@@ -1,28 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. ربط العناصر من الواجهة
+    // 1. ربط العناصر (تأكد من مطابقة الـ IDs في الـ HTML الجديد)
     const registerForm = document.getElementById('registerForm');
-    const registrationSection = document.getElementById('registrationFormSection');
-    const otpSection = document.getElementById('otpSection');
+    const regStep1 = document.getElementById('regStep1');
+    const regStep2 = document.getElementById('regStep2');
     
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const passwordInput = document.getElementById('pass');
+    const confirmPasswordInput = document.getElementById('confirmPass');
     const emailInput = document.getElementById('email');
     const confirmEmailInput = document.getElementById('confirmEmail');
     
-    const strengthBar = document.getElementById('strengthBar');
-    const timerDisplay = document.getElementById('timer');
-    const resendBtn = document.getElementById('resendBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const finalVerifyBtn = document.getElementById('finalVerifyBtn');
+    const strengthFill = document.querySelector('.strength-fill');
+    const strengthText = document.querySelector('.strength-text');
+    const timerDisplay = document.getElementById('regTimer');
+    const resendBtn = document.getElementById('resendRegBtn');
+    const activateBtn = document.getElementById('activateBtn');
+    const otpInput = document.getElementById('regOtp');
 
-    // رابط الـ Webhook الفعلي الخاص بك
+    // رابط الـ Webhook الخاص بك في Make.com
     const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
 
     let generatedPin = null;
     let countdownInterval = null;
-    let tempUserData = null; // حفظ البيانات مؤقتاً لحين التفعيل
+    let tempUserData = null;
 
-    // --- 2. نظام قوة كلمة المرور ---
+    // --- 2. نظام قوة كلمة المرور المطور ---
     passwordInput.addEventListener('input', () => {
         const val = passwordInput.value;
         const requirements = {
@@ -31,21 +32,26 @@ document.addEventListener('DOMContentLoaded', () => {
             spec: /[\W_]/.test(val)
         };
 
-        // تحديث ألوان القواعد
-        document.getElementById('len').className = requirements.len ? 'rule valid' : 'rule';
-        document.getElementById('char').className = requirements.char ? 'rule valid' : 'rule';
-        document.getElementById('spec').className = requirements.spec ? 'rule valid' : 'rule';
+        // تحديث ألوان القواعد الجانبية
+        if(document.getElementById('reqLen')) document.getElementById('reqLen').classList.toggle('valid', requirements.len);
+        if(document.getElementById('reqChar')) document.getElementById('reqChar').classList.toggle('valid', requirements.char);
+        if(document.getElementById('reqSpec')) document.getElementById('reqSpec').classList.toggle('valid', requirements.spec);
 
-        // حساب القوة وتلوين الشريط
-        let strength = 0;
-        if (requirements.len) strength += 33.3;
-        if (requirements.char) strength += 33.3;
-        if (requirements.spec) strength += 33.4;
+        // حساب القوة وتحديث شريط التقدم
+        let score = 0;
+        if (requirements.len) score++;
+        if (requirements.char) score++;
+        if (requirements.spec) score++;
 
-        strengthBar.style.width = strength + "%";
-        if (strength < 40) strengthBar.style.backgroundColor = "#f87171"; // أحمر
-        else if (strength < 80) strengthBar.style.backgroundColor = "#fbbf24"; // أصفر
-        else strengthBar.style.backgroundColor = "#4ade80"; // أخضر
+        const width = (score / 3) * 100;
+        if (strengthFill) {
+            strengthFill.style.width = width + "%";
+            // تغيير الألوان بناءً على المستوى
+            if (score === 1) { strengthFill.style.backgroundColor = "#ef4444"; strengthText.textContent = "ضعيفة"; }
+            else if (score === 2) { strengthFill.style.backgroundColor = "#f59e0b"; strengthText.textContent = "متوسطة"; }
+            else if (score === 3) { strengthFill.style.backgroundColor = "#10b981"; strengthText.textContent = "قوية جداً"; }
+            else { strengthFill.style.width = "0%"; strengthText.textContent = ""; }
+        }
     });
 
     // --- 3. نظام المؤقت الزمني (5 دقائق) ---
@@ -70,22 +76,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 timerDisplay.textContent = "جاهز";
                 resendBtn.disabled = false;
                 resendBtn.style.opacity = "1";
-                resendBtn.style.borderColor = "#38bdf8";
-                resendBtn.style.color = "#38bdf8";
+                resendBtn.style.background = "var(--primary)";
             }
         }, 1000);
     }
 
     // --- 4. دالة إرسال البيانات لـ Make.com ---
-    async function sendToWebhook(name, email, pin) {
+    async function sendToWebhook(userData, pin) {
         try {
-            await fetch(MAKE_WEBHOOK_URL, {
+            const response = await fetch(MAKE_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, pin })
+                body: JSON.stringify({
+                    name: userData.name,
+                    email: userData.email,
+                    pin: pin
+                })
             });
+            return response.ok;
         } catch (error) {
             console.error('Webhook Error:', error);
+            return false;
         }
     }
 
@@ -93,74 +104,77 @@ document.addEventListener('DOMContentLoaded', () => {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // أ. التحقق من مطابقة البريد الإلكتروني
+        // أ. التحققات الأساسية
         if (emailInput.value.trim() !== confirmEmailInput.value.trim()) {
             alert("خطأ: البريد الإلكتروني غير متطابق!");
             return;
         }
-
-        // ب. التحقق من مطابقة كلمة المرور
         if (passwordInput.value !== confirmPasswordInput.value) {
             alert("خطأ: كلمة المرور غير متطابقة!");
             return;
         }
 
-        // ج. توليد كود التحقق (OTP)
+        // ب. توليد الـ PIN وتجهيز البيانات
         generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
-
-        // د. تجهيز بيانات المستخدم مؤقتاً
         tempUserData = {
-            id: Date.now(),
             name: document.getElementById('fullName').value.trim(),
             email: emailInput.value.trim(),
-            phone: document.getElementById('countryCode').value + document.getElementById('phone').value.trim(),
-            password: passwordInput.value,
-            securityPin: generatedPin,
-            role: 'client',
-            status: 'active'
+            phone: document.getElementById('country').value + document.getElementById('phone').value.trim(),
+            password: passwordInput.value
         };
 
-        // هـ. إرسال الكود وتغيير الواجهة
+        // ج. إرسال الكود وتغيير الشاشة
+        const submitBtn = registerForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'جاري المعالجة...';
+        submitBtn.textContent = 'جاري الإرسال...';
 
-        await sendToWebhook(tempUserData.name, tempUserData.email, generatedPin);
+        const success = await sendToWebhook(tempUserData, generatedPin);
 
-        // إخفاء التسجيل وإظهار التفعيل
-        document.getElementById('registrationFormSection').style.display = 'none';
-        otpSection.style.display = 'block';
-        startTimer(300); // مؤقت 5 دقائق
+        if (success) {
+            regStep1.style.display = 'none';
+            regStep2.style.display = 'block';
+            startTimer(300); // 5 دقائق
+            if(otpInput) otpInput.focus(); // تركيز تلقائي لتحسين تجربة الجوال
+        } else {
+            alert("عذراً، حدث خطأ في النظام. يرجى المحاولة مرة أخرى.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'إنشاء حساب';
+        }
     });
 
     // --- 6. إعادة إرسال الكود ---
     resendBtn.addEventListener('click', async () => {
         generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
-        tempUserData.securityPin = generatedPin;
+        resendBtn.textContent = 'جاري الإرسال...';
         
-        resendBtn.textContent = 'تم الإرسال...';
-        await sendToWebhook(tempUserData.name, tempUserData.email, generatedPin);
-        
-        startTimer(300);
-        setTimeout(() => resendBtn.textContent = 'إعادة إرسال الكود', 2000);
+        const success = await sendToWebhook(tempUserData, generatedPin);
+        if (success) {
+            startTimer(300);
+            setTimeout(() => resendBtn.textContent = 'إعادة إرسال الكود', 2000);
+        }
     });
 
     // --- 7. التفعيل النهائي والدخول ---
-    finalVerifyBtn.addEventListener('click', () => {
-        const userEnteredOtp = document.getElementById('otpInput').value.trim();
+    activateBtn.addEventListener('click', () => {
+        const userEnteredOtp = otpInput.value.trim();
 
         if (userEnteredOtp === generatedPin) {
-            // حفظ المستخدم بشكل دائم في الذاكرة المحلية
-            const existingUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-            existingUsers.push(tempUserData);
-            localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
-            
-            // حفظ الجلسة الحالية
-            localStorage.setItem('currentUser', JSON.stringify(tempUserData));
+            // حفظ في الذاكرة المحلية (Mock DB)
+            const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            users.push({ ...tempUserData, isVerified: true, createdAt: new Date() });
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
 
-            alert("تم تفعيل حسابكم بنجاح! 🎉 جاري توجيهكم للوحة التحكم...");
-            window.location.href = '../client/dashboard/index.html'; 
+            alert("تم تفعيل حسابكم بنجاح! 🎉 جاري توجيهكم...");
+            window.location.href = "login.html"; 
         } else {
-            alert("كود التحقق غير صحيح، يرجى التأكد من الكود المرسل لبريدك.");
+            alert("كود التحقق غير صحيح، يرجى التأكد من الرسالة الواصلة لبريدك.");
         }
     });
+
+    // منع الحروف في حقل الـ OTP (للجوال)
+    if(otpInput) {
+        otpInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    }
 });
