@@ -1,18 +1,20 @@
+/* استدعاء الخطوط والأيقونات الرسمية من جوجل */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200');
 
 :root {
-    /* الألوان الأساسية - أزرق سماوي استثماري */
+    /* الألوان الأساسية - هوية استثمارية احترافية */
     --primary: #38bdf8;
     --primary-dark: #0284c7;
-    --primary-glow: rgba(56, 189, 248, 0.3);
+    --primary-glow: rgba(56, 189, 248, 0.15); /* وهج خفيف جداً لضمان نظافة التصميم */
     
-    /* ألوان الخلفية والزجاج */
+    /* ألوان الزجاج والخلفية */
     --bg-dark: #0f172a;
     --glass: rgba(255, 255, 255, 0.04);
-    --glass-heavy: rgba(15, 23, 42, 0.7);
+    --glass-heavy: rgba(15, 23, 42, 0.85);
     --border: rgba(255, 255, 255, 0.08);
     
-    /* ألوان الحالة */
+    /* الحالات */
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
@@ -38,93 +40,55 @@ body {
     justify-content: center;
     align-items: center;
     direction: rtl;
+    color: var(--text-main);
     overflow-x: hidden;
 }
 
-/* --- نظام الإشعارات المنبثقة الاحترافي (Toast 3D) --- */
-.toast-overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    display: none;
-    animation: popInScale 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+/* --- الشعار (Brand Logo) - النسخة الاحترافية النظيفة --- */
+.brand-logo {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 100px; /* حجم متوازن */
+    height: auto;
+    object-fit: contain;
+    /* ظل حاد ونظيف جداً يفصل الشعار عن الزجاج بدون تشويه الحواف */
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
 }
 
-.toast-box {
-    background: rgba(15, 23, 42, 0.95);
+/* --- الحاوية الزجاجية --- */
+.glass-panel {
+    background: var(--glass);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border: 1px solid var(--border);
-    padding: 30px 50px;
-    border-radius: 28px;
-    text-align: center;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8),
-                inset 0 1px 2px rgba(255, 255, 255, 0.1);
-}
-
-.toast-box .material-symbols-rounded {
-    font-size: 48px;
-    margin-bottom: 15px;
-    display: block;
-}
-
-/* --- الحاوية الرئيسية --- */
-.auth-container {
-    width: 92%;
-    max-width: 480px;
-    margin: 20px auto;
-}
-
-.glass-panel {
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-    border-radius: 32px;
+    border-radius: 35px;
     padding: 45px 35px;
-    box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.6),
-        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+    width: 100%;
     position: relative;
-    overflow: hidden;
-}
-
-/* --- ترويسة البوابة والشعار --- */
-.header-logo {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.brand-icon {
-    width: 80px;
-    height: auto;
-    filter: drop-shadow(0 0 12px var(--primary-glow));
-    margin-bottom: 10px;
 }
 
 h2 {
     font-weight: 800;
     font-size: 26px;
-    margin: 0;
+    margin: 0 0 35px 0;
+    text-align: center;
     background: linear-gradient(to bottom, #fff, #94a3b8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-align: center;
 }
 
-/* --- تقسيم الأقسام بأيقونات رسمية --- */
+/* --- الأقسام والعناوين الفرعية --- */
 .section-header {
     font-size: 16px;
     font-weight: 700;
     color: var(--primary);
-    margin: 30px 0 18px 0;
+    margin: 35px 0 18px 0;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
+    padding-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .section-header .material-symbols-rounded {
@@ -132,7 +96,7 @@ h2 {
     font-variation-settings: 'FILL' 1;
 }
 
-/* --- تنسيق الحقول والتسميات (Labels on Top) --- */
+/* --- تنسيق الحقول (Labels on Top) --- */
 .input-group {
     margin-bottom: 22px;
     position: relative;
@@ -144,8 +108,8 @@ h2 {
     color: var(--text-muted);
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 8px;
-    margin-right: 5px;
+    margin-bottom: 10px;
+    margin-right: 6px;
 }
 
 .input-wrapper {
@@ -155,22 +119,22 @@ h2 {
 
 input, select {
     width: 100%;
-    padding: 15px 18px;
+    padding: 16px 20px;
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     color: var(--text-main);
     font-family: 'Cairo', sans-serif;
     font-size: 15px;
     box-sizing: border-box;
     transition: all 0.3s ease;
     appearance: none;
+    outline: none;
 }
 
-input:focus, select:focus {
-    outline: none;
+input:focus {
     border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.35);
     box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
@@ -178,70 +142,20 @@ input::placeholder {
     color: rgba(255, 255, 255, 0.15);
 }
 
-/* --- رقم الجوال بنظام دولي --- */
-.phone-row {
-    display: flex;
-    gap: 10px;
-    direction: ltr; /* لضمان الكود يسار الرقم */
-}
-
-#countryCode {
-    width: 100px;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-/* --- أيقونة معاينة كلمة المرور --- */
+/* أيقونة المعاينة (Password Toggle) */
 .password-toggle {
     position: absolute;
-    left: 15px;
+    left: 18px; /* جهة اليسار لأن الاتجاه RTL */
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: var(--text-muted);
-    font-size: 20px;
-    z-index: 5;
+    font-size: 22px;
+    z-index: 10;
 }
 
 .password-toggle:hover {
     color: var(--primary);
-}
-
-/* --- مقياس القوة والشروط --- */
-.strength-container {
-    margin-top: 10px;
-}
-
-.strength-bar-bg {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.strength-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 10px;
-}
-
-.req-list {
-    list-style: none;
-    padding: 0;
-    margin: 12px 0 0 0;
-    font-size: 12px;
-}
-
-.req-list li {
-    color: var(--danger);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.req-list li.valid {
-    color: var(--success);
 }
 
 /* --- الأزرار الاحترافية --- */
@@ -250,24 +164,42 @@ input::placeholder {
     padding: 18px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     border: none;
-    border-radius: 18px;
+    border-radius: 20px;
     color: white;
     font-weight: 700;
     font-size: 17px;
     cursor: pointer;
     box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .btn-main:active {
     transform: scale(0.97);
 }
 
-/* --- نظام التبويبات (Tabs) في الصفحة الرئيسية --- */
-.tabs-nav {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 25px;
-    overflow-x: auto;
-    padding: 5px;
+/* --- نظام الإشعارات المنبثقة (Toast 3D) --- */
+.toast-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+}
+
+.toast-box {
+    background: var(--glass-heavy);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--border);
+    padding: 30px 50px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+}
+
+/* استجابة الجوال */
+@media (max-width: 480px) {
+    .glass-panel { padding: 35px 25px; border-radius: 30px; }
+    h2 { font-size: 22px; }
+    input, .btn-main { padding: 15px; font-size: 15px; }
 }
