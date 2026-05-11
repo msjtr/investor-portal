@@ -6,47 +6,86 @@
     <title>تسجيل مستثمر جديد | بوابة المستثمرين</title>
     <link rel="stylesheet" href="../../styles/global.css">
     <link rel="stylesheet" href="auth.css">
+    <style>
+        /* تنسيقات إضافية للميزات الجديدة */
+        .phone-input-group { display: flex; gap: 10px; }
+        #countryCode { width: 30%; background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; border-radius: 8px; }
+        .strength-meter { height: 5px; background: #333; margin-top: 10px; border-radius: 3px; overflow: hidden; }
+        .strength-bar { height: 100%; width: 0; transition: 0.3s; }
+        .req-item { font-size: 12px; color: #94a3b8; margin: 5px 0; display: flex; align-items: center; gap: 5px; }
+        .req-item.valid { color: #4ade80; }
+        .otp-screen { display: none; text-align: center; }
+        #timer { color: #fbbf24; font-weight: bold; }
+    </p>
 </head>
 <body>
 
-    <div class="auth-container" style="max-width: 480px;">
-        <div class="glass-panel">
+    <div class="auth-container" style="max-width: 500px; margin: 20px auto;">
+        <div class="glass-panel" id="mainPanel">
             <div class="brand-logo">
                 <h2>بوابة المستثمرين</h2>
-                <p>إنشاء حساب مستثمر جديد</p>
+                <p id="panelTitle">إنشاء حساب مستثمر جديد</p>
             </div>
 
             <form id="registerForm">
                 <div class="input-group">
-                    <label for="fullName">الاسم الرباعي</label>
+                    <label>الاسم الرباعي</label>
                     <input type="text" id="fullName" placeholder="أدخل اسمك الكامل" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="email">البريد الإلكتروني</label>
+                    <label>البريد الإلكتروني</label>
                     <input type="email" id="email" placeholder="name@example.com" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="whatsapp">رقم الواتساب (مع رمز الدولة)</label>
-                    <input type="tel" id="whatsapp" placeholder="مثال: 966500000000+" required>
+                    <label>تأكيد البريد الإلكتروني</label>
+                    <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="password">كلمة المرور</label>
+                    <label>رقم الجوال</label>
+                    <div class="phone-input-group">
+                        <select id="countryCode">
+                            <option value="966">🇸🇦 +966</option>
+                            <option value="971">🇦🇪 +971</option>
+                            <option value="965">🇰🇼 +965</option>
+                            <option value="20">🇪🇬 +20</option>
+                        </select>
+                        <input type="tel" id="phone" style="width: 70%;" placeholder="5xxxxxxxx" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>كلمة المرور</label>
                     <input type="password" id="password" placeholder="كلمة مرور قوية" required>
+                    <div class="strength-meter"><div id="strengthBar" class="strength-bar"></div></div>
+                    <div id="passwordRequirements">
+                        <div class="req-item" id="req6">● 6 أرقام على الأقل</div>
+                        <div class="req-item" id="reqLetter">● حرف واحد على الأقل</div>
+                        <div class="req-item" id="reqSymbol">● رمز خاص واحد مرمز (#@$)</div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-primary">تسجيل وإرسال كود التحقق</button>
-                
-                <div class="form-actions" style="justify-content: center; margin-top: 20px;">
-                    <span style="color: #94a3b8; font-size: 14px;">لديك حساب بالفعل؟ </span>
-                    <a href="login.html" class="forgot-link" style="margin-right: 5px; font-weight: bold;">تسجيل الدخول</a>
+                <div class="input-group">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" required>
                 </div>
 
-                <div id="errorMessage" class="error-msg"></div>
-                <div id="successMessage" style="color: #4ade80; text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold;"></div>
+                <button type="submit" id="submitBtn" class="btn-primary">إنشاء الحساب</button>
             </form>
+
+            <div id="otpScreen" class="otp-screen">
+                <p>تم إرسال كود التحقق لبريدك الإلكتروني، يرجى إدخاله أدناه لتفعيل الحساب:</p>
+                <div class="input-group">
+                    <input type="text" id="otpInput" placeholder="- - - -" maxlength="4" style="text-align: center; font-size: 24px; letter-spacing: 10px;">
+                </div>
+                <div id="timerDisplay">يمكنك إعادة الإرسال خلال: <span id="timer">05:00</span></div>
+                <button id="resendBtn" class="btn-secondary" disabled style="margin-top: 10px;">إعادة إرسال الكود</button>
+                <button id="verifyBtn" class="btn-primary" style="margin-top: 20px;">تفعيل الحساب</button>
+            </div>
+
+            <div id="statusMessage" style="text-align: center; margin-top: 15px; font-size: 14px;"></div>
         </div>
     </div>
 
