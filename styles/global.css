@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
-/* 1. المتغيرات الأساسية للمشروع */
+/* --- 1. المتغيرات الأساسية للمشروع --- */
 :root {
     --primary: #38bdf8;         /* أزرق سماوي استثماري */
     --primary-dark: #0284c7;
@@ -14,10 +14,11 @@
     --text-muted: #94a3b8;
 }
 
-/* 2. إعدادات الصفحة الرئيسية */
+/* --- 2. إعدادات الصفحة الرئيسية --- */
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -34,10 +35,40 @@ body {
     overflow-x: hidden;
 }
 
-/* 3. الحاوية الزجاجية (اللوحة الفخمة) */
+/* --- 3. نظام الإشعارات المنبثقة (Toast 3D Overlay) --- */
+.toast-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+    animation: popInScale 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.toast-box {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    padding: 30px 50px;
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8),
+                inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+#toastMsg {
+    color: var(--text-main);
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+/* --- 4. الحاوية الزجاجية الرئيسية (اللوحة الفخمة) --- */
 .auth-container {
     width: 92%;
-    max-width: 460px;
+    max-width: 480px; /* تم التعديل لمنح مساحة أريح للأيقونات */
     margin: 20px auto;
 }
 
@@ -51,23 +82,54 @@ body {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6),
                 inset 0 1px 1px rgba(255, 255, 255, 0.05);
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- 5. الترويسة وعناوين الأقسام مع دعم 3D --- */
+.header-logo {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 h2 {
     text-align: center;
-    margin-top: 0;
-    margin-bottom: 35px;
+    margin: 10px 0 35px 0;
     font-weight: 800;
-    font-size: 26px;
+    font-size: 28px;
     background: linear-gradient(to bottom, #ffffff, #cbd5e1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* 4. تنسيق المدخلات (Inputs) */
+.section-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 30px 0 18px 0;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 8px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- 6. تنسيق المدخلات والتسميات (Inputs & Labels) --- */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     width: 100%;
+    position: relative;
+    text-align: right;
+}
+
+label, .input-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-right: 5px;
 }
 
 input, select {
@@ -79,138 +141,18 @@ input, select {
     color: var(--text-main);
     font-family: 'Cairo', sans-serif;
     font-size: 16px;
-    transition: all 0.3s ease;
+    appearance: none;
+    outline: none;
 }
 
-input:focus {
-    outline: none;
+input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+input:focus, select:focus {
     border-color: var(--primary);
     background: rgba(0, 0, 0, 0.45);
     box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
-/* تنسيق رقم الجوال */
-.phone-row {
-    display: flex;
-    gap: 10px;
-    direction: ltr; /* لضمان ظهور مفتاح الدولة يسار الرقم */
-}
-
-#countryCode, #country {
-    width: 105px;
-    flex-shrink: 0;
-    text-align: center;
-    cursor: pointer;
-}
-
-/* 5. مقياس قوة كلمة المرور والقواعد */
-.req-list {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0;
-    font-size: 13px;
-    text-align: right;
-}
-
-.req-list li {
-    color: var(--error);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s;
-}
-
-.req-list li.valid {
-    color: var(--success);
-}
-
-.strength-bar-bg {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    margin: 10px 0;
-    overflow: hidden;
-}
-
-.strength-fill {
-    height: 100%;
-    width: 0%;
-    transition: 0.5s ease;
-    border-radius: 10px;
-}
-
-/* 6. الأزرار الاحترافية */
-.btn-main {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    border: none;
-    border-radius: 18px;
-    color: white;
-    font-weight: 800;
-    font-size: 17px;
-    cursor: pointer;
-    box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
-    margin-top: 15px;
-    transition: all 0.3s ease;
-}
-
-.btn-main:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px -5px rgba(2, 132, 199, 0.6);
-}
-
-.btn-main:active {
-    transform: translateY(1px) scale(0.98);
-}
-
-.btn-main:disabled {
-    background: #475569;
-    box-shadow: none;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* 7. المؤقت الزمني والروابط */
-.timer-container {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 14px;
-    color: var(--text-muted);
-}
-
-.timer-count {
-    color: var(--primary);
-    font-weight: 700;
-    font-family: monospace;
-    font-size: 16px;
-}
-
-.switch-link {
-    text-align: center;
-    margin-top: 25px;
-    font-size: 14px;
-    color: var(--text-muted);
-}
-
-.switch-link a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 700;
-}
-
-/* 8. التوافق مع شاشات الجوال */
-@media (max-width: 480px) {
-    .glass-panel {
-        padding: 35px 25px;
-        border-radius: 28px;
-    }
-    
-    h2 { font-size: 22px; }
-    
-    input, select, .btn-main {
-        padding: 14px 16px;
-        font-size: 15px;
-    }
-}
+/* زر إظهار/إخ
