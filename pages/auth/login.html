@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | بوابة المستثمرين</title>
+    <link rel="stylesheet" href="../../styles/global.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="glass-panel">
+            <div class="brand-logo">
+                <h2>بوابة المستثمرين</h2>
+                <p id="subTitle">مرحباً بك مجدداً</p>
+            </div>
+
+            <form id="loginForm">
+                <div id="step-1">
+                    <div class="input-group">
+                        <label for="email">البريد الإلكتروني</label>
+                        <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">كلمة المرور</label>
+                        <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="forgot-password.html" class="forgot-link">نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <button type="button" id="btnNext" class="btn-primary">التالي</button>
+                </div>
+
+                <div id="step-2" style="display: none;">
+                    <div class="input-group">
+                        <label for="securityPin">رقم الضمان الأمني</label>
+                        <input type="password" id="securityPin" placeholder="أدخل رمز التحقق (مثال: 2026)" maxlength="4">
+                    </div>
+                    
+                    <button type="submit" id="btnLogin" class="btn-primary">تأكيد الدخول</button>
+                    <button type="button" id="btnBack" class="btn-secondary">رجوع</button>
+                </div>
+
+                <div id="errorMessage" class="error-msg"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/auth.js"></script>
+</body>
+</html>
