@@ -29,6 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let countdownInterval = null;
     let tempUserData = null;
 
+    // --- 2. نظام الكاش (الحفظ التلقائي واسترجاع البيانات) ---
+    const fieldsToCache = ['fullName', 'email', 'confirmEmail', 'phone', 'username'];
+    fieldsToCache.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            // استرجاع القيمة من الكاش
+            const savedValue = localStorage.getItem('cache_' + id);
+            if (savedValue) element.value = savedValue;
+
+            // حفظ القيمة عند كل تغيير (input)
+            element.addEventListener('input', () => {
+                localStorage.setItem('cache_' + id, element.value);
+            });
+        }
+    });
+
     // --- وظيفة التنبيه الجمالي في المنتصف ---
     function showToast(message, isSuccess = true) {
         toastMsg.textContent = message;
@@ -37,9 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { toastOverlay.style.display = 'none'; }, 3000);
     }
 
-    // --- نظام فحص كلمة المرور (إنجليزي فقط + قوة) ---
+    // --- 3. نظام فحص كلمة المرور (إنجليزي فقط + قوة) ---
     passwordInput.addEventListener('input', () => {
-        // منع اللغة العربية والحروف غير اللاتينية فوراً
+        // منع اللغة العربية والحروف غير اللاتينية
         passwordInput.value = passwordInput.value.replace(/[^\x00-\x7F]/g, "");
 
         const val = passwordInput.value;
@@ -54,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(document.getElementById('reqChar')) document.getElementById('reqChar').classList.toggle('valid', reqs.char);
         if(document.getElementById('reqSpec')) document.getElementById('reqSpec').classList.toggle('valid', reqs.spec);
 
-        // حساب القوة وتلوين الشريط
+        // تلوين شريط القوة بناءً على الشروط
         let score = Object.values(reqs).filter(Boolean).length;
         if (strengthFill) {
             strengthFill.style.width = (score / 3 * 100) + "%";
@@ -63,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         checkMatch();
     });
 
-    // --- نظام فحص المطابقة الفوري ---
+    // --- 4. نظام فحص المطابقة الفوري ---
     confirmPasswordInput.addEventListener('input', checkMatch);
 
     function checkMatch() {
@@ -81,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- نظام المؤقت الزمني ---
+    // --- 5. نظام المؤقت الزمني (5 دقائق) ---
     function startTimer(duration) {
         let timer = duration;
         resendBtn.disabled = true;
@@ -99,10 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // --- معالجة نموذج التسجيل والـ Webhook ---
+    // --- 6. معالجة نموذج التسجيل والـ Webhook ---
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // تحققات نهائية قبل الإرسال
         if (emailInput.value.trim() !== confirmEmailInput.value.trim()) {
             showToast("عذراً، البريد الإلكتروني غير متطابق!", false);
             return;
@@ -117,8 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.textContent = 'جاري إرسال كود التفعيل...';
 
         generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
+        
+        // تجهيز بيانات المستخدم كاملة
         tempUserData = {
             name: document.getElementById('fullName').value.trim(),
+            username: document.getElementById('username').value.trim(),
             email: emailInput.value.trim(),
             phone: document.getElementById('country').value + document.getElementById('phone').value.trim(),
             password: passwordInput.value
@@ -130,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: tempUserData.name,
+                    username: tempUserData.username,
                     email: tempUserData.email,
                     pin: generatedPin
                 })
@@ -139,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast("تم إرسال الكود لبريدك بنجاح", true);
                 regStep1.style.display = 'none';
                 regStep2.style.display = 'block';
-                startTimer(300);
+                startTimer(300); // 5 دقائق
             } else { throw new Error(); }
         } catch (error) {
             showToast("فشل إرسال الكود، تأكد من الاتصال", false);
@@ -148,10 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- التفعيل النهائي ---
+    // --- 7. التفعيل النهائي والدخول ---
     activateBtn.addEventListener('click', () => {
         if (otpInput.value.trim() === generatedPin) {
             showToast("تم تفعيل حسابكم بنجاح! 🎉", true);
+            
+            // مسح الكاش بعد النجاح لضمان الأمان
+            fieldsToCache.forEach(id => localStorage.removeItem('cache_' + id));
+            
             setTimeout(() => { window.location.href = "login.html"; }, 2000);
         } else {
             showToast("كود التحقق غير صحيح", false);
@@ -162,5 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // وظيفة العين (خارج النطاق لتكون متاحة للـ onclick في HTML)
 function togglePass(id) {
     const input = document.getElementById(id);
-    input.type = input.type === 'password' ? 'text' : 'password';
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
 }
