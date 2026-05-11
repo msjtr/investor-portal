@@ -1,17 +1,35 @@
+/* استدعاء الخطوط والأيقونات الرسمية بنقاء 4K */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200');
 
 :root {
+    /* الألوان - أزرق سماوي استثماري فخم */
     --primary: #38bdf8;
     --primary-dark: #0284c7;
-    --primary-glow: rgba(56, 189, 248, 0.2); /* تقليل الوهج ليصبح أنقى */
-    --glass: rgba(255, 255, 255, 0.04);
-    --border: rgba(255, 255, 255, 0.1);
+    --primary-glow: rgba(56, 189, 248, 0.15);
+    
+    /* ألوان الزجاج والخلفية الداكنة */
+    --bg-dark: #0f172a;
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-heavy: rgba(15, 23, 42, 0.85);
+    --border: rgba(255, 255, 255, 0.08);
+    
+    /* ألوان الحالة */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    
+    /* النصوص */
     --text-main: #ffffff;
     --text-muted: #94a3b8;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* الإعدادات العامة للمتصفح */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 body {
     margin: 0; padding: 0;
@@ -20,8 +38,10 @@ body {
     min-height: 100vh;
     display: flex; justify-content: center; align-items: center;
     direction: rtl; color: var(--text-main);
+    overflow-x: hidden;
 }
 
+/* --- اللوحة الزجاجية (Glassmorphism) --- */
 .glass-panel {
     background: var(--glass);
     backdrop-filter: blur(25px);
@@ -31,54 +51,156 @@ body {
     padding: 45px 35px;
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
     width: 100%;
+    position: relative;
 }
 
-/* --- تحديث الشعار ليكون نظيفاً وحاداً --- */
+/* --- الشعار (Brand Logo) - النسخة النظيفة والحادة --- */
 .brand-logo {
-    display: block; 
+    display: block;
     margin: 0 auto 30px auto;
-    width: 110px; /* حجم متوازن وأكبر قليلاً للوضوح */
+    width: 110px; /* حجم مثالي للوضوح */
     height: auto;
-    object-fit: contain; /* يضمن عدم تشوه الأبعاد */
-    /* استخدام ظل ناعم وحاد بدلاً من وهج منتشر ومزعج */
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 5px var(--primary-glow));
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    object-fit: contain;
+    /* ظل حاد ونظيف جداً يفصل الشعار عن الخلفية دون تشويش */
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
 }
 
-.brand-logo:hover {
-    transform: scale(1.05); /* حركة تفاعلية بسيطة عند تمرير الماوس */
+h2 {
+    font-weight: 800; font-size: 26px; text-align: center;
+    margin: 0 0 35px 0;
+    background: linear-gradient(to bottom, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.input-group { margin-bottom: 24px; text-align: right; }
-.input-label { display: block; margin-bottom: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+/* --- تنسيق الحقول (العناوين بالأعلى) --- */
+.input-group {
+    margin-bottom: 24px;
+    position: relative;
+    text-align: right;
+}
 
-input {
-    width: 100%; padding: 16px 20px;
+.input-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-right: 6px;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+input, select {
+    width: 100%;
+    padding: 16px 20px;
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--border);
     border-radius: 18px;
-    color: white; font-family: 'Cairo'; font-size: 15px;
-    outline: none; transition: 0.3s;
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    appearance: none;
+    outline: none;
 }
 
-input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 0 4px var(--primary-glow); }
+input:focus {
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
 
+input::placeholder {
+    color: rgba(255, 255, 255, 0.15);
+}
+
+/* أيقونة المعاينة (بجانب كلمة المرور) */
+.password-toggle {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 22px;
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+/* --- الأزرار الاحترافية --- */
 .btn-main {
-    width: 100%; padding: 18px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border: none; border-radius: 20px;
-    color: white; font-weight: 700; font-size: 17px;
-    cursor: pointer; box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
-    transition: 0.3s;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-weight: 700;
+    font-size: 17px;
+    cursor: pointer;
+    box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
+    margin-top: 15px;
 }
 
-.btn-main:active { transform: scale(0.97); }
+.btn-main:active {
+    transform: scale(0.97);
+}
 
-h2 { 
-    text-align: center; 
-    margin: 0 0 30px 0; 
-    font-weight: 800; 
-    background: linear-gradient(to bottom, #fff, #94a3b8); 
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent; 
+/* --- نظام التبويبات (Dashboard Tabs) --- */
+.tabs-nav {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.tab-btn {
+    padding: 14px 24px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* --- نظام الإشعارات (Toasts) --- */
+.toast-overlay {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+}
+
+.toast-box {
+    background: var(--glass-heavy);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--border);
+    padding: 30px 50px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+}
+
+/* استجابة الجوال */
+@media (max-width: 480px) {
+    .glass-panel { padding: 35px 25px; border-radius: 30px; }
+    h2 { font-size: 22px; }
 }
