@@ -4,24 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const regStep1 = document.getElementById('regStep1');
     const regStep2 = document.getElementById('regStep2');
     
-    // المدخلات
-    const passwordInput = document.getElementById('pass');
-    const confirmPasswordInput = document.getElementById('confirmPass');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
     const emailInput = document.getElementById('email');
     const confirmEmailInput = document.getElementById('confirmEmail');
     const otpInput = document.getElementById('regOtp');
     
-    // عناصر الحالة والمؤقت
     const strengthFill = document.getElementById('strengthFill');
-    const matchMsg = document.getElementById('matchMsg');
     const timerCount = document.getElementById('regTimer');
     const resendBtn = document.getElementById('resendRegBtn');
     const activateBtn = document.getElementById('activateBtn');
 
-    // عناصر التنبيه (Toast) المدعومة بالـ 3D
     const toastOverlay = document.getElementById('toastOverlay');
     const toastMsg = document.getElementById('toastMsg');
-    const toastIconContainer = document.getElementById('toastIconContainer'); // تم التعديل لحاوية الـ 3D
+    const toastIconContainer = document.getElementById('toastIconContainer');
 
     const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
 
@@ -29,48 +25,52 @@ document.addEventListener('DOMContentLoaded', () => {
     let countdownInterval = null;
     let tempUserData = null;
 
-    // --- 2. نظام الكاش (الحفظ التلقائي واسترجاع البيانات) ---
+    // --- 2. نظام الكاش (الحفظ التلقائي) ---
     const fieldsToCache = ['fullName', 'email', 'confirmEmail', 'phone', 'username'];
     fieldsToCache.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            const savedValue = localStorage.getItem('cache_' + id);
-            if (savedValue) element.value = savedValue;
+            const savedValue = localStorage.getItem('inv_cache_' + id);
+            if (savedValue) {
+                element.value = savedValue;
+                element.style.borderColor = 'var(--primary)'; // تمييز الحقل المسترجع
+            }
 
             element.addEventListener('input', () => {
-                localStorage.setItem('cache_' + id, element.value);
+                localStorage.setItem('inv_cache_' + id, element.value);
+                element.style.borderColor = 'var(--border)';
             });
         }
     });
 
-    // --- وظيفة التنبيه الجمالي ثلاثي الأبعاد في المنتصف ---
+    // --- وظيفة التنبيه الجمالي 3D ---
     function showToast(message, isSuccess = true) {
-        // تفريغ الحاوية أولاً
         toastIconContainer.innerHTML = '';
         
-        // إنشاء وحقن أيقونة 3D متحركة بناءً على النتيجة
         const icon = document.createElement('lord-icon');
-        icon.setAttribute('trigger', 'in');
-        icon.style.width = '80px';
-        icon.style.height = '80px';
+        icon.setAttribute('trigger', 'loop');
+        icon.setAttribute('delay', '500');
+        icon.style.width = '70px';
+        icon.style.height = '70px';
 
         if (isSuccess) {
-            icon.setAttribute('src', 'https://cdn.lordicon.com/guqkthbs.json'); // أيقونة نجاح 3D
-            icon.setAttribute('colors', 'primary:#10b981'); // أخضر
+            icon.setAttribute('src', 'https://cdn.lordicon.com/lupuorrc.json'); // أيقونة نجاح متحركة
+            icon.setAttribute('colors', 'primary:#10b981,secondary:#10b981');
         } else {
-            icon.setAttribute('src', 'https://cdn.lordicon.com/bmnlikjh.json'); // أيقونة خطأ 3D
-            icon.setAttribute('colors', 'primary:#ef4444'); // أحمر
+            icon.setAttribute('src', 'https://cdn.lordicon.com/tdrtuzcl.json'); // أيقونة خطأ متحركة
+            icon.setAttribute('colors', 'primary:#ef4444,secondary:#ef4444');
         }
 
         toastIconContainer.appendChild(icon);
         toastMsg.textContent = message;
         toastOverlay.style.display = 'block';
         
-        setTimeout(() => { toastOverlay.style.display = 'none'; }, 3000);
+        setTimeout(() => { toastOverlay.style.display = 'none'; }, 3500);
     }
 
-    // --- 3. نظام فحص كلمة المرور (إنجليزي فقط + قوة) ---
+    // --- 3. نظام قوة كلمة المرور (إنجليزي فقط) ---
     passwordInput.addEventListener('input', () => {
+        // منع الحروف العربية فوراً
         passwordInput.value = passwordInput.value.replace(/[^\x00-\x7F]/g, "");
 
         const val = passwordInput.value;
@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             spec: /[\W_]/.test(val)
         };
 
+        // تحديث حالة الشروط بصرياً
         if(document.getElementById('reqLen')) document.getElementById('reqLen').classList.toggle('valid', reqs.len);
         if(document.getElementById('reqChar')) document.getElementById('reqChar').classList.toggle('valid', reqs.char);
         if(document.getElementById('reqSpec')) document.getElementById('reqSpec').classList.toggle('valid', reqs.spec);
@@ -87,35 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let score = Object.values(reqs).filter(Boolean).length;
         if (strengthFill) {
             strengthFill.style.width = (score / 3 * 100) + "%";
-            strengthFill.style.backgroundColor = score === 3 ? "#10b981" : score === 2 ? "#f59e0b" : "#ef4444";
+            strengthFill.style.backgroundColor = score === 3 ? "var(--success)" : score === 2 ? "var(--warning)" : "var(--danger)";
         }
-        checkMatch();
     });
 
-    // --- 4. نظام فحص المطابقة الفوري ---
-    confirmPasswordInput.addEventListener('input', checkMatch);
-
-    function checkMatch() {
-        if (!confirmPasswordInput.value) {
-            if(matchMsg) matchMsg.style.display = 'none';
-            return;
-        }
-        if(matchMsg) {
-            matchMsg.style.display = 'block';
-            if (passwordInput.value === confirmPasswordInput.value) {
-                matchMsg.textContent = "● كلمات المرور متطابقة";
-                matchMsg.style.color = "#4ade80";
-            } else {
-                matchMsg.textContent = "● كلمات المرور غير متطابقة";
-                matchMsg.style.color = "#f87171";
-            }
-        }
-    }
-
-    // --- 5. نظام المؤقت الزمني (5 دقائق) ---
+    // --- 4. نظام المؤقت الزمني ---
     function startTimer(duration) {
         let timer = duration;
         resendBtn.disabled = true;
+        resendBtn.style.opacity = "0.5";
         if (countdownInterval) clearInterval(countdownInterval);
 
         countdownInterval = setInterval(() => {
@@ -125,81 +106,72 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval);
                 timerCount.textContent = "جاهز";
                 resendBtn.disabled = false;
+                resendBtn.style.opacity = "1";
                 resendBtn.style.background = "var(--primary)";
             }
         }, 1000);
     }
 
-    // --- 6. معالجة نموذج التسجيل والـ Webhook ---
+    // --- 5. إرسال النموذج (Make.com Webhook) ---
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         if (emailInput.value.trim() !== confirmEmailInput.value.trim()) {
-            showToast("عذراً، البريد الإلكتروني غير متطابق!", false);
-            return;
-        }
-        if (passwordInput.value !== confirmPasswordInput.value) {
-            showToast("عذراً، كلمة المرور غير متطابقة!", false);
+            showToast("البريد الإلكتروني غير متطابق!", false);
             return;
         }
 
-        const submitBtn = document.getElementById('submitBtn');
+        const submitBtn = registerForm.querySelector('.btn-main');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'جاري إرسال كود التفعيل...';
+        submitBtn.textContent = 'جاري المعالجة...';
 
         generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
         
         tempUserData = {
             name: document.getElementById('fullName').value.trim(),
-            username: document.getElementById('username').value.trim(),
             email: emailInput.value.trim(),
-            phone: document.getElementById('countryCode').value + document.getElementById('phone').value.trim(),
-            password: passwordInput.value
+            pin: generatedPin
         };
 
         try {
             const response = await fetch(MAKE_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: tempUserData.name,
-                    username: tempUserData.username,
-                    email: tempUserData.email,
-                    pin: generatedPin
-                })
+                body: JSON.stringify(tempUserData)
             });
 
             if (response.ok) {
-                showToast("تم إرسال الكود لبريدك بنجاح", true);
+                showToast("تم إرسال كود التحقق لبريدك", true);
                 regStep1.style.display = 'none';
                 regStep2.style.display = 'block';
                 startTimer(300);
             } else { throw new Error(); }
         } catch (error) {
-            showToast("فشل إرسال الكود، تأكد من الاتصال", false);
+            showToast("فشل الاتصال بالخادم", false);
             submitBtn.disabled = false;
-            submitBtn.textContent = 'إنشاء حساب';
+            submitBtn.textContent = 'إنشاء حساب المستثمر';
         }
     });
 
-    // --- 7. التفعيل النهائي والدخول ---
+    // --- 6. التفعيل النهائي ---
     activateBtn.addEventListener('click', () => {
         if (otpInput.value.trim() === generatedPin) {
-            showToast("تم تفعيل حسابكم بنجاح! 🎉", true);
+            showToast("أهلاً بك! تم تفعيل الحساب بنجاح", true);
             
-            fieldsToCache.forEach(id => localStorage.removeItem('cache_' + id));
+            // مسح الكاش بعد النجاح
+            fieldsToCache.forEach(id => localStorage.removeItem('inv_cache_' + id));
             
-            setTimeout(() => { window.location.href = "login.html"; }, 2000);
+            setTimeout(() => { window.location.href = "login.html"; }, 2500);
         } else {
-            showToast("كود التحقق غير صحيح", false);
+            showToast("كود التحقق خاطئ", false);
         }
     });
 });
 
-// وظيفة العين (خارج النطاق لتكون متاحة للـ onclick في HTML)
-function togglePass(id) {
-    const input = document.getElementById(id);
-    if (input) {
-        input.type = input.type === 'password' ? 'text' : 'password';
-    }
+// وظيفة تبديل رؤية كلمة المرور
+function toggleView(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isPass = input.type === 'password';
+    input.type = isPass ? 'text' : 'password';
+    btn.textContent = isPass ? 'visibility_off' : 'visibility';
 }
