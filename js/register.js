@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('errorMessage');
     const successMessage = document.getElementById('successMessage');
 
-    // ⚠️ ضع الرابط السري الذي نسخته من منصة Make.com هنا بين علامتي التنصيص
+    // ⚠️ تنبيه هام: الصق رابط الـ Webhook الحقيقي الخاص بك بين علامتي التنصيص أدناه
+    // تأكد من عدم وجود مسافات زائدة داخل علامتي التنصيص
     const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/YOUR_WEBHOOK_URL_HERE';
 
     if (registerForm) {
@@ -17,23 +18,28 @@ document.addEventListener('DOMContentLoaded', () => {
             let whatsapp = document.getElementById('whatsapp').value.trim();
             const password = document.getElementById('password').value;
 
+            // التحقق من طول كلمة المرور
             if (password.length < 4) {
                 errorMessage.textContent = 'كلمة المرور يجب أن تكون 4 رموز على الأقل.';
                 return;
             }
 
-            // تنظيف رقم الواتساب (إزالة علامة + أو المسافات ليتوافق مع API الواتساب)
+            // تنظيف رقم الواتساب (إزالة أي رموز مثل + أو مسافات ليتوافق مع الـ API)
             whatsapp = whatsapp.replace(/\D/g, '');
 
+            // جلب المستخدمين المسجلين مسبقاً من المتصفح
             const existingUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            
+            // التأكد من عدم تكرار البريد الإلكتروني
             if (existingUsers.some(u => u.email === email)) {
                 errorMessage.textContent = 'البريد الإلكتروني مسجل مسبقاً.';
                 return;
             }
 
-            // توليد كود التحقق الأمني (OTP) من 4 أرقام
+            // توليد رمز تحقق أمني (OTP) عشوائي من 4 أرقام
             const generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
 
+            // تجهيز كائن المستخدم الجديد
             const newUser = {
                 id: Date.now(),
                 name: fullName,
@@ -45,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 status: 'active'
             };
 
-            // تعطيل الزر وعرض حالة التحميل
+            // تعطيل زر التسجيل مؤقتاً وتغيير نصه لتوضيح حالة التحميل
             const submitBtn = registerForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.textContent = 'جاري إرسال كود التحقق للواتساب... ⏳';
 
             try {
-                // إرسال البيانات إلى Make.com
+                // إرسال البيانات إلى منصة Make.com
                 const response = await fetch(MAKE_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -63,10 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    // حفظ الحساب في المتصفح ليتمكن من تسجيل الدخول
+                    // حفظ بيانات المستخدم في المتصفح ليتمكن من تسجيل الدخول لاحقاً
                     existingUsers.push(newUser);
                     localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
 
+                    // إخفاء زر التسجيل وعرض رسالة النجاح
                     submitBtn.style.display = 'none';
                     successMessage.innerHTML = `
                         تم تسجيل حسابك بنجاح! 🎉<br>
@@ -74,19 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         يرجى مراجعة الواتساب، جاري تحويلك لتسجيل الدخول...
                     `;
 
-                    // تحويل المستخدم لصفحة الدخول بعد 4 ثوانٍ
+                    // تحويل المستخدم لصفحة تسجيل الدخول بعد 4 ثوانٍ
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 4000);
                 } else {
-                    throw new Error('فشل إرسال الطلب');
+                    throw new Error('فشل استجابة الخادم');
                 }
             } catch (error) {
                 console.error('Webhook Error:', error);
                 errorMessage.textContent = 'حدث خطأ أثناء الاتصال ببوابة الواتساب، يرجى المحاولة.';
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'تسجيل وإرسال كود التحقق';
-            }
-        });
-    }
-});
+                submitBtn.textContent =
