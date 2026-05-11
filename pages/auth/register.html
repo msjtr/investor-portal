@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب مستثمر | بوابة المستثمرين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     
     <style>
         :root {
@@ -24,7 +25,7 @@
             color: white; direction: rtl; box-sizing: border-box;
         }
 
-        /* الإشعارات في منتصف الشاشة */
+        /* الإشعارات في منتصف الشاشة مع لمسة 3D */
         .toast-overlay {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -50,10 +51,12 @@
             padding: 35px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
+        /* حاوية العناوين مع أيقونة 3D */
         .section-header {
             font-size: 16px; font-weight: 700; color: var(--primary);
             margin: 25px 0 15px 0; border-bottom: 1px solid var(--border);
             padding-bottom: 8px; text-align: right;
+            display: flex; align-items: center; gap: 10px;
         }
 
         .input-group { margin-bottom: 22px; position: relative; text-align: right; }
@@ -77,7 +80,9 @@
         .pass-toggle {
             position: absolute; left: 15px; top: 40px;
             cursor: pointer; color: var(--text-dim); font-size: 18px;
+            transition: transform 0.2s;
         }
+        .pass-toggle:hover { transform: scale(1.2); }
 
         .phone-row { display: flex; gap: 10px; direction: ltr; }
         #countryCode { width: 100px; }
@@ -92,7 +97,7 @@
             border: none; border-radius: 14px;
             color: white; font-weight: 800; font-size: 16px;
             cursor: pointer; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
-            margin-top: 15px;
+            margin-top: 15px; transition: all 0.3s;
         }
 
         .btn-main:active { transform: scale(0.98); }
@@ -104,25 +109,38 @@
 
         @keyframes popIn { from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
         
-        /* تباعد الأيقونات */
-        .icon-space { margin-left: 8px; }
+        /* تأثير 3D للشعار العلوي */
+        .header-logo { text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <div id="toastOverlay" class="toast-overlay">
         <div class="toast-box">
-            <div id="toastIcon" style="font-size: 50px; margin-bottom: 15px;">✅</div>
+            <div id="toastIconContainer" style="height: 80px; margin-bottom: 10px;">
+                </div>
             <div id="toastMsg" style="font-size: 18px; font-weight: 700;"></div>
         </div>
     </div>
 
     <div class="auth-container">
         <div class="glass-panel" id="regStep1">
-            <h2 style="text-align:center; margin-bottom:10px;">بوابة المستثمرين</h2>
+            <div class="header-logo">
+                <lord-icon
+                    src="https://cdn.lordicon.com/ssvybplt.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#38bdf8,secondary:#ffffff"
+                    style="width:70px;height:70px">
+                </lord-icon>
+                <h2 style="margin:0;">بوابة المستثمرين</h2>
+            </div>
             
             <form id="registerForm">
-                <div class="section-header">👤 المعلومات الشخصية</div>
+                <div class="section-header">
+                    <lord-icon src="https://cdn.lordicon.com/bgebyrfe.json" trigger="hover" colors="primary:#38bdf8,secondary:#ffffff" style="width:30px;height:30px"></lord-icon>
+                    <span>المعلومات الشخصية</span>
+                </div>
                 
                 <div class="input-group">
                     <label>الاسم الكامل</label>
@@ -150,7 +168,10 @@
                     <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد" required>
                 </div>
 
-                <div class="section-header">🔐 معلومات التسجيل</div>
+                <div class="section-header">
+                    <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="hover" colors="primary:#38bdf8,secondary:#ffffff" style="width:30px;height:30px"></lord-icon>
+                    <span>معلومات التسجيل</span>
+                </div>
 
                 <div class="input-group">
                     <label>اسم المستخدم</label>
@@ -184,7 +205,14 @@
         </div>
 
         <div class="glass-panel" id="regStep2" style="display:none; text-align:center;">
-            <h2>تفعيل الحساب</h2>
+            <lord-icon
+                src="https://cdn.lordicon.com/tmqaflqo.json"
+                trigger="loop"
+                delay="1000"
+                colors="primary:#38bdf8,secondary:#ffffff"
+                style="width:90px;height:90px">
+            </lord-icon>
+            <h2 style="margin-top:0;">تفعيل الحساب</h2>
             <p style="color:var(--text-dim);">تم إرسال كود التحقق لبريدك الإلكتروني</p>
             <input type="text" id="regOtp" placeholder="0 0 0 0" maxlength="4" style="text-align:center; font-size:35px; letter-spacing:15px; background:rgba(0,0,0,0.4); margin:20px 0;">
             <div style="font-size:14px; margin-bottom:20px;">إعادة الإرسال خلال: <span id="regTimer" style="font-weight:bold;">05:00</span></div>
@@ -210,11 +238,19 @@
             });
         };
 
-        // 2. إشعارات جمالية في المنتصف
+        // 2. إشعارات جمالية في المنتصف مع تغيير أيقونة الـ 3D حسب الحالة
         function showToast(msg, success = true) {
             const overlay = document.getElementById('toastOverlay');
+            const iconContainer = document.getElementById('toastIconContainer');
+            
+            // حقن الأيقونة المناسبة (نجاح أم خطأ)
+            if (success) {
+                iconContainer.innerHTML = `<lord-icon src="https://cdn.lordicon.com/guqkthbs.json" trigger="in" colors="primary:#10b981" style="width:80px;height:80px"></lord-icon>`;
+            } else {
+                iconContainer.innerHTML = `<lord-icon src="https://cdn.lordicon.com/bmnlikjh.json" trigger="in" colors="primary:#ef4444" style="width:80px;height:80px"></lord-icon>`;
+            }
+
             document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').innerText = success ? '✅' : '⚠️';
             overlay.style.display = 'block';
             setTimeout(() => { overlay.style.display = 'none'; }, 3000);
         }
@@ -235,7 +271,6 @@
         const pass = document.getElementById('pass');
         pass.addEventListener('input', () => {
             const v = pass.value;
-            // منع العربي في كلمة المرور
             pass.value = v.replace(/[^\x00-\x7F]/g, "");
             
             document.getElementById('reqLen').classList.toggle('valid', v.length >= 6);
@@ -247,7 +282,6 @@
         document.getElementById('registerForm').onsubmit = async (e) => {
             e.preventDefault();
             
-            // التحقق من المطابقة
             if(document.getElementById('email').value !== document.getElementById('confirmEmail').value) return showToast("البريد غير متطابق", false);
             if(document.getElementById('pass').value !== document.getElementById('confirmPass').value) return showToast("كلمة المرور غير متطابقة", false);
 
@@ -272,7 +306,6 @@
                     document.getElementById('regStep1').style.display = 'none';
                     document.getElementById('regStep2').style.display = 'block';
                     startTimer(300);
-                    // مسح الكاش عند النجاح
                     cacheFields.forEach(id => localStorage.removeItem('cache_' + id));
                 }
             } catch (err) {
