@@ -41,10 +41,38 @@ body {
     overflow-x: hidden;
 }
 
-/* الحاوية الرئيسية */
+/* --- نظام الإشعارات المنبثقة (Toast 3D) --- */
+.toast-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+    animation: popInScale 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.toast-box {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--border);
+    padding: 30px 50px;
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8),
+                inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+#toastMsg {
+    color: var(--text-main);
+    margin-top: 5px;
+}
+
+/* --- الحاوية الرئيسية --- */
 .auth-container {
     width: 92%;
-    max-width: 460px;
+    max-width: 480px;
     margin: 20px auto;
 }
 
@@ -57,32 +85,47 @@ body {
     padding: 45px 35px;
     box-shadow: 
         0 25px 50px -12px rgba(0, 0, 0, 0.6),
-        inset 0 1px 1px rgba(255, 255, 255, 0.05); /* إضاءة داخلية خفيفة */
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
     position: relative;
     overflow: hidden;
 }
 
-/* شعار البوابة أو العنوان */
-.brand-header {
+/* --- ترويسة البوابة (عناوين وأيقونات 3D) --- */
+.header-logo {
     text-align: center;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
-.brand-header h2 {
+.brand-header h2, .header-logo h2 {
     font-weight: 800;
     font-size: 28px;
-    margin: 0;
+    margin: 10px 0 0 0;
     background: linear-gradient(to bottom, #fff, #94a3b8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* تنسيق المدخلات */
-.input-group {
-    margin-bottom: 22px;
+.section-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 30px 0 18px 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.input-label {
+/* --- تنسيق الحقول والتسميات --- */
+.input-group {
+    margin-bottom: 22px;
+    position: relative;
+    text-align: right;
+}
+
+label, .input-label {
     display: block;
     color: var(--text-muted);
     font-size: 13px;
@@ -95,124 +138,3 @@ input, select {
     width: 100%;
     padding: 15px 18px;
     background: rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    color: var(--text-main);
-    font-family: 'Cairo', sans-serif;
-    font-size: 16px;
-    appearance: none; /* إزالة سهم المتصفح الافتراضي */
-}
-
-input::placeholder {
-    color: rgba(255, 255, 255, 0.2);
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 0 0 4px var(--primary-glow);
-}
-
-/* تنسيق رقم الجوال - مستجيب */
-.phone-row {
-    display: flex;
-    gap: 10px;
-    direction: ltr; /* لضمان صحة ظهور الرمز والارقام */
-}
-
-#countryCode {
-    width: 105px;
-    text-align: center;
-    flex-shrink: 0;
-    cursor: pointer;
-    background: rgba(56, 189, 248, 0.05);
-}
-
-#phoneNumber {
-    letter-spacing: 1px;
-}
-
-/* مقياس قوة كلمة المرور */
-.strength-container {
-    margin-top: 10px;
-    padding: 0 5px;
-}
-
-.strength-bar-bg {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.strength-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 10px;
-    /* يتم تغيير العرض واللون عبر JS */
-}
-
-.strength-text {
-    font-size: 11px;
-    margin-top: 6px;
-    display: block;
-    color: var(--text-muted);
-}
-
-/* الأزرار الاحترافية */
-.btn-main {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    border: none;
-    border-radius: 18px;
-    color: white;
-    font-weight: 700;
-    font-size: 17px;
-    cursor: pointer;
-    box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
-    margin-top: 15px;
-    position: relative;
-}
-
-.btn-main:hover {
-    box-shadow: 0 15px 30px -5px rgba(2, 132, 199, 0.6);
-    transform: translateY(-2px);
-}
-
-.btn-main:active {
-    transform: translateY(1px) scale(0.98);
-}
-
-/* المؤقت الزمني */
-.timer-container {
-    text-align: center;
-    margin-top: 20px;
-    color: var(--text-muted);
-    font-size: 14px;
-}
-
-.timer-count {
-    color: var(--primary);
-    font-weight: 700;
-    font-family: monospace;
-    font-size: 16px;
-}
-
-/* تحسينات الشاشات الصغيرة */
-@media (max-width: 480px) {
-    .glass-panel {
-        padding: 35px 25px;
-        border-radius: 28px;
-    }
-    
-    .brand-header h2 {
-        font-size: 22px;
-    }
-    
-    input, select, .btn-main {
-        padding: 14px 16px;
-        font-size: 15px;
-    }
-}
