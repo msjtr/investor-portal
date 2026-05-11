@@ -7,32 +7,51 @@
     <link rel="stylesheet" href="../../styles/global.css">
     <link rel="stylesheet" href="auth.css">
 </head>
-<body>
-    <div class="auth-container" style="max-width: 480px;">
-        <div class="glass-panel">
-            <div class="brand-logo">
-                <h2>بوابة المستثمرين</h2>
-                <p>إنشاء حساب مستثمر جديد</p>
+<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); margin: 0; font-family: system-ui, -apple-system, sans-serif;">
+
+    <div class="auth-container" style="width: 100%; max-width: 480px; padding: 20px;">
+        <div class="glass-panel" style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 40px 30px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);">
+            
+            <div class="brand-logo" style="text-align: center; margin-bottom: 35px;">
+                <h2 style="color: #ffffff; font-size: 28px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px;">بوابة المستثمرين</h2>
+                <p style="color: #94a3b8; font-size: 15px; margin: 0;">إنشاء حساب مستثمر جديد</p>
             </div>
+
             <form id="registerForm">
-                <div class="input-group">
-                    <label for="fullName">الاسم الكامل</label>
-                    <input type="text" id="fullName" placeholder="أدخل اسمك الكامل" required>
+                <div class="input-group" style="margin-bottom: 22px;">
+                    <label for="fullName" style="display: block; color: #e2e8f0; font-size: 14px; font-weight: 600; margin-bottom: 8px;">الاسم الكامل</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك الرباعي" required 
+                           style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2); color: #ffffff; font-size: 15px; transition: all 0.3s ease; box-sizing: border-box;">
                 </div>
-                <div class="input-group">
-                    <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" placeholder="name@example.com" required>
+
+                <div class="input-group" style="margin-bottom: 22px;">
+                    <label for="email" style="display: block; color: #e2e8f0; font-size: 14px; font-weight: 600; margin-bottom: 8px;">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="name@example.com" required 
+                           style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2); color: #ffffff; font-size: 15px; transition: all 0.3s ease; box-sizing: border-box;">
                 </div>
-                <div class="input-group">
-                    <label for="password">كلمة المرور</label>
-                    <input type="password" id="password" placeholder="أدخل كلمة مرور" required>
+
+                <div class="input-group" style="margin-bottom: 30px;">
+                    <label for="password" style="display: block; color: #e2e8f0; font-size: 14px; font-weight: 600; margin-bottom: 8px;">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة مرور قوية" required 
+                           style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2); color: #ffffff; font-size: 15px; transition: all 0.3s ease; box-sizing: border-box;">
                 </div>
-                <button type="submit" id="submitBtn" class="btn-primary">إنشاء الحساب واستلام الكود</button>
-                <div id="errorMessage" class="error-msg" style="color: #ef4444; margin-top: 10px; font-size: 14px;"></div>
-                <div id="successMessage" style="color: #4ade80; text-align: center; margin-top: 15px; font-size: 14px;"></div>
+
+                <button type="submit" id="submitBtn" class="btn-primary" 
+                        style="width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; font-size: 16px; font-weight: bold; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4); transition: all 0.3s ease;">
+                    إنشاء الحساب واستلام الكود
+                </button>
+
+                <div style="text-align: center; margin-top: 25px; font-size: 14px;">
+                    <span style="color: #64748b;">لديك حساب بالفعل؟</span>
+                    <a href="login.html" style="color: #3b82f6; text-decoration: none; font-weight: bold; margin-right: 5px;">تسجيل الدخول</a>
+                </div>
+
+                <div id="errorMessage" class="error-msg" style="color: #f87171; text-align: center; margin-top: 15px; font-size: 14px; font-weight: 500;"></div>
+                <div id="successMessage" style="color: #4ade80; text-align: center; margin-top: 15px; font-size: 15px; font-weight: bold; line-height: 1.5;"></div>
             </form>
         </div>
     </div>
+
     <script src="../../js/register.js"></script>
 </body>
 </html>
