@@ -1,94 +1,40 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل مستثمر جديد | بوابة المستثمرين</title>
-    <link rel="stylesheet" href="../../styles/global.css">
-    <link rel="stylesheet" href="auth.css">
-    <style>
-        /* تنسيقات إضافية للميزات الجديدة */
-        .phone-input-group { display: flex; gap: 10px; }
-        #countryCode { width: 30%; background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; border-radius: 8px; }
-        .strength-meter { height: 5px; background: #333; margin-top: 10px; border-radius: 3px; overflow: hidden; }
-        .strength-bar { height: 100%; width: 0; transition: 0.3s; }
-        .req-item { font-size: 12px; color: #94a3b8; margin: 5px 0; display: flex; align-items: center; gap: 5px; }
-        .req-item.valid { color: #4ade80; }
-        .otp-screen { display: none; text-align: center; }
-        #timer { color: #fbbf24; font-weight: bold; }
-    </p>
-</head>
-<body>
-
-    <div class="auth-container" style="max-width: 500px; margin: 20px auto;">
-        <div class="glass-panel" id="mainPanel">
-            <div class="brand-logo">
-                <h2>بوابة المستثمرين</h2>
-                <p id="panelTitle">إنشاء حساب مستثمر جديد</p>
+<div class="glass-panel">
+    <div id="regStep1">
+        <h2>إنشاء حساب مستثمر</h2>
+        <form id="registerForm">
+            <input type="text" id="fullName" placeholder="الاسم الكامل" required>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+            <input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required>
+            
+            <div class="phone-group">
+                <select id="countryCode">
+                    <option value="+966">🇸🇦 +966</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+965">🇰🇼 +965</option>
+                    <option value="+20">🇪🇬 +20</option>
+                </select>
+                <input type="tel" id="phone" placeholder="رقم الجوال" required>
             </div>
 
-            <form id="registerForm">
-                <div class="input-group">
-                    <label>الاسم الرباعي</label>
-                    <input type="text" id="fullName" placeholder="أدخل اسمك الكامل" required>
-                </div>
-
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="email" placeholder="name@example.com" required>
-                </div>
-
-                <div class="input-group">
-                    <label>تأكيد البريد الإلكتروني</label>
-                    <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد" required>
-                </div>
-
-                <div class="input-group">
-                    <label>رقم الجوال</label>
-                    <div class="phone-input-group">
-                        <select id="countryCode">
-                            <option value="966">🇸🇦 +966</option>
-                            <option value="971">🇦🇪 +971</option>
-                            <option value="965">🇰🇼 +965</option>
-                            <option value="20">🇪🇬 +20</option>
-                        </select>
-                        <input type="tel" id="phone" style="width: 70%;" placeholder="5xxxxxxxx" required>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="password" placeholder="كلمة مرور قوية" required>
-                    <div class="strength-meter"><div id="strengthBar" class="strength-bar"></div></div>
-                    <div id="passwordRequirements">
-                        <div class="req-item" id="req6">● 6 أرقام على الأقل</div>
-                        <div class="req-item" id="reqLetter">● حرف واحد على الأقل</div>
-                        <div class="req-item" id="reqSymbol">● رمز خاص واحد مرمز (#@$)</div>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>تأكيد كلمة المرور</label>
-                    <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" required>
-                </div>
-
-                <button type="submit" id="submitBtn" class="btn-primary">إنشاء الحساب</button>
-            </form>
-
-            <div id="otpScreen" class="otp-screen">
-                <p>تم إرسال كود التحقق لبريدك الإلكتروني، يرجى إدخاله أدناه لتفعيل الحساب:</p>
-                <div class="input-group">
-                    <input type="text" id="otpInput" placeholder="- - - -" maxlength="4" style="text-align: center; font-size: 24px; letter-spacing: 10px;">
-                </div>
-                <div id="timerDisplay">يمكنك إعادة الإرسال خلال: <span id="timer">05:00</span></div>
-                <button id="resendBtn" class="btn-secondary" disabled style="margin-top: 10px;">إعادة إرسال الكود</button>
-                <button id="verifyBtn" class="btn-primary" style="margin-top: 20px;">تفعيل الحساب</button>
+            <input type="password" id="pass" placeholder="كلمة المرور" required>
+            <div id="passReqs">
+                <div id="reqLen" class="requirement">● 6 أرقام/حروف على الأقل</div>
+                <div id="reqChar" class="requirement">● حرف واحد على الأقل</div>
+                <div id="reqSpec" class="requirement">● رمز خاص (@#$%)</div>
             </div>
-
-            <div id="statusMessage" style="text-align: center; margin-top: 15px; font-size: 14px;"></div>
-        </div>
+            
+            <input type="password" id="confirmPass" placeholder="تأكيد كلمة المرور" required>
+            <button type="submit" class="btn-primary">تسجيل</button>
+        </form>
     </div>
 
-    <script src="../../js/register.js"></script>
-</body>
-</html>
+    <div id="regStep2" style="display: none;">
+        <h2>تفعيل الحساب</h2>
+        <p>أدخل الكود المرسل لبريدك</p>
+        <input type="text" id="otpReg" placeholder="0 0 0 0" maxlength="4" style="text-align:center; font-size: 24px;">
+        <div class="timer-text">إعادة الإرسال خلال: <span id="regTimer">05:00</span></div>
+        <button id="resendRegBtn" class="btn-primary" style="background:#475569" disabled>إعادة إرسال</button>
+        <button id="finishReg" class="btn-primary">تفعيل الآن</button>
+    </div>
+</div>
+<script src="register.js"></script>
