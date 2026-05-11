@@ -4,34 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جاري التحويل... | بوابة المستثمرين</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="styles/global.css">
     <meta http-equiv="refresh" content="2;url=pages/auth/login.html">
-    
     <style>
-        :root {
-            --primary: #38bdf8;
-            --primary-dark: #2563eb;
-            --bg-dark: #0f172a;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            /* خلفية متدرجة فخمة متوافقة مع بقية الصفحات */
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Cairo', sans-serif;
-            color: #ffffff;
-            overflow: hidden;
-        }
-
         .loader-container {
             text-align: center;
-            background: var(--glass
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .main-loader {
+            width: 50px; height: 50px;
+            border: 5px solid var(--glass);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="loader-container">
+        <img src="brand-icon.svg" class="brand-icon" style="width: 120px; margin-bottom: 20px;">
+        <h2>مرحباً بك في بوابة المستثمرين</h2>
+        <div class="main-loader"></div>
+        <p style="color: var(--text-muted);">جاري تهيئة الاتصال الآمن...</p>
+    </div>
+</body>
+</html>
