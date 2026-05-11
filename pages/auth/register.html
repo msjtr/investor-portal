@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل مستثمر جديد | بوابة المستثمرين</title>
+    <link rel="stylesheet" href="../../styles/global.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+    <div class="auth-container" style="max-width: 480px;">
+        <div class="glass-panel">
+            <div class="brand-logo">
+                <h2>بوابة المستثمرين</h2>
+                <p>إنشاء حساب مستثمر جديد</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="fullName">الاسم الرباعي</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك الكامل" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="whatsapp">رقم الواتساب (مع رمز الدولة)</label>
+                    <input type="tel" id="whatsapp" placeholder="مثال: 966500000000+" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="كلمة مرور قوية" required>
+                </div>
+
+                <button type="submit" class="btn-primary">تسجيل وإرسال كود التحقق</button>
+                
+                <div class="form-actions" style="justify-content: center; margin-top: 20px;">
+                    <span style="color: #94a3b8; font-size: 14px;">لديك حساب بالفعل؟ </span>
+                    <a href="login.html" class="forgot-link" style="margin-right: 5px; font-weight: bold;">تسجيل الدخول</a>
+                </div>
+
+                <div id="errorMessage" class="error-msg"></div>
+                <div id="successMessage" style="color: #4ade80; text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/register.js"></script>
+</body>
+</html>
