@@ -3,54 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | بوابة المستثمرين</title>
+    <title>تسجيل مستثمر جديد | بوابة المستثمرين</title>
     <link rel="stylesheet" href="../../styles/global.css">
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-
-    <div class="auth-container">
+    <div class="auth-container" style="max-width: 480px;">
         <div class="glass-panel">
             <div class="brand-logo">
                 <h2>بوابة المستثمرين</h2>
-                <p id="subTitle">مرحباً بك مجدداً</p>
+                <p>إنشاء حساب مستثمر جديد</p>
             </div>
-
-            <form id="loginForm">
-                <div id="step-1">
-                    <div class="input-group">
-                        <label for="email">البريد الإلكتروني</label>
-                        <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="password">كلمة المرور</label>
-                        <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
-                    </div>
-
-                    <div class="form-actions" style="display: flex; justify-content: space-between; align-items: center;">
-                        <a href="register.html" class="forgot-link" style="color: #4ade80; font-weight: bold; font-size: 14px;">✦ تسجيل حساب جديد</a>
-                        <a href="forgot-password.html" class="forgot-link">نسيت كلمة المرور؟</a>
-                    </div>
-
-                    <button type="button" id="btnNext" class="btn-primary">التالي</button>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="fullName">الاسم الكامل</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك الكامل" required>
                 </div>
-
-                <div id="step-2" style="display: none;">
-                    <div class="input-group">
-                        <label for="securityPin">رقم الضمان الأمني</label>
-                        <input type="password" id="securityPin" placeholder="أدخل رمز التحقق (مثال: 2026)" maxlength="4">
-                    </div>
-                    
-                    <button type="submit" id="btnLogin" class="btn-primary">تأكيد الدخول</button>
-                    <button type="button" id="btnBack" class="btn-secondary">رجوع</button>
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="name@example.com" required>
                 </div>
-
-                <div id="errorMessage" class="error-msg"></div>
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة مرور" required>
+                </div>
+                <button type="submit" id="submitBtn" class="btn-primary">إنشاء الحساب واستلام الكود</button>
+                <div id="errorMessage" class="error-msg" style="color: #ef4444; margin-top: 10px; font-size: 14px;"></div>
+                <div id="successMessage" style="color: #4ade80; text-align: center; margin-top: 15px; font-size: 14px;"></div>
             </form>
         </div>
     </div>
-
-    <script src="../../js/auth.js"></script>
+    <script src="../../js/register.js"></script>
 </body>
 </html>
