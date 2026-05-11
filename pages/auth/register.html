@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
     <style>
-        /* --- 1. المتغيرات الأساسية للمشروع --- */
         :root {
             --primary: #38bdf8;
             --primary-dark: #0284c7;
@@ -24,7 +23,6 @@
             --text-muted: #94a3b8;
         }
 
-        /* --- 2. إعدادات الصفحة --- */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -41,7 +39,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 3. نظام الإشعارات المنبثقة (Toast 3D) --- */
+        /* --- نظام الإشعارات المنبثقة --- */
         .toast-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 9999; display: none;
@@ -60,7 +58,6 @@
             text-align: center; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
         }
 
-        /* --- 4. الحاوية الرئيسية --- */
         .auth-container { width: 92%; max-width: 480px; margin: 20px auto; }
         .glass-panel {
             background: var(--glass-bg);
@@ -70,7 +67,6 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
 
-        /* --- 5. ترويسة الأقسام --- */
         .section-header {
             display: flex; align-items: center; gap: 10px;
             color: var(--primary); margin: 30px 0 18px 0;
@@ -78,7 +74,6 @@
         }
         .section-header span { font-size: 24px; font-variation-settings: 'FILL' 1; }
 
-        /* --- 6. تنسيق المدخلات --- */
         .input-group { margin-bottom: 22px; width: 100%; position: relative; text-align: right; }
         .input-label { display: block; color: var(--text-muted); font-size: 13px; font-weight: 600; margin-bottom: 8px; margin-right: 5px; }
 
@@ -95,12 +90,28 @@
         #countryCode { width: 105px; flex-shrink: 0; cursor: pointer; }
 
         .pass-wrapper { position: relative; }
-        .toggle-btn {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            cursor: pointer; color: var(--text-muted); font-size: 22px; z-index: 5;
+        
+        /* خيار عرض كلمة المرور الجديد */
+        .show-pass-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 12px;
+            z-index: 5;
+            user-select: none;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 8px;
+            border-radius: 10px;
         }
+        .show-pass-option:hover { color: var(--primary); background: rgba(0,0,0,0.4); }
+        .show-pass-option span { font-size: 18px; }
 
-        /* --- 7. مقياس القوة --- */
         .strength-container { margin-top: 10px; }
         .strength-bar { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
         #strengthFill { height: 100%; width: 0; transition: 0.5s ease; }
@@ -110,7 +121,6 @@
         .req-list li.valid { color: var(--success); }
         .req-list li span { font-size: 16px; }
 
-        /* --- 8. الأزرار --- */
         .btn-main {
             width: 100%; padding: 18px; margin-top: 25px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -158,13 +168,13 @@
                         <option value="+971">🇦🇪 +971</option>
                         <option value="+20">🇪🇬 +20</option>
                     </select>
-                    <input type="tel" id="phone" placeholder="5XXXXXXXX" required>
+                    <input type="tel" id="phone" placeholder="أدخل رقم الجوال" required>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="input-label">البريد الإلكتروني</label>
-                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
+                <input type="email" id="email" placeholder="مثال: البريد الإلكتروني" required>
             </div>
 
             <div class="input-group">
@@ -185,16 +195,22 @@
             <div class="input-group">
                 <label class="input-label">كلمة المرور</label>
                 <div class="pass-wrapper">
-                    <input type="password" id="password" placeholder="••••••••" required>
-                    <span class="material-symbols-rounded toggle-btn" onclick="toggleView('password', this)">visibility</span>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                    <div class="show-pass-option" onclick="toggleView('password', this)">
+                        <span class="material-symbols-rounded">visibility</span>
+                        عرض كلمة المرور
+                    </div>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="input-label">تأكيد كلمة المرور</label>
                 <div class="pass-wrapper">
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
-                    <span class="material-symbols-rounded toggle-btn" onclick="toggleView('confirmPassword', this)">visibility</span>
+                    <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" required>
+                    <div class="show-pass-option" onclick="toggleView('confirmPassword', this)">
+                        <span class="material-symbols-rounded">visibility</span>
+                        عرض كلمة المرور
+                    </div>
                 </div>
             </div>
 
@@ -203,103 +219,4 @@
                 <ul class="req-list">
                     <li id="reqLen"><span class="material-symbols-rounded">gpp_maybe</span>6 خانات على الأقل</li>
                     <li id="reqChar"><span class="material-symbols-rounded">gpp_maybe</span>حرف إنجليزي واحد على الأقل</li>
-                    <li id="reqSpec"><span class="material-symbols-rounded">gpp_maybe</span>رمز خاص واحد على الأقل (@#$%)</li>
-                </ul>
-            </div>
-
-            <button type="submit" class="btn-main">إنشاء حساب مستثمر جديد</button>
-        </form>
-
-        <div class="switch-link">
-            <a href="login.html">← لديك حساب؟ سجل دخولك هنا</a>
-        </div>
-    </div>
-</div>
-
-<script>
-    // --- 1. نظام الكاش (التخزين الذكي) ---
-    const cacheItems = ['fullName', 'email', 'confirmEmail', 'phone', 'username', 'countryCode'];
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        cacheItems.forEach(id => {
-            const el = document.getElementById(id);
-            const saved = localStorage.getItem('inv_cache_' + id);
-            if (saved) {
-                el.value = saved;
-                el.classList.add('cached-flash');
-            }
-            el.addEventListener('input', () => {
-                // منع المسافات في اسم المستخدم
-                if(id === 'username') el.value = el.value.replace(/\s/g, '');
-                localStorage.setItem('inv_cache_' + id, el.value);
-            });
-        });
-    });
-
-    // --- 2. معاينة كلمة المرور (Toggle) ---
-    function toggleView(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const isPass = input.type === 'password';
-        input.type = isPass ? 'text' : 'password';
-        btn.textContent = isPass ? 'visibility_off' : 'visibility';
-        btn.style.color = isPass ? 'var(--primary)' : 'var(--text-muted)';
-    }
-
-    // --- 3. فحص قوة كلمة المرور ---
-    const passIn = document.getElementById('password');
-    passIn.addEventListener('input', () => {
-        const val = passIn.value;
-        const checks = {
-            len: val.length >= 6,
-            char: /[a-zA-Z]/.test(val),
-            spec: /[\W_]/.test(val)
-        };
-
-        document.getElementById('reqLen').classList.toggle('valid', checks.len);
-        document.getElementById('reqChar').classList.toggle('valid', checks.char);
-        document.getElementById('reqSpec').classList.toggle('valid', checks.spec);
-
-        const score = Object.values(checks).filter(Boolean).length;
-        const fill = document.getElementById('strengthFill');
-        fill.style.width = (score * 33.3) + "%";
-        fill.style.backgroundColor = score === 3 ? "var(--success)" : score === 2 ? "var(--warning)" : "var(--error)";
-    });
-
-    // --- 4. نظام الإشعارات المنبثقة ---
-    function showToast(msg, icon = 'verified_user', isError = false) {
-        const overlay = document.getElementById('toastOverlay');
-        const iconEl = document.getElementById('toastIcon');
-        document.getElementById('toastMsg').textContent = msg;
-        iconEl.textContent = icon;
-        iconEl.style.color = isError ? 'var(--error)' : 'var(--primary)';
-        
-        overlay.style.display = 'block';
-        setTimeout(() => { overlay.style.display = 'none'; }, 3000);
-    }
-
-    // --- 5. معالجة إرسال النموذج ---
-    document.getElementById('registerForm').onsubmit = (e) => {
-        e.preventDefault();
-        
-        if(document.getElementById('email').value.trim() !== document.getElementById('confirmEmail').value.trim()) {
-            showToast("عذراً، البريد الإلكتروني غير متطابق", 'error_outline', true);
-            return;
-        }
-
-        if(document.getElementById('password').value !== document.getElementById('confirmPassword').value) {
-            showToast("عذراً، كلمة المرور غير متطابقة", 'lock_reset', true);
-            return;
-        }
-
-        showToast("جاري إرسال رمز التفعيل لبريدك...", 'mail');
-        
-        // مسح الكاش عند إرسال البيانات بنجاح لـ Make.com
-        setTimeout(() => {
-            cacheItems.forEach(id => localStorage.removeItem('inv_cache_' + id));
-            // ملاحظة: هنا يتم ربط fetch الخاص بـ Make.com لاحقاً
-        }, 2000);
-    };
-</script>
-
-</body>
-</html>
+                    <li id="reqSpec"><span class="
