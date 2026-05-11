@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دخول | بوابة المستثمرين</title>
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../styles/global.css">
 </head>
 <body>
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
-    <div class="glass-panel" style="width: 100%; max-width: 420px; padding: 40px 30px;">
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; width: 100%;">
+    <div class="glass-panel" style="max-width: 420px;">
         <img src="../../brand-icon.svg" class="brand-logo">
-        <h2 style="text-align: center; margin-bottom: 30px;">تسجيل الدخول</h2>
+        <h2>تسجيل الدخول</h2>
         <form id="loginForm">
             <div class="input-group">
                 <label class="input-label">اسم المستخدم أو البريد</label>
-                <input type="text" id="lUser" placeholder="أدخل بياناتك" required>
+                <input type="text" id="lUser" placeholder="أدخل بيانات الحساب" required>
             </div>
             <div class="input-group">
                 <label class="input-label">كلمة المرور</label>
@@ -22,15 +22,15 @@
             </div>
             <button type="submit" class="btn-main">دخول آمن</button>
         </form>
-        <p style="text-align: center; margin-top: 20px; font-size: 14px;">
-            مستثمر جديد؟ <a href="register.html" style="color: var(--primary); text-decoration: none;">ابدأ هنا</a>
+        <p style="text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted);">
+            مستثمر جديد؟ <a href="register.html" style="color: var(--primary); text-decoration: none; font-weight: 700;">ابدأ هنا</a>
         </p>
     </div>
 </div>
 <script>
     document.getElementById('loginForm').onsubmit = (e) => {
         e.preventDefault();
-        // محاكاة الدخول والتوجه للرئيسية
+        // التوجه للوحة التحكم (التبويمة)
         window.location.href = "../dashboard.html";
     };
 </script>
