@@ -41,7 +41,7 @@ body {
     overflow-x: hidden;
 }
 
-/* --- نظام الإشعارات المنبثقة (Toast 3D) --- */
+/* --- نظام الإشعارات المنبثقة الاحترافي (Toast 3D) --- */
 .toast-overlay {
     position: fixed;
     top: 50%;
@@ -64,9 +64,10 @@ body {
                 inset 0 1px 2px rgba(255, 255, 255, 0.1);
 }
 
-#toastMsg {
-    color: var(--text-main);
-    margin-top: 5px;
+.toast-box .material-symbols-rounded {
+    font-size: 48px;
+    margin-bottom: 15px;
+    display: block;
 }
 
 /* --- الحاوية الرئيسية --- */
@@ -90,21 +91,30 @@ body {
     overflow: hidden;
 }
 
-/* --- ترويسة البوابة (عناوين وأيقونات 3D) --- */
+/* --- ترويسة البوابة والشعار --- */
 .header-logo {
     text-align: center;
     margin-bottom: 25px;
 }
 
-.brand-header h2, .header-logo h2 {
+.brand-icon {
+    width: 80px;
+    height: auto;
+    filter: drop-shadow(0 0 12px var(--primary-glow));
+    margin-bottom: 10px;
+}
+
+h2 {
     font-weight: 800;
-    font-size: 28px;
-    margin: 10px 0 0 0;
+    font-size: 26px;
+    margin: 0;
     background: linear-gradient(to bottom, #fff, #94a3b8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-align: center;
 }
 
+/* --- تقسيم الأقسام بأيقونات رسمية --- */
 .section-header {
     font-size: 16px;
     font-weight: 700;
@@ -112,20 +122,24 @@ body {
     margin: 30px 0 18px 0;
     border-bottom: 1px solid var(--border);
     padding-bottom: 8px;
-    text-align: right;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* --- تنسيق الحقول والتسميات --- */
+.section-header .material-symbols-rounded {
+    font-size: 22px;
+    font-variation-settings: 'FILL' 1;
+}
+
+/* --- تنسيق الحقول والتسميات (Labels on Top) --- */
 .input-group {
     margin-bottom: 22px;
     position: relative;
     text-align: right;
 }
 
-label, .input-label {
+.input-label {
     display: block;
     color: var(--text-muted);
     font-size: 13px;
@@ -134,7 +148,126 @@ label, .input-label {
     margin-right: 5px;
 }
 
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 input, select {
     width: 100%;
     padding: 15px 18px;
     background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    appearance: none;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.15);
+}
+
+/* --- رقم الجوال بنظام دولي --- */
+.phone-row {
+    display: flex;
+    gap: 10px;
+    direction: ltr; /* لضمان الكود يسار الرقم */
+}
+
+#countryCode {
+    width: 100px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* --- أيقونة معاينة كلمة المرور --- */
+.password-toggle {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 20px;
+    z-index: 5;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+/* --- مقياس القوة والشروط --- */
+.strength-container {
+    margin-top: 10px;
+}
+
+.strength-bar-bg {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+}
+
+.req-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+    font-size: 12px;
+}
+
+.req-list li {
+    color: var(--danger);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.req-list li.valid {
+    color: var(--success);
+}
+
+/* --- الأزرار الاحترافية --- */
+.btn-main {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    border-radius: 18px;
+    color: white;
+    font-weight: 700;
+    font-size: 17px;
+    cursor: pointer;
+    box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
+    margin-top: 10px;
+}
+
+.btn-main:active {
+    transform: scale(0.97);
+}
+
+/* --- نظام التبويبات (Tabs) في الصفحة الرئيسية --- */
+.tabs-nav {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+    padding: 5px;
+}
