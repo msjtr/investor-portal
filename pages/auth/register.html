@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المستثمرين | إنشاء حساب</title>
     
-    <link rel="icon" href="data:,">
-    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
 
     <style>
         :root {
@@ -23,11 +22,7 @@
             --text-muted: #94a3b8;
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
         body {
             margin: 0; padding: 0;
@@ -39,7 +34,7 @@
             overflow-x: hidden;
         }
 
-        /* --- نظام الإشعارات المنبثقة --- */
+        /* نظام الإشعارات المنبثقة 3D */
         .toast-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 9999; display: none;
@@ -54,10 +49,12 @@
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            padding: 30px 50px; border-radius: 28px;
+            padding: 30px; border-radius: 28px;
             text-align: center; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+            min-width: 280px;
         }
 
+        /* الحاوية الرئيسية */
         .auth-container { width: 92%; max-width: 480px; margin: 20px auto; }
         .glass-panel {
             background: var(--glass-bg);
@@ -91,25 +88,16 @@
 
         .pass-wrapper { position: relative; }
         
-        /* خيار عرض كلمة المرور الجديد */
+        /* خيار عرض كلمة المرور المعرب */
         .show-pass-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 12px;
-            z-index: 5;
-            user-select: none;
-            background: rgba(0,0,0,0.2);
-            padding: 5px 8px;
-            border-radius: 10px;
+            display: flex; align-items: center; gap: 5px;
+            position: absolute; left: 10px; top: 50%;
+            transform: translateY(-50%); cursor: pointer;
+            color: var(--text-muted); font-size: 11px;
+            z-index: 5; user-select: none;
+            background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 12px;
         }
-        .show-pass-option:hover { color: var(--primary); background: rgba(0,0,0,0.4); }
+        .show-pass-option:hover { color: var(--primary); background: rgba(255,255,255,0.1); }
         .show-pass-option span { font-size: 18px; }
 
         .strength-container { margin-top: 10px; }
@@ -128,6 +116,7 @@
             cursor: pointer; box-shadow: 0 12px 24px rgba(2, 132, 199, 0.4);
         }
         .btn-main:active { transform: scale(0.97); }
+        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .switch-link { text-align: center; margin-top: 25px; font-size: 14px; }
         .switch-link a { color: var(--primary); text-decoration: none; font-weight: 700; }
@@ -140,26 +129,24 @@
 
 <div class="toast-overlay" id="toastOverlay">
     <div class="toast-box">
-        <span class="material-symbols-rounded" id="toastIcon" style="font-size: 45px; color: var(--primary);">verified_user</span>
-        <div id="toastMsg" style="margin-top: 10px; font-weight: 700;">جاري المعالجة...</div>
+        <div id="toastIconContainer"></div>
+        <div id="toastMsg" style="margin-top: 15px;"></div>
     </div>
 </div>
 
 <div class="auth-container">
-    <div class="glass-panel">
-        <h2 style="text-align: center; margin: 0 0 30px 0; font-weight: 800;">بوابة المستثمرين</h2>
+    <div class="glass-panel" id="regStep1">
+        <h2 style="text-align: center; margin: 0 0 30px 0; font-weight: 800;">إنشاء حساب مستثمر</h2>
         
         <form id="registerForm">
             <div class="section-header">
                 <span class="material-symbols-rounded">person_celebrate</span>
                 المعلومات الشخصية
             </div>
-            
             <div class="input-group">
                 <label class="input-label">الاسم الكامل</label>
-                <input type="text" id="fullName" placeholder="أدخل اسمك الثلاثي كما في الهوية" required>
+                <input type="text" id="fullName" placeholder="أدخل اسمك الثلاثي" required>
             </div>
-
             <div class="input-group">
                 <label class="input-label">رقم الجوال</label>
                 <div class="phone-row">
@@ -168,15 +155,13 @@
                         <option value="+971">🇦🇪 +971</option>
                         <option value="+20">🇪🇬 +20</option>
                     </select>
-                    <input type="tel" id="phone" placeholder="أدخل رقم الجوال" required>
+                    <input type="tel" id="phone" placeholder="5XXXXXXXX" required>
                 </div>
             </div>
-
             <div class="input-group">
                 <label class="input-label">البريد الإلكتروني</label>
-                <input type="email" id="email" placeholder="مثال: البريد الإلكتروني" required>
+                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
             </div>
-
             <div class="input-group">
                 <label class="input-label">تأكيد البريد الإلكتروني</label>
                 <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد للتأكيد" required>
@@ -186,30 +171,25 @@
                 <span class="material-symbols-rounded">lock_person</span>
                 معلومات الحساب
             </div>
-
             <div class="input-group">
                 <label class="input-label">اسم المستخدم</label>
-                <input type="text" id="username" placeholder="اختر اسماً فريداً بالإنجليزية" required>
+                <input type="text" id="username" placeholder="اسم المستخدم بالإنجليزية" required>
             </div>
-
             <div class="input-group">
                 <label class="input-label">كلمة المرور</label>
                 <div class="pass-wrapper">
-                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                    <input type="password" id="password" placeholder="••••••••" required>
                     <div class="show-pass-option" onclick="toggleView('password', this)">
-                        <span class="material-symbols-rounded">visibility</span>
-                        عرض كلمة المرور
+                        <span class="material-symbols-rounded">visibility</span>عرض
                     </div>
                 </div>
             </div>
-
             <div class="input-group">
                 <label class="input-label">تأكيد كلمة المرور</label>
                 <div class="pass-wrapper">
-                    <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" required>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
                     <div class="show-pass-option" onclick="toggleView('confirmPassword', this)">
-                        <span class="material-symbols-rounded">visibility</span>
-                        عرض كلمة المرور
+                        <span class="material-symbols-rounded">visibility</span>عرض
                     </div>
                 </div>
             </div>
@@ -218,5 +198,155 @@
                 <div class="strength-bar"><div id="strengthFill"></div></div>
                 <ul class="req-list">
                     <li id="reqLen"><span class="material-symbols-rounded">gpp_maybe</span>6 خانات على الأقل</li>
-                    <li id="reqChar"><span class="material-symbols-rounded">gpp_maybe</span>حرف إنجليزي واحد على الأقل</li>
-                    <li id="reqSpec"><span class="
+                    <li id="reqChar"><span class="material-symbols-rounded">gpp_maybe</span>حرف إنجليزي واحد</li>
+                    <li id="reqSpec"><span class="material-symbols-rounded">gpp_maybe</span>رمز خاص واحد (@#$%)</li>
+                </ul>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-main">إنشاء حساب جديد</button>
+        </form>
+        <div class="switch-link"><a href="login.html">← العودة لصفحة تسجيل الدخول</a></div>
+    </div>
+
+    <div class="glass-panel" id="regStep2" style="display:none; text-align: center;">
+        <h2 style="font-weight: 800;">تفعيل الحساب</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">أدخل كود التحقق المرسل لبريدك الإلكتروني</p>
+        
+        <div class="input-group">
+            <input type="text" id="regOtp" placeholder="----" maxlength="4" style="text-align:center; font-size: 35px; letter-spacing: 15px; background: rgba(0,0,0,0.4);">
+        </div>
+
+        <p style="font-size: 14px; color: var(--text-muted);">إعادة الإرسال خلال: <span id="regTimer" style="color: white; font-weight: 700;">05:00</span></p>
+        
+        <button id="resendRegBtn" class="btn-main" style="background: #334155; box-shadow: none;" disabled>إعادة إرسال الكود</button>
+        <button id="activateBtn" class="btn-main">تفعيل وتثبيت الحساب</button>
+    </div>
+</div>
+
+<script>
+    // --- برمجة المشروع كاملة ---
+    const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
+    const cacheItems = ['fullName', 'email', 'confirmEmail', 'phone', 'username', 'countryCode'];
+    let generatedPin = null;
+    let countdownInterval = null;
+
+    // 1. نظام الكاش
+    document.addEventListener('DOMContentLoaded', () => {
+        cacheItems.forEach(id => {
+            const el = document.getElementById(id);
+            const saved = localStorage.getItem('inv_cache_' + id);
+            if (saved) { el.value = saved; el.classList.add('cached-flash'); }
+            el.addEventListener('input', () => {
+                if(id === 'username') el.value = el.value.replace(/\s/g, '').replace(/[^\x00-\x7F]/g, "");
+                localStorage.setItem('inv_cache_' + id, el.value);
+            });
+        });
+    });
+
+    // 2. معاينة كلمة المرور
+    function toggleView(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('span');
+        const isPass = input.type === 'password';
+        input.type = isPass ? 'text' : 'password';
+        icon.textContent = isPass ? 'visibility_off' : 'visibility';
+        btn.childNodes[1].nodeValue = isPass ? " إخفاء" : " عرض";
+    }
+
+    // 3. التنبيهات 3D (Lordicon)
+    function showToast(msg, isSuccess = true) {
+        const overlay = document.getElementById('toastOverlay');
+        const iconContainer = document.getElementById('toastIconContainer');
+        iconContainer.innerHTML = '';
+        
+        const icon = document.createElement('lord-icon');
+        icon.setAttribute('trigger', 'loop');
+        icon.setAttribute('src', isSuccess ? 'https://cdn.lordicon.com/lupuorrc.json' : 'https://cdn.lordicon.com/tdrtuzcl.json');
+        icon.setAttribute('colors', isSuccess ? 'primary:#10b981,secondary:#10b981' : 'primary:#ef4444,secondary:#ef4444');
+        icon.style.width = '70px'; icon.style.height = '70px';
+        
+        iconContainer.appendChild(icon);
+        document.getElementById('toastMsg').textContent = msg;
+        overlay.style.display = 'block';
+        setTimeout(() => { overlay.style.display = 'none'; }, 3000);
+    }
+
+    // 4. قوة كلمة المرور
+    document.getElementById('password').addEventListener('input', (e) => {
+        const v = e.target.value;
+        const checks = {
+            len: v.length >= 6,
+            char: /[a-zA-Z]/.test(v),
+            spec: /[\W_]/.test(v)
+        };
+        document.getElementById('reqLen').classList.toggle('valid', checks.len);
+        document.getElementById('reqChar').classList.toggle('valid', checks.char);
+        document.getElementById('reqSpec').classList.toggle('valid', checks.spec);
+
+        const score = Object.values(checks).filter(Boolean).length;
+        const fill = document.getElementById('strengthFill');
+        fill.style.width = (score * 33.3) + "%";
+        fill.style.backgroundColor = score === 3 ? "var(--success)" : score === 2 ? "var(--warning)" : "var(--error)";
+    });
+
+    // 5. المؤقت الزمني
+    function startTimer(duration) {
+        let timer = duration;
+        const btn = document.getElementById('resendRegBtn');
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            let m = Math.floor(timer / 60), s = timer % 60;
+            document.getElementById('regTimer').textContent = `${m}:${s < 10 ? '0'+s : s}`;
+            if (--timer < 0) {
+                clearInterval(countdownInterval);
+                btn.disabled = false; btn.style.background = "var(--primary)";
+                document.getElementById('regTimer').textContent = "جاهز";
+            }
+        }, 1000);
+    }
+
+    // 6. إرسال النموذج
+    document.getElementById('registerForm').onsubmit = async (e) => {
+        e.preventDefault();
+        if(document.getElementById('email').value.trim() !== document.getElementById('confirmEmail').value.trim()) {
+            showToast("عذراً، البريد الإلكتروني غير متطابق", false); return;
+        }
+        if(document.getElementById('password').value !== document.getElementById('confirmPassword').value) {
+            showToast("عذراً، كلمة المرور غير متطابقة", false); return;
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true; btn.textContent = 'جاري إرسال الكود...';
+        generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
+
+        try {
+            const response = await fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    pin: generatedPin
+                })
+            });
+            if (response.ok) {
+                showToast("تم إرسال كود التفعيل بنجاح", true);
+                document.getElementById('regStep1').style.display = 'none';
+                document.getElementById('regStep2').style.display = 'block';
+                startTimer(300);
+            }
+        } catch (e) { showToast("فشل إرسال الكود، تحقق من اتصالك", false); btn.disabled = false; }
+    };
+
+    // 7. التفعيل النهائي
+    document.getElementById('activateBtn').onclick = () => {
+        if (document.getElementById('regOtp').value === generatedPin) {
+            showToast("تم تفعيل حسابك بنجاح! 🎉", true);
+            cacheItems.forEach(id => localStorage.removeItem('inv_cache_' + id));
+            setTimeout(() => { window.location.href = "login.html"; }, 2500);
+        } else { showToast("كود التحقق خاطئ", false); }
+    };
+</script>
+
+</body>
+</html>
