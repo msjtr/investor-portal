@@ -1,85 +1,25 @@
-/* استدعاء خط القاهرة والأيقونات الرسمية من جوجل */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200');
 
 :root {
-    /* لوحة الألوان - أزرق سماوي استثماري */
     --primary: #38bdf8;
     --primary-dark: #0284c7;
     --primary-glow: rgba(56, 189, 248, 0.3);
-    
-    /* ألوان الخلفية والزجاج الفاخر */
-    --bg-dark: #0f172a;
     --glass: rgba(255, 255, 255, 0.04);
-    --glass-heavy: rgba(15, 23, 42, 0.85);
-    --border: rgba(255, 255, 255, 0.08);
-    
-    /* ألوان الحالة للحماية والتنبيه */
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    
-    /* تنسيق النصوص */
+    --border: rgba(255, 255, 255, 0.1);
     --text-main: #ffffff;
     --text-muted: #94a3b8;
 }
 
-/* إعدادات المتصفح العامة */
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     font-family: 'Cairo', sans-serif;
     background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    direction: rtl;
-    color: var(--text-main);
-    overflow-x: hidden;
-}
-
-/* --- نظام الإشعارات المنبثقة (Toast 3D) --- */
-.toast-overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    display: none;
-    animation: popInScale 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-.toast-box {
-    background: var(--glass-heavy);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid var(--border);
-    padding: 35px 55px;
-    border-radius: 32px;
-    text-align: center;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9),
-                inset 0 1px 2px rgba(255, 255, 255, 0.1);
-}
-
-.toast-icon {
-    font-size: 54px;
-    margin-bottom: 15px;
-    display: block;
-    font-variation-settings: 'FILL' 1;
-}
-
-/* --- الحاوية الرئيسية واللوحة الزجاجية --- */
-.auth-container {
-    width: 92%;
-    max-width: 480px;
-    margin: 20px auto;
+    display: flex; justify-content: center; align-items: center;
+    direction: rtl; color: var(--text-main);
 }
 
 .glass-panel {
@@ -89,244 +29,39 @@ body {
     border: 1px solid var(--border);
     border-radius: 35px;
     padding: 45px 35px;
-    box-shadow: 
-        0 30px 60px -12px rgba(0, 0, 0, 0.6),
-        inset 0 1px 1px rgba(255, 255, 255, 0.05);
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+    width: 100%;
 }
 
-/* --- ترويسة الصفحة والشعار --- */
-.header-logo {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.brand-icon {
-    width: 85px;
-    height: auto;
+.brand-logo {
+    display: block; margin: 0 auto 25px auto;
+    width: 85px; height: auto;
     filter: drop-shadow(0 0 15px var(--primary-glow));
-    margin-bottom: 12px;
 }
 
-h2 {
-    font-weight: 800;
-    font-size: 26px;
-    margin: 0;
-    background: linear-gradient(to bottom, #fff, #94a3b8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-}
+.input-group { margin-bottom: 24px; text-align: right; }
+.input-label { display: block; margin-bottom: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
-/* --- الأقسام والعناوين الفرعية --- */
-.section-header {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--primary);
-    margin: 35px 0 20px 0;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.section-header .material-symbols-rounded {
-    font-size: 24px;
-    font-variation-settings: 'FILL' 1;
-}
-
-/* --- تنسيق الحقول (Labels on Top) --- */
-.input-group {
-    margin-bottom: 24px;
-    position: relative;
-    text-align: right;
-}
-
-.input-label {
-    display: block;
-    color: var(--text-muted);
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    margin-right: 6px;
-}
-
-.input-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-input, select {
-    width: 100%;
-    padding: 16px 20px;
+input {
+    width: 100%; padding: 16px 20px;
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--border);
     border-radius: 18px;
-    color: var(--text-main);
-    font-family: 'Cairo', sans-serif;
-    font-size: 15px;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    appearance: none;
-    outline: none;
+    color: white; font-family: 'Cairo'; font-size: 15px;
+    outline: none; transition: 0.3s;
 }
 
-input:focus, select:focus {
-    border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 0 0 4px var(--primary-glow);
-}
+input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 0 4px var(--primary-glow); }
 
-input::placeholder {
-    color: rgba(255, 255, 255, 0.15);
-}
-
-/* --- أيقونات المعاينة والأرقام --- */
-.password-toggle {
-    position: absolute;
-    left: 18px; /* جهة اليسار لأن الاتجاه RTL */
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 22px;
-    z-index: 10;
-}
-
-.password-toggle:hover {
-    color: var(--primary);
-}
-
-.phone-row {
-    display: flex;
-    gap: 10px;
-    direction: ltr; /* لضمان صحة الكود والترتيب العالمي */
-}
-
-#countryCode {
-    width: 110px;
-    text-align: center;
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-/* --- مقياس القوة والشروط --- */
-.strength-container {
-    margin-top: 12px;
-}
-
-.strength-bar-bg {
-    height: 5px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.strength-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 12px;
-}
-
-.req-list {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0 0 0;
-    font-size: 12px;
-}
-
-.req-list li {
-    color: var(--danger);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.req-list li.valid {
-    color: var(--success);
-}
-
-/* --- الأزرار الاحترافية --- */
 .btn-main {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    border: none;
-    border-radius: 20px;
-    color: white;
-    font-weight: 700;
-    font-size: 17px;
-    cursor: pointer;
-    box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
-    margin-top: 15px;
-    position: relative;
-    overflow: hidden;
+    width: 100%; padding: 18px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none; border-radius: 20px;
+    color: white; font-weight: 700; font-size: 17px;
+    cursor: pointer; box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
+    transition: 0.3s;
 }
 
-.btn-main:active {
-    transform: scale(0.97);
-}
+.btn-main:active { transform: scale(0.97); }
 
-/* --- نظام التبويبات (Dashboard Tabs) --- */
-.tabs-nav {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 30px;
-    overflow-x: auto;
-    padding: 5px;
-    scrollbar-width: none; /* إخفاء شريط التمرير */
-}
-
-.tabs-nav::-webkit-scrollbar { display: none; }
-
-.tab-btn {
-    padding: 14px 24px;
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    color: var(--text-muted);
-    cursor: pointer;
-    white-space: nowrap;
-    font-weight: 600;
-}
-
-.tab-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: 0 8px 15px var(--primary-glow);
-}
-
-/* --- تخصيص القوائم المنسدلة --- */
-select option {
-    background: #0f172a;
-    color: white;
-    padding: 15px;
-}
-
-/* --- استجابة الشاشات (Mobile Optimization) --- */
-@media (max-width: 480px) {
-    .glass-panel {
-        padding: 35px 25px;
-        border-radius: 30px;
-    }
-    h2 {
-        font-size: 22px;
-    }
-    input, select, .btn-main {
-        padding: 15px;
-        font-size: 15px;
-    }
-    .brand-icon {
-        width: 70px;
-    }
-}
-
-/* حركات الأنميشن */
-@keyframes popInScale {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
-    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
+h2 { text-align: center; margin: 0 0 30px 0; font-weight: 800; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
