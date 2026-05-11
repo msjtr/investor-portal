@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دخول | بوابة المستثمرين</title>
-    <link rel="stylesheet" href="../../styles/global.css">
+    <link rel="icon" type="image/svg+xml" href="../../brand-icon.svg">
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; width: 100%;">
-    <div class="glass-panel" style="max-width: 420px;">
+<div class="auth-container">
+    <div class="glass-panel">
         <img src="../../brand-icon.svg" class="brand-logo">
         <h2>تسجيل الدخول</h2>
         <form id="loginForm">
@@ -18,19 +19,33 @@
             </div>
             <div class="input-group">
                 <label class="input-label">كلمة المرور</label>
-                <input type="password" id="lPass" placeholder="••••••••" required>
+                <div class="input-wrapper">
+                    <input type="password" id="lPass" placeholder="••••••••" required>
+                    <span class="material-symbols-rounded password-toggle" id="toggleLPass">visibility</span>
+                </div>
             </div>
             <button type="submit" class="btn-main">دخول آمن</button>
         </form>
-        <p style="text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted);">
-            مستثمر جديد؟ <a href="register.html" style="color: var(--primary); text-decoration: none; font-weight: 700;">ابدأ هنا</a>
-        </p>
+        <div class="switch-link">
+            مستثمر جديد؟ <a href="register.html">ابدأ هنا</a>
+            <br><br>
+            <a href="forgot-password.html" style="font-size: 12px; color: var(--text-muted);">نسيت كلمة المرور؟</a>
+        </div>
     </div>
 </div>
 <script>
+    const setupToggle = (btnId, inputId) => {
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        btn.onclick = () => {
+            const isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            btn.textContent = isPass ? 'visibility_off' : 'visibility';
+        };
+    };
+    setupToggle('toggleLPass', 'lPass');
     document.getElementById('loginForm').onsubmit = (e) => {
         e.preventDefault();
-        // التوجه للوحة التحكم (التبويمة)
         window.location.href = "../dashboard.html";
     };
 </script>
