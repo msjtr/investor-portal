@@ -3,80 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل مستثمر جديد | بوابة المستثمرين</title>
+    <title>تسجيل الدخول | بوابة المستثمرين</title>
     <link rel="stylesheet" href="../../styles/global.css">
-    <style>
-        /* إضافة ستايل خاص لقوة كلمة المرور والمؤقت */
-        .strength-meter { height: 6px; background: rgba(255,255,255,0.05); margin-top: 10px; border-radius: 10px; overflow: hidden; }
-        .strength-bar { height: 100%; width: 0%; transition: all 0.4s ease; }
-        .rule { font-size: 12px; color: #64748b; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
-        .rule.valid { color: #4ade80; }
-        .phone-group { display: flex; gap: 8px; }
-        #countryCode { width: 110px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; padding: 0 10px; cursor: pointer; }
-        .otp-overlay { display: none; } /* لإخفاء واجهة التفعيل في البداية */
-    </style>
+    <link rel="stylesheet" href="auth-v2.css">
 </head>
-<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); margin: 0; font-family: system-ui, -apple-system, sans-serif;">
-
-    <div class="auth-container" style="width: 100%; max-width: 500px; padding: 20px;">
-        <div class="glass-panel" id="mainPanel" style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 40px 30px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);">
+<body>
+    <div class="auth-container">
+        <div class="glass-panel" id="loginFormContainer">
+            <h2 id="formTitle">تسجيل الدخول</h2>
             
-            <div id="registrationFormSection">
-                <div class="brand-logo" style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="color: #ffffff; font-size: 28px; margin: 0;">إنشاء حساب جديد</h2>
+            <form id="loginStep1">
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="example@mail.com" required>
                 </div>
-
-                <form id="registerForm">
-                    <div style="margin-bottom: 15px;">
-                        <input type="text" id="fullName" placeholder="الاسم الرباعي" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <input type="email" id="email" placeholder="البريد الإلكتروني" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
-                    </div>
-
-                    <div class="phone-group" style="margin-bottom: 15px;">
-                        <select id="countryCode">
-                            <option value="+966">🇸🇦 +966</option>
-                            <option value="+971">🇦🇪 +971</option>
-                            <option value="+965">🇰🇼 +965</option>
-                            <option value="+20">🇪🇬 +20</option>
-                        </select>
-                        <input type="tel" id="phone" placeholder="رقم الجوال" required style="flex: 1; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
-                        <input type="password" id="password" placeholder="كلمة المرور" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
-                        <div class="strength-meter"><div id="strengthBar" class="strength-bar"></div></div>
-                        <div id="rules">
-                            <div class="rule" id="len">● 6 أرقام/حروف على الأقل</div>
-                            <div class="rule" id="char">● حرف واحد على الأقل</div>
-                            <div class="rule" id="spec">● رمز خاص واحد مرمز (#@$)</div>
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
-                    </div>
-
-                    <button type="submit" id="submitBtn" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;">التسجيل</button>
-                </form>
-            </div>
-
-            <div id="otpSection" class="otp-overlay" style="text-align: center;">
-                <h2 style="color: white;">تفعيل الحساب</h2>
-                <p style="color: #94a3b8;">أدخل كود التفعيل المرسل لبريدك الإلكتروني</p>
-                <input type="text" id="otpInput" maxlength="4" placeholder="0 0 0 0" style="width: 150px; text-align: center; font-size: 24px; padding: 10px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #3b82f6; border-radius: 10px; letter-spacing: 5px;">
-                <div style="margin-top: 20px; color: #fbbf24; font-size: 14px;">
-                    إعادة الإرسال متاحة خلال: <span id="timer">05:00</span>
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPass" placeholder="••••••••" required>
                 </div>
-                <button id="resendBtn" disabled style="margin-top: 15px; background: none; border: 1px solid #475569; color: #94a3b8; padding: 8px 15px; border-radius: 8px; cursor: pointer;">إعادة إرسال الكود</button>
-                <button id="finalVerifyBtn" style="width: 100%; margin-top: 20px; padding: 16px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;">تفعيل ودخول</button>
+                <button type="submit" class="btn-primary">دخول</button>
+                <p class="switch-text">ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
+            </form>
+
+            <div id="loginStep2" style="display: none;">
+                <p>تم إرسال كلمة التحقق لمرة واحدة إلى بريدك</p>
+                <div class="otp-box">
+                    <input type="text" id="loginOtpInput" maxlength="4" placeholder="0 0 0 0">
+                </div>
+                <div id="timerBox">إعادة الإرسال خلال: <span id="lTimerText">05:00</span></div>
+                <button id="resendLoginOtp" class="btn-secondary" disabled style="margin-bottom: 10px;">إعادة إرسال الكود</button>
+                <button id="finalLoginBtn" class="btn-primary">تحقق ودخول</button>
             </div>
         </div>
     </div>
-
-    <script src="../../js/register.js"></script>
+    <script src="login-v2.js"></script>
 </body>
 </html>
