@@ -4,7 +4,7 @@
 :root {
     --primary: #38bdf8;
     --primary-dark: #0284c7;
-    --primary-glow: rgba(56, 189, 248, 0.3);
+    --primary-glow: rgba(56, 189, 248, 0.2); /* تقليل الوهج ليصبح أنقى */
     --glass: rgba(255, 255, 255, 0.04);
     --border: rgba(255, 255, 255, 0.1);
     --text-main: #ffffff;
@@ -33,10 +33,20 @@ body {
     width: 100%;
 }
 
+/* --- تحديث الشعار ليكون نظيفاً وحاداً --- */
 .brand-logo {
-    display: block; margin: 0 auto 25px auto;
-    width: 85px; height: auto;
-    filter: drop-shadow(0 0 15px var(--primary-glow));
+    display: block; 
+    margin: 0 auto 30px auto;
+    width: 110px; /* حجم متوازن وأكبر قليلاً للوضوح */
+    height: auto;
+    object-fit: contain; /* يضمن عدم تشوه الأبعاد */
+    /* استخدام ظل ناعم وحاد بدلاً من وهج منتشر ومزعج */
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 5px var(--primary-glow));
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.brand-logo:hover {
+    transform: scale(1.05); /* حركة تفاعلية بسيطة عند تمرير الماوس */
 }
 
 .input-group { margin-bottom: 24px; text-align: right; }
@@ -64,4 +74,11 @@ input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); box-
 
 .btn-main:active { transform: scale(0.97); }
 
-h2 { text-align: center; margin: 0 0 30px 0; font-weight: 800; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { 
+    text-align: center; 
+    margin: 0 0 30px 0; 
+    font-weight: 800; 
+    background: linear-gradient(to bottom, #fff, #94a3b8); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+}
