@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "مدير النظام",
+    "email": "admin@tera.com",
+    "password": "123",
+    "securityPin": "9999", 
+    "role": "admin",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "name": "مستثمر تجريبي",
+    "email": "client@tera.com",
+    "password": "123",
+    "securityPin": "2026",
+    "role": "client",
+    "status": "active"
+  }
+]
