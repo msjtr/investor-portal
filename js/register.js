@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. تعريف العناصر الأساسية (تأكد من مطابقة الـ IDs في الـ HTML)
+    // 1. تعريف العناصر الأساسية
     const registerForm = document.getElementById('registerForm');
     const regStep1 = document.getElementById('regStep1');
     const regStep2 = document.getElementById('regStep2');
@@ -12,124 +12,111 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpInput = document.getElementById('regOtp');
     
     // عناصر الحالة والمؤقت
-    const strengthFill = document.querySelector('.strength-fill');
-    const strengthText = document.querySelector('.strength-text');
+    const strengthFill = document.getElementById('strengthFill');
+    const matchMsg = document.getElementById('matchMsg');
     const timerCount = document.getElementById('regTimer');
     const resendBtn = document.getElementById('resendRegBtn');
     const activateBtn = document.getElementById('activateBtn');
 
-    // رابط الـ Webhook الخاص بك (Make.com)
+    // عناصر التنبيه (Toast)
+    const toastOverlay = document.getElementById('toastOverlay');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastIcon = document.getElementById('toastIcon');
+
     const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
 
     let generatedPin = null;
     let countdownInterval = null;
     let tempUserData = null;
 
-    // --- 1. نظام فحص قوة كلمة المرور المطور ---
+    // --- وظيفة التنبيه الجمالي في المنتصف ---
+    function showToast(message, isSuccess = true) {
+        toastMsg.textContent = message;
+        toastIcon.textContent = isSuccess ? '✅' : '⚠️';
+        toastOverlay.style.display = 'block';
+        setTimeout(() => { toastOverlay.style.display = 'none'; }, 3000);
+    }
+
+    // --- نظام فحص كلمة المرور (إنجليزي فقط + قوة) ---
     passwordInput.addEventListener('input', () => {
+        // منع اللغة العربية والحروف غير اللاتينية فوراً
+        passwordInput.value = passwordInput.value.replace(/[^\x00-\x7F]/g, "");
+
         const val = passwordInput.value;
-        const requirements = {
+        const reqs = {
             len: val.length >= 6,
             char: /[a-zA-Z]/.test(val),
             spec: /[\W_]/.test(val)
         };
 
-        // تحديث الألوان في القائمة الجانبية (إضافة كلاس valid)
-        if(document.getElementById('reqLen')) document.getElementById('reqLen').classList.toggle('valid', requirements.len);
-        if(document.getElementById('reqChar')) document.getElementById('reqChar').classList.toggle('valid', requirements.char);
-        if(document.getElementById('reqSpec')) document.getElementById('reqSpec').classList.toggle('valid', requirements.spec);
+        // تحديث ألوان القائمة
+        if(document.getElementById('reqLen')) document.getElementById('reqLen').classList.toggle('valid', reqs.len);
+        if(document.getElementById('reqChar')) document.getElementById('reqChar').classList.toggle('valid', reqs.char);
+        if(document.getElementById('reqSpec')) document.getElementById('reqSpec').classList.toggle('valid', reqs.spec);
 
-        // حساب القوة وتلوين شريط القوة
-        let score = 0;
-        if (requirements.len) score++;
-        if (requirements.char) score++;
-        if (requirements.spec) score++;
-
+        // حساب القوة وتلوين الشريط
+        let score = Object.values(reqs).filter(Boolean).length;
         if (strengthFill) {
-            const width = (score / 3) * 100;
-            strengthFill.style.width = `${width}%`;
-
-            // تغيير الألوان والنصوص بناءً على القوة
-            if (score === 1) {
-                strengthFill.style.backgroundColor = "#ef4444"; // أحمر
-                if(strengthText) strengthText.textContent = "قوة كلمة المرور: ضعيفة";
-            } else if (score === 2) {
-                strengthFill.style.backgroundColor = "#f59e0b"; // برتقالي
-                if(strengthText) strengthText.textContent = "قوة كلمة المرور: متوسطة";
-            } else if (score === 3) {
-                strengthFill.style.backgroundColor = "#10b981"; // أخضر
-                if(strengthText) strengthText.textContent = "قوة كلمة المرور: قوية جداً";
-            } else {
-                strengthFill.style.width = "0%";
-                if(strengthText) strengthText.textContent = "قوة كلمة المرور: غير مستوفية";
-            }
+            strengthFill.style.width = (score / 3 * 100) + "%";
+            strengthFill.style.backgroundColor = score === 3 ? "#10b981" : score === 2 ? "#f59e0b" : "#ef4444";
         }
+        checkMatch();
     });
 
-    // --- 2. نظام المؤقت الزمني (5 دقائق) ---
+    // --- نظام فحص المطابقة الفوري ---
+    confirmPasswordInput.addEventListener('input', checkMatch);
+
+    function checkMatch() {
+        if (!confirmPasswordInput.value) {
+            matchMsg.style.display = 'none';
+            return;
+        }
+        matchMsg.style.display = 'block';
+        if (passwordInput.value === confirmPasswordInput.value) {
+            matchMsg.textContent = "● كلمات المرور متطابقة";
+            matchMsg.style.color = "#4ade80";
+        } else {
+            matchMsg.textContent = "● كلمات المرور غير متطابقة";
+            matchMsg.style.color = "#f87171";
+        }
+    }
+
+    // --- نظام المؤقت الزمني ---
     function startTimer(duration) {
         let timer = duration;
         resendBtn.disabled = true;
-        resendBtn.style.opacity = "0.5";
-        
         if (countdownInterval) clearInterval(countdownInterval);
 
         countdownInterval = setInterval(() => {
-            let minutes = Math.floor(timer / 60);
-            let seconds = timer % 60;
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            if(timerCount) timerCount.textContent = `${minutes}:${seconds}`;
-
+            let m = Math.floor(timer / 60), s = timer % 60;
+            timerCount.textContent = `${m}:${s < 10 ? '0'+s : s}`;
             if (--timer < 0) {
                 clearInterval(countdownInterval);
-                if(timerCount) timerCount.textContent = "جاهز";
+                timerCount.textContent = "جاهز";
                 resendBtn.disabled = false;
-                resendBtn.style.opacity = "1";
                 resendBtn.style.background = "var(--primary)";
             }
         }, 1000);
     }
 
-    // --- 3. إرسال البيانات لـ Make.com ---
-    async function sendToMake(userData, pin) {
-        try {
-            const response = await fetch(MAKE_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: userData.name,
-                    email: userData.email,
-                    pin: pin
-                })
-            });
-            return response.ok;
-        } catch (error) {
-            console.error('Webhook Error:', error);
-            return false;
-        }
-    }
-
-    // --- 4. معالجة نموذج التسجيل الرئيسي ---
+    // --- معالجة نموذج التسجيل والـ Webhook ---
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // أ. التحقق من مطابقة البيانات وتطهيرها (Trim)
         if (emailInput.value.trim() !== confirmEmailInput.value.trim()) {
-            alert("عذراً، البريد الإلكتروني غير متطابق!");
+            showToast("عذراً، البريد الإلكتروني غير متطابق!", false);
             return;
         }
         if (passwordInput.value !== confirmPasswordInput.value) {
-            alert("عذراً، كلمة المرور غير متطابقة!");
+            showToast("عذراً، كلمة المرور غير متطابقة!", false);
             return;
         }
 
-        // ب. توليد كود التحقق (PIN)
-        generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'جاري إرسال كود التفعيل...';
 
-        // ج. حفظ البيانات مؤقتاً
+        generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
         tempUserData = {
             name: document.getElementById('fullName').value.trim(),
             email: emailInput.value.trim(),
@@ -137,47 +124,43 @@ document.addEventListener('DOMContentLoaded', () => {
             password: passwordInput.value
         };
 
-        // د. الانتقال لشاشة الـ OTP وإرسال الكود
-        const submitBtn = registerForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'جاري المعالجة...';
+        try {
+            const response = await fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: tempUserData.name,
+                    email: tempUserData.email,
+                    pin: generatedPin
+                })
+            });
 
-        const success = await sendToMake(tempUserData, generatedPin);
-        
-        if (success) {
-            regStep1.style.display = 'none';
-            regStep2.style.display = 'block';
-            startTimer(300); // 5 دقائق
-            // تركيز الماوس تلقائياً على حقل الـ OTP (لتحسين تجربة الجوال)
-            if(otpInput) otpInput.focus();
-        } else {
-            alert("حدث خطأ أثناء إرسال الكود، يرجى المحاولة مرة أخرى.");
+            if (response.ok) {
+                showToast("تم إرسال الكود لبريدك بنجاح", true);
+                regStep1.style.display = 'none';
+                regStep2.style.display = 'block';
+                startTimer(300);
+            } else { throw new Error(); }
+        } catch (error) {
+            showToast("فشل إرسال الكود، تأكد من الاتصال", false);
             submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
+            submitBtn.textContent = 'إنشاء حساب';
         }
     });
 
-    // --- 5. إعادة إرسال الكود ---
-    resendBtn.addEventListener('click', async () => {
-        generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
-        const originalText = resendBtn.textContent;
-        resendBtn.textContent = 'جاري الإرسال...';
-        
-        const success = await sendToMake(tempUserData, generatedPin);
-        if (success) {
-            startTimer(300);
-            setTimeout(() => resendBtn.textContent = originalText, 2000);
-        } else {
-            alert("فشل إعادة الإرسال، تحقق من اتصالك.");
-            resendBtn.textContent = originalText;
-        }
-    });
-
-    // --- 6. التحقق النهائي من الـ OTP والتوجيه ---
+    // --- التفعيل النهائي ---
     activateBtn.addEventListener('click', () => {
-        const userEnteredOtp = otpInput.value.trim();
+        if (otpInput.value.trim() === generatedPin) {
+            showToast("تم تفعيل حسابكم بنجاح! 🎉", true);
+            setTimeout(() => { window.location.href = "login.html"; }, 2000);
+        } else {
+            showToast("كود التحقق غير صحيح", false);
+        }
+    });
+});
 
-        if (userEnteredOtp === generatedPin) {
-            // محاكاة حفظ البيانات في المتصفح
-            const users
+// وظيفة العين (خارج النطاق لتكون متاحة للـ onclick في HTML)
+function togglePass(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
