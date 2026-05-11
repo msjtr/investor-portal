@@ -24,6 +24,28 @@
             padding: 20px;
             color: white;
             box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* حاوية الإشعارات في المنتصف */
+        .toast-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .toast-box {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            padding: 25px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
         .glass-panel {
@@ -39,9 +61,7 @@
             text-align: center;
         }
 
-        h2 { margin-bottom: 20px; font-size: 1.5rem; color: #f8fafc; }
-
-        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group { margin-bottom: 15px; position: relative; width: 100%; }
 
         input, select {
             width: 100%;
@@ -58,78 +78,83 @@
 
         input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
 
-        .phone-group { display: flex; gap: 8px; }
-        .phone-group select { width: 100px; font-size: 14px; }
-
-        .req-list {
-            text-align: right;
-            padding: 0;
-            margin: 10px 0;
-            list-style: none;
-            font-size: 13px;
+        /* أيقونة العين لمعاينة الباسورد */
+        .pass-toggle {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            cursor: pointer;
+            color: #94a3b8;
+            font-size: 14px;
         }
 
-        .req-list li { color: var(--error); margin-bottom: 4px; transition: 0.2s; }
+        .phone-group { display: flex; gap: 8px; }
+        .phone-group select { width: 100px; }
+
+        .req-list { text-align: right; padding: 0; margin: 10px 0; list-style: none; font-size: 12px; }
+        .req-list li { color: var(--error); margin-bottom: 4px; }
         .req-list li.valid { color: var(--success); }
 
+        /* حالة تطابق الباسورد */
+        .match-msg { font-size: 12px; text-align: right; margin-top: -10px; margin-bottom: 10px; display: none; }
+
         .btn-primary {
-            width: 100%;
-            padding: 14px;
+            width: 100%; padding: 14px;
             background: var(--primary);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
+            border: none; border-radius: 12px;
+            color: white; font-weight: bold; font-size: 16px;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
 
-        .btn-primary:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; }
+        .btn-primary:disabled { opacity: 0.5; cursor: wait; }
 
-        .timer-box { font-size: 14px; color: #94a3b8; margin: 15px 0; }
-        .switch-link { margin-top: 20px; font-size: 14px; color: #cbd5e1; }
-        .switch-link a { color: var(--primary); text-decoration: none; font-weight: bold; }
-
-        /* موبايل: تصغير الحواف لزيادة المساحة */
-        @media (max-width: 480px) {
-            .glass-panel { padding: 20px; border-radius: 18px; }
-            h2 { font-size: 1.3rem; }
-            input, .btn-primary { padding: 12px; font-size: 15px; }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -60%); } to { opacity: 1; transform: translate(-50%, -50%); } }
     </style>
 </head>
 <body>
+
+    <div id="toastOverlay" class="toast-overlay">
+        <div class="toast-box">
+            <div id="toastIcon" style="font-size: 40px; margin-bottom: 10px;">✅</div>
+            <div id="toastMsg" style="font-size: 16px; font-weight: 600;"></div>
+        </div>
+    </div>
 
     <div class="glass-panel">
         <div id="regStep1">
             <h2>إنشاء حساب جديد</h2>
             <form id="registerForm">
-                <input type="text" id="fullName" placeholder="الاسم الكامل" required>
-                <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-                <input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required>
+                <div class="input-group"><input type="text" id="fullName" placeholder="الاسم الكامل" required></div>
+                <div class="input-group"><input type="email" id="email" placeholder="البريد الإلكتروني" required></div>
+                <div class="input-group"><input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required></div>
                 
                 <div class="phone-group">
                     <select id="country">
                         <option value="+966">🇸🇦 +966</option>
-                        <option value="+971">🇦🇪 +971</option>
                         <option value="+20">🇪🇬 +20</option>
                     </select>
                     <input type="tel" id="phone" placeholder="رقم الجوال" required>
                 </div>
 
-                <input type="password" id="pass" placeholder="كلمة المرور" required>
+                <div class="input-group">
+                    <input type="password" id="pass" placeholder="كلمة المرور (English Only)" required>
+                    <span class="pass-toggle" onclick="togglePass('pass')">👁️</span>
+                </div>
+                
                 <ul class="req-list">
-                    <li id="reqLen">● 6 أرقام/حروف على الأقل</li>
+                    <li id="reqLen">● 6 خانات على الأقل</li>
                     <li id="reqChar">● حرف واحد على الأقل</li>
                     <li id="reqSpec">● رمز خاص (@#$%)</li>
                 </ul>
                 
-                <input type="password" id="confirmPass" placeholder="تأكيد كلمة المرور" required>
-                <button type="submit" class="btn-primary">إنشاء حساب</button>
+                <div class="input-group">
+                    <input type="password" id="confirmPass" placeholder="تأكيد كلمة المرور" required>
+                    <span class="pass-toggle" onclick="togglePass('confirmPass')">👁️</span>
+                </div>
+                <div id="matchMsg" class="match-msg"></div>
+
+                <button type="submit" id="submitBtn" class="btn-primary">إنشاء حساب</button>
             </form>
-            <div class="switch-link">لديك حساب؟ <a href="login.html">سجل دخولك</a></div>
         </div>
 
         <div id="regStep2" style="display:none;">
@@ -143,24 +168,97 @@
     </div>
 
     <script>
-        // قوة كلمة المرور
+        const WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
+        let generatedOtp = null;
+
+        // وظيفة الإشعار الجمالي
+        function showToast(msg, isSuccess = true) {
+            const overlay = document.getElementById('toastOverlay');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerText = isSuccess ? '✅' : '⚠️';
+            overlay.style.display = 'block';
+            setTimeout(() => { overlay.style.display = 'none'; }, 3000);
+        }
+
+        // معاينة الباسورد
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        // مراقبة كلمة المرور (إنجليزي فقط + مطابقة)
         const pass = document.getElementById('pass');
+        const confirmPass = document.getElementById('confirmPass');
+        const matchMsg = document.getElementById('matchMsg');
+
         pass.addEventListener('input', () => {
+            // منع العربي
+            pass.value = pass.value.replace(/[^\x00-\x7F]/g, "");
+            
             const v = pass.value;
             document.getElementById('reqLen').classList.toggle('valid', v.length >= 6);
             document.getElementById('reqChar').classList.toggle('valid', /[a-zA-Z]/.test(v));
             document.getElementById('reqSpec').classList.toggle('valid', /[\W_]/.test(v));
+            checkMatch();
         });
 
-        // الانتقال للتفعيل
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
+        confirmPass.addEventListener('input', checkMatch);
+
+        function checkMatch() {
+            if (confirmPass.value === "") {
+                matchMsg.style.display = 'none';
+                return;
+            }
+            matchMsg.style.display = 'block';
+            if (pass.value === confirmPass.value) {
+                matchMsg.innerText = "● كلمات المرور متطابقة";
+                matchMsg.style.color = "var(--success)";
+            } else {
+                matchMsg.innerText = "● كلمات المرور غير متطابقة";
+                matchMsg.style.color = "var(--error)";
+            }
+        }
+
+        // إرسال النموذج (حل مشكلة عدم وصول الكود)
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if(document.getElementById('email').value !== document.getElementById('confirmEmail').value) return alert("البريد غير متطابق");
-            if(pass.value !== document.getElementById('confirmPass').value) return alert("كلمة المرور غير متطابقة");
-            
-            document.getElementById('regStep1').style.display = 'none';
-            document.getElementById('regStep2').style.display = 'block';
-            startTimer(300, 'regTimer', 'resendRegBtn');
+            const email = document.getElementById('email').value;
+            const cEmail = document.getElementById('confirmEmail').value;
+
+            if(email !== cEmail) return showToast("البريد الإلكتروني غير متطابق", false);
+            if(pass.value !== confirmPass.value) return showToast("كلمة المرور غير متطابقة", false);
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "جاري إرسال كود التحقق...";
+
+            // توليد كود التحقق
+            generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('fullName').value,
+                        email: email,
+                        pin: generatedOtp
+                    })
+                });
+
+                if (response.ok) {
+                    showToast("تم إرسال كود التفعيل لبريدك", true);
+                    document.getElementById('regStep1').style.display = 'none';
+                    document.getElementById('regStep2').style.display = 'block';
+                    startTimer(300, 'regTimer', 'resendRegBtn');
+                } else {
+                    throw new Error();
+                }
+            } catch (err) {
+                showToast("فشل في إرسال الكود، حاول مجدداً", false);
+                btn.disabled = false;
+                btn.innerText = "إنشاء حساب";
+            }
         });
 
         function startTimer(duration, displayId, btnId) {
@@ -170,13 +268,23 @@
             const interval = setInterval(() => {
                 let m = Math.floor(timer / 60), s = timer % 60;
                 display.textContent = `${m}:${s < 10 ? '0'+s : s}`;
-                if (--timer < 0) { clearInterval(interval); btn.disabled = false; btn.style.background = "#2563eb"; }
+                if (--timer < 0) { 
+                    clearInterval(interval); 
+                    btn.disabled = false; 
+                    btn.style.background = "#2563eb"; 
+                    btn.innerText = "إعادة إرسال الكود الآن";
+                }
             }, 1000);
         }
 
         document.getElementById('activateBtn').onclick = () => {
-            alert("تم تفعيل حسابكم بنجاح! الرجوع للدخول");
-            window.location.href = "login.html";
+            const entered = document.getElementById('regOtp').value;
+            if (entered === generatedOtp) {
+                showToast("تم تفعيل حسابكم بنجاح!", true);
+                setTimeout(() => { window.location.href = "login.html"; }, 2000);
+            } else {
+                showToast("كود التحقق غير صحيح", false);
+            }
         };
     </script>
 </body>
