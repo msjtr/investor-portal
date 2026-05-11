@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المستثمرين | إنشاء حساب</title>
     
+    <link rel="icon" href="data:,">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
@@ -16,14 +18,13 @@
             --primary-glow: rgba(56, 189, 248, 0.3);
             --glass-bg: rgba(255, 255, 255, 0.04);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --bg-dark: #0f172a;
             --success: #10b981;
             --error: #ef4444;
             --text-main: #ffffff;
             --text-muted: #94a3b8;
         }
 
-        /* --- 2. إعدادات الصفحة الرئيسية --- */
+        /* --- 2. إعدادات الصفحة --- */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -40,7 +41,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 3. نظام الإشعارات المنبثقة (Toast 3D Overlay) --- */
+        /* --- 3. نظام الإشعارات المنبثقة (Toast 3D) --- */
         .toast-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 9999; display: none;
@@ -59,7 +60,7 @@
             text-align: center; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
         }
 
-        /* --- 4. الحاوية الزجاجية الرئيسية --- */
+        /* --- 4. الحاوية الرئيسية --- */
         .auth-container { width: 92%; max-width: 480px; margin: 20px auto; }
         .glass-panel {
             background: var(--glass-bg);
@@ -77,7 +78,7 @@
         }
         .section-header span { font-size: 24px; font-variation-settings: 'FILL' 1; }
 
-        /* --- 6. تنسيق المدخلات والتسميات --- */
+        /* --- 6. تنسيق المدخلات --- */
         .input-group { margin-bottom: 22px; width: 100%; position: relative; text-align: right; }
         .input-label { display: block; color: var(--text-muted); font-size: 13px; font-weight: 600; margin-bottom: 8px; margin-right: 5px; }
 
@@ -85,24 +86,21 @@
             width: 100%; padding: 15px 18px;
             background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border);
             border-radius: 16px; color: var(--text-main); font-family: 'Cairo'; font-size: 16px;
+            outline: none;
         }
-        input:focus { outline: none; border-color: var(--primary); background: rgba(0, 0, 0, 0.45); box-shadow: 0 0 0 4px var(--primary-glow); }
+        input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.45); box-shadow: 0 0 0 4px var(--primary-glow); }
 
-        /* تحسين شكل القائمة المنسدلة */
         select option { background: #1e293b; color: white; }
-
         .phone-row { display: flex; gap: 10px; direction: ltr; }
         #countryCode { width: 105px; flex-shrink: 0; cursor: pointer; }
 
-        /* زر إظهار الباسورد */
         .pass-wrapper { position: relative; }
         .toggle-btn {
             position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
             cursor: pointer; color: var(--text-muted); font-size: 22px; z-index: 5;
         }
-        .toggle-btn:hover { color: var(--primary); }
 
-        /* --- 7. مقياس القوة والشروط (تحت الباسورد) --- */
+        /* --- 7. مقياس القوة --- */
         .strength-container { margin-top: 10px; }
         .strength-bar { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
         #strengthFill { height: 100%; width: 0; transition: 0.5s ease; }
@@ -112,7 +110,7 @@
         .req-list li.valid { color: var(--success); }
         .req-list li span { font-size: 16px; }
 
-        /* --- 8. الأزرار والروابط --- */
+        /* --- 8. الأزرار --- */
         .btn-main {
             width: 100%; padding: 18px; margin-top: 25px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -122,10 +120,8 @@
         .btn-main:active { transform: scale(0.97); }
 
         .switch-link { text-align: center; margin-top: 25px; font-size: 14px; }
-        .switch-link a { color: var(--primary); text-decoration: none; font-weight: 700; border-bottom: 1px solid transparent; }
-        .switch-link a:hover { border-bottom-color: var(--primary); }
+        .switch-link a { color: var(--primary); text-decoration: none; font-weight: 700; }
 
-        /* نظام الكاش: وميض بسيط للحقول المسترجعة */
         .cached-flash { animation: flashBlue 1.5s ease; }
         @keyframes flashBlue { 0% { border-color: var(--primary); } 100% { border-color: var(--glass-border); } }
     </style>
@@ -135,13 +131,13 @@
 <div class="toast-overlay" id="toastOverlay">
     <div class="toast-box">
         <span class="material-symbols-rounded" id="toastIcon" style="font-size: 45px; color: var(--primary);">verified_user</span>
-        <div id="toastMsg">جاري معالجة طلبك...</div>
+        <div id="toastMsg" style="margin-top: 10px; font-weight: 700;">جاري المعالجة...</div>
     </div>
 </div>
 
 <div class="auth-container">
     <div class="glass-panel">
-        <h2 id="pageTitle">بوابة المستثمرين</h2>
+        <h2 style="text-align: center; margin: 0 0 30px 0; font-weight: 800;">بوابة المستثمرين</h2>
         
         <form id="registerForm">
             <div class="section-header">
@@ -151,7 +147,7 @@
             
             <div class="input-group">
                 <label class="input-label">الاسم الكامل</label>
-                <input type="text" id="fullName" placeholder="أدخل اسمك الثلاثي" required>
+                <input type="text" id="fullName" placeholder="أدخل اسمك الثلاثي كما في الهوية" required>
             </div>
 
             <div class="input-group">
@@ -168,7 +164,7 @@
 
             <div class="input-group">
                 <label class="input-label">البريد الإلكتروني</label>
-                <input type="email" id="email" placeholder="mail@example.com" required>
+                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
             </div>
 
             <div class="input-group">
@@ -178,12 +174,12 @@
 
             <div class="section-header">
                 <span class="material-symbols-rounded">lock_person</span>
-                معلومات التسجيل
+                معلومات الحساب
             </div>
 
             <div class="input-group">
-                <label class="input-label">اسم المستخدم (Username)</label>
-                <input type="text" id="username" placeholder="مثال: Ahmed_2026" required>
+                <label class="input-label">اسم المستخدم</label>
+                <input type="text" id="username" placeholder="اختر اسماً فريداً بالإنجليزية" required>
             </div>
 
             <div class="input-group">
@@ -206,16 +202,16 @@
                 <div class="strength-bar"><div id="strengthFill"></div></div>
                 <ul class="req-list">
                     <li id="reqLen"><span class="material-symbols-rounded">gpp_maybe</span>6 خانات على الأقل</li>
-                    <li id="reqChar"><span class="material-symbols-rounded">gpp_maybe</span>حرف واحد على الأقل</li>
-                    <li id="reqSpec"><span class="material-symbols-rounded">gpp_maybe</span>رمز خاص واحد (@#$%)</li>
+                    <li id="reqChar"><span class="material-symbols-rounded">gpp_maybe</span>حرف إنجليزي واحد على الأقل</li>
+                    <li id="reqSpec"><span class="material-symbols-rounded">gpp_maybe</span>رمز خاص واحد على الأقل (@#$%)</li>
                 </ul>
             </div>
 
-            <button type="submit" class="btn-main">إنشاء حساب المستثمر</button>
+            <button type="submit" class="btn-main">إنشاء حساب مستثمر جديد</button>
         </form>
 
         <div class="switch-link">
-            <a href="login.html">← العودة لصفحة تسجيل الدخول</a>
+            <a href="login.html">← لديك حساب؟ سجل دخولك هنا</a>
         </div>
     </div>
 </div>
@@ -233,6 +229,8 @@
                 el.classList.add('cached-flash');
             }
             el.addEventListener('input', () => {
+                // منع المسافات في اسم المستخدم
+                if(id === 'username') el.value = el.value.replace(/\s/g, '');
                 localStorage.setItem('inv_cache_' + id, el.value);
             });
         });
@@ -268,27 +266,37 @@
     });
 
     // --- 4. نظام الإشعارات المنبثقة ---
-    function showToast(msg, icon = 'info') {
+    function showToast(msg, icon = 'verified_user', isError = false) {
         const overlay = document.getElementById('toastOverlay');
+        const iconEl = document.getElementById('toastIcon');
         document.getElementById('toastMsg').textContent = msg;
-        document.getElementById('toastIcon').textContent = icon;
+        iconEl.textContent = icon;
+        iconEl.style.color = isError ? 'var(--error)' : 'var(--primary)';
+        
         overlay.style.display = 'block';
         setTimeout(() => { overlay.style.display = 'none'; }, 3000);
     }
 
-    // عند الضغط على إنشاء حساب
+    // --- 5. معالجة إرسال النموذج ---
     document.getElementById('registerForm').onsubmit = (e) => {
         e.preventDefault();
-        if(document.getElementById('email').value !== document.getElementById('confirmEmail').value) {
-            showToast("عذراً، البريد الإلكتروني غير متطابق", 'error_med');
+        
+        if(document.getElementById('email').value.trim() !== document.getElementById('confirmEmail').value.trim()) {
+            showToast("عذراً، البريد الإلكتروني غير متطابق", 'error_outline', true);
             return;
         }
+
+        if(document.getElementById('password').value !== document.getElementById('confirmPassword').value) {
+            showToast("عذراً، كلمة المرور غير متطابقة", 'lock_reset', true);
+            return;
+        }
+
         showToast("جاري إرسال رمز التفعيل لبريدك...", 'mail');
         
-        // مسح الكاش عند النجاح
+        // مسح الكاش عند إرسال البيانات بنجاح لـ Make.com
         setTimeout(() => {
             cacheItems.forEach(id => localStorage.removeItem('inv_cache_' + id));
-            // هنا يتم الربط بـ Make.com
+            // ملاحظة: هنا يتم ربط fetch الخاص بـ Make.com لاحقاً
         }, 2000);
     };
 </script>
