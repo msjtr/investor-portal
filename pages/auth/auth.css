@@ -1,242 +1,127 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
-/* --- المتغيرات والأساسيات --- */
 :root {
-    --primary-blue: #38bdf8;
-    --primary-hover: #0284c7;
+    --primary: #38bdf8;
+    --primary-dark: #0284c7;
     --bg-dark: #0f172a;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.1);
+    --text-main: #ffffff;
     --text-muted: #94a3b8;
-    --success: #4ade80;
-    --warning: #fbbf24;
-    --error: #f87171;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
+    background: radial-gradient(circle at top right, #1e293b, #0f172a);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow-x: hidden;
+    direction: rtl;
 }
 
-/* --- الحاوية واللوحة الزجاجية --- */
+/* الحاوية المرنة لجميع الشاشات */
 .auth-container {
-    width: 100%;
-    max-width: 480px;
-    padding: 20px;
+    width: 95%; /* للجوالات الصغيرة */
+    max-width: 480px; /* للتابلت والكمبيوتر */
+    margin: 20px auto;
+    transition: all 0.3s ease;
 }
 
 .glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    border-radius: 28px;
     padding: 40px 30px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    color: #fff;
-    transition: transform 0.3s ease;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    width: 100%;
 }
 
-/* --- الشعار والعناوين --- */
-.brand-logo {
-    text-align: center;
-    margin-bottom: 35px;
+/* تحسينات للجوال الصغير جداً */
+@media (max-width: 400px) {
+    .glass-panel {
+        padding: 30px 20px;
+        border-radius: 20px;
+    }
+    .brand-logo h2 { font-size: 24px !important; }
 }
 
-.brand-logo h2 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.5px;
-}
-
-.brand-logo p {
-    font-size: 15px;
-    color: var(--text-muted);
-    margin-top: 8px;
-}
-
-/* --- مدخلات البيانات --- */
+/* تنسيق المدخلات بشكل مرن */
 .input-group {
-    margin-bottom: 22px;
+    margin-bottom: 18px;
+    width: 100%;
 }
 
-.input-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #e2e8f0;
-}
-
-.input-group input, 
-#countryCode {
+input, select {
     width: 100%;
     padding: 14px 16px;
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
     background: rgba(0, 0, 0, 0.2);
-    color: #fff;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: white;
     font-family: 'Cairo', sans-serif;
+    font-size: 16px; /* يمنع الزووم التلقائي في الآيفون */
+    transition: 0.3s;
 }
 
-.input-group input:focus, 
-#countryCode:focus {
+input:focus {
     outline: none;
-    border-color: var(--primary-blue);
+    border-color: var(--primary);
     background: rgba(0, 0, 0, 0.3);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
 
-/* --- تنسيق رقم الجوال المطور --- */
-.phone-group {
+/* تنسيق رقم الجوال المستجيب */
+.phone-row {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    direction: ltr; /* لضمان ظهور الرمز يسار الرقم */
 }
 
 #countryCode {
-    width: 110px;
-    cursor: pointer;
-    text-align: center;
+    width: 90px;
+    flex-shrink: 0;
 }
 
-/* --- نظام قوة كلمة المرور --- */
-.strength-meter {
-    height: 6px;
-    background: rgba(0, 0, 0, 0.3);
+/* مقياس القوة */
+.strength-container {
+    margin-top: 8px;
+}
+.strength-bar-bg {
+    height: 5px;
+    background: rgba(255,255,255,0.05);
     border-radius: 10px;
-    margin-top: 10px;
-    overflow: hidden;
 }
-
-.strength-bar {
+.strength-fill {
     height: 100%;
-    width: 0%;
-    transition: all 0.4s ease;
+    width: 0;
+    transition: 0.5s ease;
+    border-radius: 10px;
 }
 
-.rules-list {
-    margin-top: 12px;
-    padding: 0;
-    list-style: none;
-}
-
-.rule {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: color 0.3s ease;
-}
-
-.rule::before {
-    content: "●";
-    font-size: 10px;
-}
-
-.rule.valid {
-    color: var(--success);
-}
-
-/* --- واجهة الـ OTP والمؤقت --- */
-.otp-screen {
-    text-align: center;
-}
-
-.otp-input {
-    letter-spacing: 12px;
-    font-size: 24px !important;
-    text-align: center;
-    font-weight: 800;
-    color: var(--primary-blue) !important;
-}
-
-#timerDisplay {
-    margin: 20px 0;
-    font-size: 14px;
-    color: var(--text-muted);
-}
-
-#timer {
-    color: var(--warning);
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-}
-
-/* --- الأزرار --- */
-.btn-primary {
+/* الأزرار */
+.btn-main {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #fff;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
+    color: white;
+    font-weight: 800;
     font-size: 16px;
-    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
-}
-
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: #475569;
-    box-shadow: none;
-}
-
-.btn-secondary {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-muted);
-    font-size: 14px;
-    padding: 10px;
+    box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
     margin-top: 10px;
 }
 
-.btn-secondary:hover:not(:disabled) {
-    border-color: var(--primary-blue);
-    color: var(--primary-blue);
-    background: rgba(56, 189, 248, 0.05);
-}
-
-/* --- الروابط والرسائل --- */
-.form-footer {
-    text-align: center;
-    margin-top: 25px;
-    font-size: 14px;
-}
-
-.link-blue {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 700;
-    margin-right: 5px;
-}
-
-.error-msg {
-    color: var(--error);
-    text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-    font-weight: 500;
+.btn-main:active {
+    transform: scale(0.98);
 }
