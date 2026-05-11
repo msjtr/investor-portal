@@ -3,167 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب | بوابة المستثمرين</title>
+    <title>إنشاء حساب مستثمر | بوابة المستثمرين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #2563eb;
-            --glass: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.12);
-            --success: #4ade80;
-            --error: #ff4d4d;
+            --primary: #38bdf8;
+            --glass: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --error: #ef4444;
+            --text-dim: #94a3b8;
         }
 
         body {
             background: radial-gradient(circle at top right, #1e293b, #0f172a);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            color: white;
-            box-sizing: border-box;
-            overflow-x: hidden;
+            font-family: 'Cairo', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px;
+            color: white; direction: rtl; box-sizing: border-box;
         }
 
-        /* حاوية الإشعارات في المنتصف */
+        /* الإشعارات في منتصف الشاشة */
         .toast-overlay {
-            position: fixed;
-            top: 50%;
-            left: 50%;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1000;
-            display: none;
-            animation: fadeIn 0.3s ease;
+            z-index: 2000; display: none;
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .toast-box {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 30px 50px; border-radius: 24px;
+            text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.8);
         }
 
-        .toast-box {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            padding: 25px 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
+        .auth-container { width: 100%; max-width: 480px; }
 
         .glass-panel {
             background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            text-align: center;
+            border-radius: 30px;
+            padding: 35px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
-        .input-group { margin-bottom: 15px; position: relative; width: 100%; }
+        .section-header {
+            font-size: 16px; font-weight: 700; color: var(--primary);
+            margin: 25px 0 15px 0; border-bottom: 1px solid var(--border);
+            padding-bottom: 8px; text-align: right;
+        }
+
+        .input-group { margin-bottom: 22px; position: relative; text-align: right; }
+        
+        label {
+            display: block; font-size: 13px; color: var(--text-dim);
+            margin-bottom: 8px; margin-right: 5px; font-weight: 600;
+        }
 
         input, select {
-            width: 100%;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.05);
+            width: 100%; padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.25);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s ease;
+            border-radius: 14px; color: white;
+            font-size: 16px; font-family: 'Cairo';
+            box-sizing: border-box; outline: none; transition: 0.3s;
         }
 
-        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
+        input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); }
 
-        /* أيقونة العين لمعاينة الباسورد */
         .pass-toggle {
-            position: absolute;
-            left: 15px;
-            top: 15px;
-            cursor: pointer;
-            color: #94a3b8;
-            font-size: 14px;
+            position: absolute; left: 15px; top: 40px;
+            cursor: pointer; color: var(--text-dim); font-size: 18px;
         }
 
-        .phone-group { display: flex; gap: 8px; }
-        .phone-group select { width: 100px; }
+        .phone-row { display: flex; gap: 10px; direction: ltr; }
+        #countryCode { width: 100px; }
 
         .req-list { text-align: right; padding: 0; margin: 10px 0; list-style: none; font-size: 12px; }
-        .req-list li { color: var(--error); margin-bottom: 4px; }
+        .req-list li { color: var(--error); margin-bottom: 5px; transition: 0.3s; }
         .req-list li.valid { color: var(--success); }
 
-        /* حالة تطابق الباسورد */
-        .match-msg { font-size: 12px; text-align: right; margin-top: -10px; margin-bottom: 10px; display: none; }
-
-        .btn-primary {
-            width: 100%; padding: 14px;
-            background: var(--primary);
-            border: none; border-radius: 12px;
-            color: white; font-weight: bold; font-size: 16px;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        .btn-main {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            border: none; border-radius: 14px;
+            color: white; font-weight: 800; font-size: 16px;
+            cursor: pointer; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+            margin-top: 15px;
         }
 
-        .btn-primary:disabled { opacity: 0.5; cursor: wait; }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-main:disabled { opacity: 0.6; cursor: wait; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -60%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+        .back-link { text-align: center; margin-top: 25px; }
+        .back-link a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .back-link a:hover { color: var(--primary); }
+
+        @keyframes popIn { from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        
+        /* تباعد الأيقونات */
+        .icon-space { margin-left: 8px; }
     </style>
 </head>
 <body>
 
     <div id="toastOverlay" class="toast-overlay">
         <div class="toast-box">
-            <div id="toastIcon" style="font-size: 40px; margin-bottom: 10px;">✅</div>
-            <div id="toastMsg" style="font-size: 16px; font-weight: 600;"></div>
+            <div id="toastIcon" style="font-size: 50px; margin-bottom: 15px;">✅</div>
+            <div id="toastMsg" style="font-size: 18px; font-weight: 700;"></div>
         </div>
     </div>
 
-    <div class="glass-panel">
-        <div id="regStep1">
-            <h2>إنشاء حساب جديد</h2>
+    <div class="auth-container">
+        <div class="glass-panel" id="regStep1">
+            <h2 style="text-align:center; margin-bottom:10px;">بوابة المستثمرين</h2>
+            
             <form id="registerForm">
-                <div class="input-group"><input type="text" id="fullName" placeholder="الاسم الكامل" required></div>
-                <div class="input-group"><input type="email" id="email" placeholder="البريد الإلكتروني" required></div>
-                <div class="input-group"><input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required></div>
+                <div class="section-header">👤 المعلومات الشخصية</div>
                 
-                <div class="phone-group">
-                    <select id="country">
-                        <option value="+966">🇸🇦 +966</option>
-                        <option value="+20">🇪🇬 +20</option>
-                    </select>
-                    <input type="tel" id="phone" placeholder="رقم الجوال" required>
+                <div class="input-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك كما في الهوية" required>
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="pass" placeholder="كلمة المرور (English Only)" required>
-                    <span class="pass-toggle" onclick="togglePass('pass')">👁️</span>
+                    <label>رقم الجوال</label>
+                    <div class="phone-row">
+                        <select id="countryCode">
+                            <option value="+966">🇸🇦 +966</option>
+                            <option value="+20">🇪🇬 +20</option>
+                        </select>
+                        <input type="tel" id="phone" placeholder="5XXXXXXXX" required>
+                    </div>
                 </div>
-                
+
+                <div class="input-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>تأكيد البريد الإلكتروني</label>
+                    <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد" required>
+                </div>
+
+                <div class="section-header">🔐 معلومات التسجيل</div>
+
+                <div class="input-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="username" placeholder="اسم مستعار للدخول" required>
+                </div>
+
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="pass" placeholder="••••••••" required>
+                    <span class="pass-toggle" onclick="togglePass('pass', this)">👁️</span>
+                </div>
+
                 <ul class="req-list">
                     <li id="reqLen">● 6 خانات على الأقل</li>
-                    <li id="reqChar">● حرف واحد على الأقل</li>
-                    <li id="reqSpec">● رمز خاص (@#$%)</li>
+                    <li id="reqChar">● حرف واحد على الأقل (English)</li>
+                    <li id="reqSpec">● رمز خاص واحد (@#$%)</li>
                 </ul>
-                
-                <div class="input-group">
-                    <input type="password" id="confirmPass" placeholder="تأكيد كلمة المرور" required>
-                    <span class="pass-toggle" onclick="togglePass('confirmPass')">👁️</span>
-                </div>
-                <div id="matchMsg" class="match-msg"></div>
 
-                <button type="submit" id="submitBtn" class="btn-primary">إنشاء حساب</button>
+                <div class="input-group">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" id="confirmPass" placeholder="••••••••" required>
+                    <span class="pass-toggle" onclick="togglePass('confirmPass', this)">👁️</span>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-main">إنشاء حساب</button>
             </form>
+
+            <div class="back-link">
+                <a href="login.html">← الرجوع لصفحة الدخول</a>
+            </div>
         </div>
 
-        <div id="regStep2" style="display:none;">
+        <div class="glass-panel" id="regStep2" style="display:none; text-align:center;">
             <h2>تفعيل الحساب</h2>
-            <p style="font-size: 14px; color: #cbd5e1;">أدخل الكود المرسل لبريدك الإلكتروني</p>
-            <input type="text" id="regOtp" placeholder="0 0 0 0" maxlength="4" style="text-align: center; font-size: 24px; letter-spacing: 10px;">
-            <div class="timer-box">إعادة الإرسال خلال: <span id="regTimer">05:00</span></div>
-            <button id="resendRegBtn" class="btn-primary" disabled style="background: #334155;">إعادة إرسال الكود</button>
-            <button id="activateBtn" class="btn-primary">تفعيل وتثبيت</button>
+            <p style="color:var(--text-dim);">تم إرسال كود التحقق لبريدك الإلكتروني</p>
+            <input type="text" id="regOtp" placeholder="0 0 0 0" maxlength="4" style="text-align:center; font-size:35px; letter-spacing:15px; background:rgba(0,0,0,0.4); margin:20px 0;">
+            <div style="font-size:14px; margin-bottom:20px;">إعادة الإرسال خلال: <span id="regTimer" style="font-weight:bold;">05:00</span></div>
+            <button id="resendRegBtn" class="btn-main" style="background:#334155;" disabled>إعادة إرسال</button>
+            <button id="activateBtn" class="btn-main">تفعيل الحساب</button>
         </div>
     </div>
 
@@ -171,117 +197,108 @@
         const WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
         let generatedOtp = null;
 
-        // وظيفة الإشعار الجمالي
-        function showToast(msg, isSuccess = true) {
+        // 1. نظام الكاش (الحفظ التلقائي)
+        const cacheFields = ['fullName', 'email', 'confirmEmail', 'phone', 'username'];
+        window.onload = () => {
+            cacheFields.forEach(id => {
+                const savedValue = localStorage.getItem('cache_' + id);
+                if (savedValue) document.getElementById(id).value = savedValue;
+                
+                document.getElementById(id).addEventListener('input', (e) => {
+                    localStorage.setItem('cache_' + id, e.target.value);
+                });
+            });
+        };
+
+        // 2. إشعارات جمالية في المنتصف
+        function showToast(msg, success = true) {
             const overlay = document.getElementById('toastOverlay');
             document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').innerText = isSuccess ? '✅' : '⚠️';
+            document.getElementById('toastIcon').innerText = success ? '✅' : '⚠️';
             overlay.style.display = 'block';
             setTimeout(() => { overlay.style.display = 'none'; }, 3000);
         }
 
-        // معاينة الباسورد
-        function togglePass(id) {
+        // 3. معاينة كلمة المرور
+        function togglePass(id, btn) {
             const input = document.getElementById(id);
-            input.type = input.type === 'password' ? 'text' : 'password';
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerText = '🔒';
+            } else {
+                input.type = 'password';
+                btn.innerText = '👁️';
+            }
         }
 
-        // مراقبة كلمة المرور (إنجليزي فقط + مطابقة)
+        // 4. مراقبة قوة كلمة المرور
         const pass = document.getElementById('pass');
-        const confirmPass = document.getElementById('confirmPass');
-        const matchMsg = document.getElementById('matchMsg');
-
         pass.addEventListener('input', () => {
-            // منع العربي
-            pass.value = pass.value.replace(/[^\x00-\x7F]/g, "");
-            
             const v = pass.value;
+            // منع العربي في كلمة المرور
+            pass.value = v.replace(/[^\x00-\x7F]/g, "");
+            
             document.getElementById('reqLen').classList.toggle('valid', v.length >= 6);
             document.getElementById('reqChar').classList.toggle('valid', /[a-zA-Z]/.test(v));
             document.getElementById('reqSpec').classList.toggle('valid', /[\W_]/.test(v));
-            checkMatch();
         });
 
-        confirmPass.addEventListener('input', checkMatch);
-
-        function checkMatch() {
-            if (confirmPass.value === "") {
-                matchMsg.style.display = 'none';
-                return;
-            }
-            matchMsg.style.display = 'block';
-            if (pass.value === confirmPass.value) {
-                matchMsg.innerText = "● كلمات المرور متطابقة";
-                matchMsg.style.color = "var(--success)";
-            } else {
-                matchMsg.innerText = "● كلمات المرور غير متطابقة";
-                matchMsg.style.color = "var(--error)";
-            }
-        }
-
-        // إرسال النموذج (حل مشكلة عدم وصول الكود)
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        // 5. إرسال الكود لـ Make.com
+        document.getElementById('registerForm').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const cEmail = document.getElementById('confirmEmail').value;
+            
+            // التحقق من المطابقة
+            if(document.getElementById('email').value !== document.getElementById('confirmEmail').value) return showToast("البريد غير متطابق", false);
+            if(document.getElementById('pass').value !== document.getElementById('confirmPass').value) return showToast("كلمة المرور غير متطابقة", false);
 
-            if(email !== cEmail) return showToast("البريد الإلكتروني غير متطابق", false);
-            if(pass.value !== confirmPass.value) return showToast("كلمة المرور غير متطابقة", false);
-
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerText = "جاري إرسال كود التحقق...";
-
-            // توليد كود التحقق
             generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerText = "جاري إرسال الكود...";
 
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         name: document.getElementById('fullName').value,
-                        email: email,
+                        email: document.getElementById('email').value,
+                        username: document.getElementById('username').value,
                         pin: generatedOtp
                     })
                 });
 
                 if (response.ok) {
-                    showToast("تم إرسال كود التفعيل لبريدك", true);
+                    showToast("تم إرسال كود التفعيل بنجاح!");
                     document.getElementById('regStep1').style.display = 'none';
                     document.getElementById('regStep2').style.display = 'block';
-                    startTimer(300, 'regTimer', 'resendRegBtn');
-                } else {
-                    throw new Error();
+                    startTimer(300);
+                    // مسح الكاش عند النجاح
+                    cacheFields.forEach(id => localStorage.removeItem('cache_' + id));
                 }
             } catch (err) {
-                showToast("فشل في إرسال الكود، حاول مجدداً", false);
-                btn.disabled = false;
-                btn.innerText = "إنشاء حساب";
+                showToast("فشل الاتصال، حاول مجدداً", false);
+                btn.disabled = false; btn.innerText = "إنشاء حساب";
             }
-        });
+        };
 
-        function startTimer(duration, displayId, btnId) {
+        function startTimer(duration) {
             let timer = duration;
-            const display = document.getElementById(displayId);
-            const btn = document.getElementById(btnId);
+            const text = document.getElementById('regTimer');
             const interval = setInterval(() => {
                 let m = Math.floor(timer / 60), s = timer % 60;
-                display.textContent = `${m}:${s < 10 ? '0'+s : s}`;
-                if (--timer < 0) { 
-                    clearInterval(interval); 
-                    btn.disabled = false; 
-                    btn.style.background = "#2563eb"; 
-                    btn.innerText = "إعادة إرسال الكود الآن";
+                text.innerText = `${m}:${s < 10 ? '0'+s : s}`;
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    document.getElementById('resendRegBtn').disabled = false;
+                    document.getElementById('resendRegBtn').style.background = "var(--primary)";
                 }
             }, 1000);
         }
 
         document.getElementById('activateBtn').onclick = () => {
-            const entered = document.getElementById('regOtp').value;
-            if (entered === generatedOtp) {
-                showToast("تم تفعيل حسابكم بنجاح!", true);
-                setTimeout(() => { window.location.href = "login.html"; }, 2000);
+            if(document.getElementById('regOtp').value === generatedOtp) {
+                showToast("تم تفعيل حسابكم بنجاح! 🎉");
+                setTimeout(() => { window.location.href = "login.html"; }, 2500);
             } else {
                 showToast("كود التحقق غير صحيح", false);
             }
