@@ -9,128 +9,143 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
     <style>
+        /* --- 1. المتغيرات الأساسية للمشروع --- */
         :root {
             --primary: #38bdf8;
             --primary-dark: #0284c7;
             --primary-glow: rgba(56, 189, 248, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --bg-dark: #0f172a;
-            --glass: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.1);
             --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --error: #ef4444;
             --text-main: #ffffff;
             --text-muted: #94a3b8;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- 2. إعدادات الصفحة الرئيسية --- */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
         body {
             margin: 0; padding: 0;
             font-family: 'Cairo', sans-serif;
-            background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            direction: rtl; overflow-x: hidden;
+            direction: rtl; color: var(--text-main);
+            overflow-x: hidden;
         }
 
-        /* --- نظام الإشعارات المنبثقة (Toast 3D) --- */
+        /* --- 3. نظام الإشعارات المنبثقة (Toast 3D Overlay) --- */
         .toast-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 9999; display: none;
             animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        @keyframes popIn { from { opacity: 0; transform: translate(-50%, -40%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        @keyframes popIn { 
+            from { opacity: 0; transform: translate(-50%, -40%) scale(0.8); } 
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); } 
+        }
 
         .toast-box {
             background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            padding: 25px 40px; border-radius: 24px;
-            text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            padding: 30px 50px; border-radius: 28px;
+            text-align: center; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
         }
 
-        /* --- الحاوية الرئيسية --- */
+        /* --- 4. الحاوية الزجاجية الرئيسية --- */
         .auth-container { width: 92%; max-width: 480px; margin: 20px auto; }
         .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 32px; padding: 40px 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px; padding: 40px 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
 
+        /* --- 5. ترويسة الأقسام --- */
         .section-header {
             display: flex; align-items: center; gap: 10px;
-            color: var(--primary); margin: 25px 0 15px 0;
-            border-bottom: 1px solid var(--border); padding-bottom: 8px;
+            color: var(--primary); margin: 30px 0 18px 0;
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;
         }
-        .section-header span { font-size: 22px; font-variation-settings: 'FILL' 1; }
+        .section-header span { font-size: 24px; font-variation-settings: 'FILL' 1; }
 
-        /* --- تنسيق الحقول --- */
-        .input-group { margin-bottom: 20px; position: relative; text-align: right; }
+        /* --- 6. تنسيق المدخلات والتسميات --- */
+        .input-group { margin-bottom: 22px; width: 100%; position: relative; text-align: right; }
         .input-label { display: block; color: var(--text-muted); font-size: 13px; font-weight: 600; margin-bottom: 8px; margin-right: 5px; }
 
         input, select {
-            width: 100%; padding: 14px 16px;
-            background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border);
-            border-radius: 14px; color: white; font-family: 'Cairo'; font-size: 16px;
+            width: 100%; padding: 15px 18px;
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border);
+            border-radius: 16px; color: var(--text-main); font-family: 'Cairo'; font-size: 16px;
         }
-        input:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.3); box-shadow: 0 0 0 4px var(--primary-glow); }
+        input:focus { outline: none; border-color: var(--primary); background: rgba(0, 0, 0, 0.45); box-shadow: 0 0 0 4px var(--primary-glow); }
 
-        /* تعديل القائمة المنسدلة */
-        select option { background: #0f172a; color: white; }
+        /* تحسين شكل القائمة المنسدلة */
+        select option { background: #1e293b; color: white; }
 
-        .phone-row { display: flex; gap: 8px; direction: ltr; }
-        #countryCode { width: 100px; flex-shrink: 0; }
+        .phone-row { display: flex; gap: 10px; direction: ltr; }
+        #countryCode { width: 105px; flex-shrink: 0; cursor: pointer; }
 
-        /* زر معاينة الباسورد */
+        /* زر إظهار الباسورد */
         .pass-wrapper { position: relative; }
         .toggle-btn {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            cursor: pointer; color: var(--text-muted); font-size: 20px; user-select: none;
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: var(--text-muted); font-size: 22px; z-index: 5;
         }
         .toggle-btn:hover { color: var(--primary); }
 
-        /* --- مقياس القوة والشروط --- */
-        .strength-container { margin-top: 15px; }
-        .strength-bar { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+        /* --- 7. مقياس القوة والشروط (تحت الباسورد) --- */
+        .strength-container { margin-top: 10px; }
+        .strength-bar { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
         #strengthFill { height: 100%; width: 0; transition: 0.5s ease; }
         
         .req-list { list-style: none; padding: 0; margin: 0; font-size: 12px; }
-        .req-list li { display: flex; align-items: center; gap: 6px; color: var(--danger); margin-bottom: 4px; }
+        .req-list li { display: flex; align-items: center; gap: 8px; color: var(--error); margin-bottom: 6px; font-weight: 600; }
         .req-list li.valid { color: var(--success); }
-        .req-list li span { font-size: 14px; }
+        .req-list li span { font-size: 16px; }
 
+        /* --- 8. الأزرار والروابط --- */
         .btn-main {
-            width: 100%; padding: 16px; margin-top: 20px;
+            width: 100%; padding: 18px; margin-top: 25px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none; border-radius: 14px; color: white; font-weight: 800; font-size: 16px;
-            cursor: pointer; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+            border: none; border-radius: 16px; color: white; font-weight: 800; font-size: 17px;
+            cursor: pointer; box-shadow: 0 12px 24px rgba(2, 132, 199, 0.4);
         }
-        .btn-main:active { transform: scale(0.98); }
+        .btn-main:active { transform: scale(0.97); }
 
-        .switch-link { text-align: center; margin-top: 20px; font-size: 14px; }
-        .switch-link a { color: var(--primary); text-decoration: none; font-weight: 700; }
+        .switch-link { text-align: center; margin-top: 25px; font-size: 14px; }
+        .switch-link a { color: var(--primary); text-decoration: none; font-weight: 700; border-bottom: 1px solid transparent; }
+        .switch-link a:hover { border-bottom-color: var(--primary); }
+
+        /* نظام الكاش: وميض بسيط للحقول المسترجعة */
+        .cached-flash { animation: flashBlue 1.5s ease; }
+        @keyframes flashBlue { 0% { border-color: var(--primary); } 100% { border-color: var(--glass-border); } }
     </style>
 </head>
 <body>
 
 <div class="toast-overlay" id="toastOverlay">
     <div class="toast-box">
-        <span class="material-symbols-rounded" id="toastIcon" style="font-size: 40px; color: var(--primary);">info</span>
-        <div id="toastMsg" style="margin-top: 10px; font-weight: 600;"></div>
+        <span class="material-symbols-rounded" id="toastIcon" style="font-size: 45px; color: var(--primary);">verified_user</span>
+        <div id="toastMsg">جاري معالجة طلبك...</div>
     </div>
 </div>
 
 <div class="auth-container">
     <div class="glass-panel">
-        <h2 style="text-align: center; margin-bottom: 30px; font-weight: 800;">إنشاء حساب جديد</h2>
+        <h2 id="pageTitle">بوابة المستثمرين</h2>
         
         <form id="registerForm">
             <div class="section-header">
-                <span class="material-symbols-rounded">person_filled</span>
+                <span class="material-symbols-rounded">person_celebrate</span>
                 المعلومات الشخصية
             </div>
             
@@ -144,10 +159,10 @@
                 <div class="phone-row">
                     <select id="countryCode">
                         <option value="+966">🇸🇦 +966</option>
-                        <option value="+20">🇪🇬 +20</option>
                         <option value="+971">🇦🇪 +971</option>
+                        <option value="+20">🇪🇬 +20</option>
                     </select>
-                    <input type="tel" id="phone" placeholder="5xxxxxxxx" required>
+                    <input type="tel" id="phone" placeholder="5XXXXXXXX" required>
                 </div>
             </div>
 
@@ -158,24 +173,24 @@
 
             <div class="input-group">
                 <label class="input-label">تأكيد البريد الإلكتروني</label>
-                <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد" required>
+                <input type="email" id="confirmEmail" placeholder="أعد كتابة البريد للتأكيد" required>
             </div>
 
             <div class="section-header">
-                <span class="material-symbols-rounded">encrypted</span>
+                <span class="material-symbols-rounded">lock_person</span>
                 معلومات التسجيل
             </div>
 
             <div class="input-group">
-                <label class="input-label">اسم المستخدم</label>
-                <input type="text" id="username" placeholder="User123" required>
+                <label class="input-label">اسم المستخدم (Username)</label>
+                <input type="text" id="username" placeholder="مثال: Ahmed_2026" required>
             </div>
 
             <div class="input-group">
                 <label class="input-label">كلمة المرور</label>
                 <div class="pass-wrapper">
                     <input type="password" id="password" placeholder="••••••••" required>
-                    <span class="material-symbols-rounded toggle-btn" onclick="togglePass('password', this)">visibility</span>
+                    <span class="material-symbols-rounded toggle-btn" onclick="toggleView('password', this)">visibility</span>
                 </div>
             </div>
 
@@ -183,95 +198,98 @@
                 <label class="input-label">تأكيد كلمة المرور</label>
                 <div class="pass-wrapper">
                     <input type="password" id="confirmPassword" placeholder="••••••••" required>
-                    <span class="material-symbols-rounded toggle-btn" onclick="togglePass('confirmPassword', this)">visibility</span>
+                    <span class="material-symbols-rounded toggle-btn" onclick="toggleView('confirmPassword', this)">visibility</span>
                 </div>
             </div>
 
             <div class="strength-container">
                 <div class="strength-bar"><div id="strengthFill"></div></div>
                 <ul class="req-list">
-                    <li id="reqLen"><span class="material-symbols-rounded">check_circle</span>6 خانات على الأقل</li>
-                    <li id="reqChar"><span class="material-symbols-rounded">check_circle</span>حرف واحد على الأقل</li>
-                    <li id="reqSpec"><span class="material-symbols-rounded">check_circle</span>رمز خاص واحد (@#$%)</li>
+                    <li id="reqLen"><span class="material-symbols-rounded">gpp_maybe</span>6 خانات على الأقل</li>
+                    <li id="reqChar"><span class="material-symbols-rounded">gpp_maybe</span>حرف واحد على الأقل</li>
+                    <li id="reqSpec"><span class="material-symbols-rounded">gpp_maybe</span>رمز خاص واحد (@#$%)</li>
                 </ul>
             </div>
 
-            <button type="submit" class="btn-main">إنشاء الحساب</button>
+            <button type="submit" class="btn-main">إنشاء حساب المستثمر</button>
         </form>
 
         <div class="switch-link">
-            <a href="login.html">الرجوع لصفحة الدخول</a>
+            <a href="login.html">← العودة لصفحة تسجيل الدخول</a>
         </div>
     </div>
 </div>
 
 <script>
-    // --- 1. نظام الكاش (التخزين المؤقت) ---
-    const fieldIds = ['fullName', 'email', 'confirmEmail', 'phone', 'username', 'countryCode'];
+    // --- 1. نظام الكاش (التخزين الذكي) ---
+    const cacheItems = ['fullName', 'email', 'confirmEmail', 'phone', 'username', 'countryCode'];
     
     document.addEventListener('DOMContentLoaded', () => {
-        fieldIds.forEach(id => {
-            const field = document.getElementById(id);
-            const cached = localStorage.getItem('cache_' + id);
-            if (cached) field.value = cached;
-
-            field.addEventListener('input', () => {
-                localStorage.setItem('cache_' + id, field.value);
+        cacheItems.forEach(id => {
+            const el = document.getElementById(id);
+            const saved = localStorage.getItem('inv_cache_' + id);
+            if (saved) {
+                el.value = saved;
+                el.classList.add('cached-flash');
+            }
+            el.addEventListener('input', () => {
+                localStorage.setItem('inv_cache_' + id, el.value);
             });
         });
     });
 
     // --- 2. معاينة كلمة المرور (Toggle) ---
-    function togglePass(inputId, btn) {
+    function toggleView(inputId, btn) {
         const input = document.getElementById(inputId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            btn.textContent = 'visibility_off';
-            btn.style.color = 'var(--primary)';
-        } else {
-            input.type = 'password';
-            btn.textContent = 'visibility';
-            btn.style.color = 'var(--text-muted)';
-        }
+        const isPass = input.type === 'password';
+        input.type = isPass ? 'text' : 'password';
+        btn.textContent = isPass ? 'visibility_off' : 'visibility';
+        btn.style.color = isPass ? 'var(--primary)' : 'var(--text-muted)';
     }
 
-    // --- 3. قوة كلمة المرور ---
-    const passInput = document.getElementById('password');
-    passInput.addEventListener('input', () => {
-        const val = passInput.value;
-        const requirements = {
+    // --- 3. فحص قوة كلمة المرور ---
+    const passIn = document.getElementById('password');
+    passIn.addEventListener('input', () => {
+        const val = passIn.value;
+        const checks = {
             len: val.length >= 6,
             char: /[a-zA-Z]/.test(val),
             spec: /[\W_]/.test(val)
         };
 
-        document.getElementById('reqLen').className = requirements.len ? 'valid' : '';
-        document.getElementById('reqChar').className = requirements.char ? 'valid' : '';
-        document.getElementById('reqSpec').className = requirements.spec ? 'valid' : '';
+        document.getElementById('reqLen').classList.toggle('valid', checks.len);
+        document.getElementById('reqChar').classList.toggle('valid', checks.char);
+        document.getElementById('reqSpec').classList.toggle('valid', checks.spec);
 
-        const score = Object.values(requirements).filter(Boolean).length;
+        const score = Object.values(checks).filter(Boolean).length;
         const fill = document.getElementById('strengthFill');
         fill.style.width = (score * 33.3) + "%";
-        fill.style.backgroundColor = score === 3 ? "var(--success)" : score === 2 ? "var(--warning)" : "var(--danger)";
+        fill.style.backgroundColor = score === 3 ? "var(--success)" : score === 2 ? "var(--warning)" : "var(--error)";
     });
 
-    // --- 4. نظام التنبيهات 3D ---
-    function showToast(msg, type = 'info') {
+    // --- 4. نظام الإشعارات المنبثقة ---
+    function showToast(msg, icon = 'info') {
         const overlay = document.getElementById('toastOverlay');
         document.getElementById('toastMsg').textContent = msg;
+        document.getElementById('toastIcon').textContent = icon;
         overlay.style.display = 'block';
         setTimeout(() => { overlay.style.display = 'none'; }, 3000);
     }
 
-    // عند الإرسال
+    // عند الضغط على إنشاء حساب
     document.getElementById('registerForm').onsubmit = (e) => {
         e.preventDefault();
         if(document.getElementById('email').value !== document.getElementById('confirmEmail').value) {
-            showToast("البريد الإلكتروني غير متطابق", 'danger');
+            showToast("عذراً، البريد الإلكتروني غير متطابق", 'error_med');
             return;
         }
-        showToast("جاري معالجة البيانات...", 'success');
-        // هنا يتم الربط بـ Make.com أو Firebase
+        showToast("جاري إرسال رمز التفعيل لبريدك...", 'mail');
+        
+        // مسح الكاش عند النجاح
+        setTimeout(() => {
+            cacheItems.forEach(id => localStorage.removeItem('inv_cache_' + id));
+            // هنا يتم الربط بـ Make.com
+        }, 2000);
     };
 </script>
 
