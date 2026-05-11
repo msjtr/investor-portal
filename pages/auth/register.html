@@ -1,40 +1,183 @@
-<div class="glass-panel">
-    <div id="regStep1">
-        <h2>إنشاء حساب مستثمر</h2>
-        <form id="registerForm">
-            <input type="text" id="fullName" placeholder="الاسم الكامل" required>
-            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-            <input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required>
-            
-            <div class="phone-group">
-                <select id="countryCode">
-                    <option value="+966">🇸🇦 +966</option>
-                    <option value="+971">🇦🇪 +971</option>
-                    <option value="+965">🇰🇼 +965</option>
-                    <option value="+20">🇪🇬 +20</option>
-                </select>
-                <input type="tel" id="phone" placeholder="رقم الجوال" required>
-            </div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب | بوابة المستثمرين</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --glass: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.12);
+            --success: #4ade80;
+            --error: #ff4d4d;
+        }
 
-            <input type="password" id="pass" placeholder="كلمة المرور" required>
-            <div id="passReqs">
-                <div id="reqLen" class="requirement">● 6 أرقام/حروف على الأقل</div>
-                <div id="reqChar" class="requirement">● حرف واحد على الأقل</div>
-                <div id="reqSpec" class="requirement">● رمز خاص (@#$%)</div>
-            </div>
-            
-            <input type="password" id="confirmPass" placeholder="تأكيد كلمة المرور" required>
-            <button type="submit" class="btn-primary">تسجيل</button>
-        </form>
+        body {
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h2 { margin-bottom: 20px; font-size: 1.5rem; color: #f8fafc; }
+
+        .input-group { margin-bottom: 15px; position: relative; }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
+
+        .phone-group { display: flex; gap: 8px; }
+        .phone-group select { width: 100px; font-size: 14px; }
+
+        .req-list {
+            text-align: right;
+            padding: 0;
+            margin: 10px 0;
+            list-style: none;
+            font-size: 13px;
+        }
+
+        .req-list li { color: var(--error); margin-bottom: 4px; transition: 0.2s; }
+        .req-list li.valid { color: var(--success); }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; }
+
+        .timer-box { font-size: 14px; color: #94a3b8; margin: 15px 0; }
+        .switch-link { margin-top: 20px; font-size: 14px; color: #cbd5e1; }
+        .switch-link a { color: var(--primary); text-decoration: none; font-weight: bold; }
+
+        /* موبايل: تصغير الحواف لزيادة المساحة */
+        @media (max-width: 480px) {
+            .glass-panel { padding: 20px; border-radius: 18px; }
+            h2 { font-size: 1.3rem; }
+            input, .btn-primary { padding: 12px; font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel">
+        <div id="regStep1">
+            <h2>إنشاء حساب جديد</h2>
+            <form id="registerForm">
+                <input type="text" id="fullName" placeholder="الاسم الكامل" required>
+                <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+                <input type="email" id="confirmEmail" placeholder="تأكيد البريد الإلكتروني" required>
+                
+                <div class="phone-group">
+                    <select id="country">
+                        <option value="+966">🇸🇦 +966</option>
+                        <option value="+971">🇦🇪 +971</option>
+                        <option value="+20">🇪🇬 +20</option>
+                    </select>
+                    <input type="tel" id="phone" placeholder="رقم الجوال" required>
+                </div>
+
+                <input type="password" id="pass" placeholder="كلمة المرور" required>
+                <ul class="req-list">
+                    <li id="reqLen">● 6 أرقام/حروف على الأقل</li>
+                    <li id="reqChar">● حرف واحد على الأقل</li>
+                    <li id="reqSpec">● رمز خاص (@#$%)</li>
+                </ul>
+                
+                <input type="password" id="confirmPass" placeholder="تأكيد كلمة المرور" required>
+                <button type="submit" class="btn-primary">إنشاء حساب</button>
+            </form>
+            <div class="switch-link">لديك حساب؟ <a href="login.html">سجل دخولك</a></div>
+        </div>
+
+        <div id="regStep2" style="display:none;">
+            <h2>تفعيل الحساب</h2>
+            <p style="font-size: 14px; color: #cbd5e1;">أدخل الكود المرسل لبريدك الإلكتروني</p>
+            <input type="text" id="regOtp" placeholder="0 0 0 0" maxlength="4" style="text-align: center; font-size: 24px; letter-spacing: 10px;">
+            <div class="timer-box">إعادة الإرسال خلال: <span id="regTimer">05:00</span></div>
+            <button id="resendRegBtn" class="btn-primary" disabled style="background: #334155;">إعادة إرسال الكود</button>
+            <button id="activateBtn" class="btn-primary">تفعيل وتثبيت</button>
+        </div>
     </div>
 
-    <div id="regStep2" style="display: none;">
-        <h2>تفعيل الحساب</h2>
-        <p>أدخل الكود المرسل لبريدك</p>
-        <input type="text" id="otpReg" placeholder="0 0 0 0" maxlength="4" style="text-align:center; font-size: 24px;">
-        <div class="timer-text">إعادة الإرسال خلال: <span id="regTimer">05:00</span></div>
-        <button id="resendRegBtn" class="btn-primary" style="background:#475569" disabled>إعادة إرسال</button>
-        <button id="finishReg" class="btn-primary">تفعيل الآن</button>
-    </div>
-</div>
-<script src="register.js"></script>
+    <script>
+        // قوة كلمة المرور
+        const pass = document.getElementById('pass');
+        pass.addEventListener('input', () => {
+            const v = pass.value;
+            document.getElementById('reqLen').classList.toggle('valid', v.length >= 6);
+            document.getElementById('reqChar').classList.toggle('valid', /[a-zA-Z]/.test(v));
+            document.getElementById('reqSpec').classList.toggle('valid', /[\W_]/.test(v));
+        });
+
+        // الانتقال للتفعيل
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(document.getElementById('email').value !== document.getElementById('confirmEmail').value) return alert("البريد غير متطابق");
+            if(pass.value !== document.getElementById('confirmPass').value) return alert("كلمة المرور غير متطابقة");
+            
+            document.getElementById('regStep1').style.display = 'none';
+            document.getElementById('regStep2').style.display = 'block';
+            startTimer(300, 'regTimer', 'resendRegBtn');
+        });
+
+        function startTimer(duration, displayId, btnId) {
+            let timer = duration;
+            const display = document.getElementById(displayId);
+            const btn = document.getElementById(btnId);
+            const interval = setInterval(() => {
+                let m = Math.floor(timer / 60), s = timer % 60;
+                display.textContent = `${m}:${s < 10 ? '0'+s : s}`;
+                if (--timer < 0) { clearInterval(interval); btn.disabled = false; btn.style.background = "#2563eb"; }
+            }, 1000);
+        }
+
+        document.getElementById('activateBtn').onclick = () => {
+            alert("تم تفعيل حسابكم بنجاح! الرجوع للدخول");
+            window.location.href = "login.html";
+        };
+    </script>
+</body>
+</html>
