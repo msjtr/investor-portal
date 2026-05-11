@@ -1,41 +1,21 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | بوابة المستثمرين</title>
-    <link rel="stylesheet" href="../../styles/global.css">
-    <link rel="stylesheet" href="auth-v2.css">
-</head>
-<body>
-    <div class="auth-container">
-        <div class="glass-panel" id="loginFormContainer">
-            <h2 id="formTitle">تسجيل الدخول</h2>
-            
-            <form id="loginStep1">
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" placeholder="example@mail.com" required>
-                </div>
-                <div class="input-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="loginPass" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-primary">دخول</button>
-                <p class="switch-text">ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
-            </form>
-
-            <div id="loginStep2" style="display: none;">
-                <p>تم إرسال كلمة التحقق لمرة واحدة إلى بريدك</p>
-                <div class="otp-box">
-                    <input type="text" id="loginOtpInput" maxlength="4" placeholder="0 0 0 0">
-                </div>
-                <div id="timerBox">إعادة الإرسال خلال: <span id="lTimerText">05:00</span></div>
-                <button id="resendLoginOtp" class="btn-secondary" disabled style="margin-bottom: 10px;">إعادة إرسال الكود</button>
-                <button id="finalLoginBtn" class="btn-primary">تحقق ودخول</button>
-            </div>
-        </div>
+<div class="glass-panel">
+    <div id="loginStep1">
+        <h2>تسجيل الدخول</h2>
+        <form id="loginForm">
+            <input type="email" id="lEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="lPass" placeholder="كلمة المرور" required>
+            <button type="submit" class="btn-primary">دخول</button>
+            <p style="font-size:14px;">ليس لديك حساب؟ <a href="register.html" style="color:#60a5fa">سجل هنا</a></p>
+        </form>
     </div>
-    <script src="login-v2.js"></script>
-</body>
-</html>
+
+    <div id="loginStep2" style="display: none;">
+        <h2>تحقق من الهوية</h2>
+        <p>كود التحقق لمرة واحدة (OTP)</p>
+        <input type="text" id="otpLogin" placeholder="0 0 0 0" maxlength="4" style="text-align:center; font-size: 24px;">
+        <div class="timer-text">إعادة الإرسال خلال: <span id="lTimer">05:00</span></div>
+        <button id="resendLBtn" class="btn-primary" style="background:#475569" disabled>إعادة إرسال</button>
+        <button id="finishLogin" class="btn-primary">تحقق ودخول</button>
+    </div>
+</div>
+<script src="login.js"></script>
