@@ -4,40 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب | بوابة المستثمرين</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="../../brand-icon.svg">
+    
+    <link rel="stylesheet" href="../../styles/global.css">
 </head>
 <body>
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
-    <div class="glass-panel" style="width: 100%; max-width: 460px; padding: 40px 30px;">
-        <img src="../../brand-icon.svg" class="brand-logo">
-        <h2 style="text-align: center; margin-bottom: 30px;">إنشاء حساب جديد</h2>
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; width: 100%;">
+    <div class="glass-panel" style="width: 100%; max-width: 460px;">
+        <img src="../../brand-icon.svg" class="brand-logo" alt="بوابة المستثمرين">
+        <h2>إنشاء حساب جديد</h2>
+        
         <form id="registerForm">
             <div class="input-group">
                 <label class="input-label">الاسم الكامل</label>
-                <input type="text" id="fullName" placeholder="الاسم الثلاثي" required>
+                <input type="text" id="fullName" placeholder="الاسم كما في الهوية" required>
             </div>
+            
             <div class="input-group">
                 <label class="input-label">البريد الإلكتروني</label>
                 <input type="email" id="email" placeholder="m@" required>
             </div>
+            
             <div class="input-group">
                 <label class="input-label">اسم المستخدم</label>
-                <input type="text" id="username" placeholder="اختر اسم مستخدم" required>
+                <input type="text" id="username" placeholder="اختر اسم مستخدم فريد" required>
             </div>
+            
             <div class="input-group">
                 <label class="input-label">كلمة المرور</label>
-                <div class="input-wrapper">
-                    <input type="password" id="pass" placeholder="••••••••" required>
-                </div>
+                <input type="password" id="pass" placeholder="••••••••" required>
             </div>
+            
             <button type="submit" class="btn-main">إنشاء الحساب</button>
         </form>
-        <p style="text-align: center; margin-top: 20px; font-size: 14px;">
-            لديك حساب؟ <a href="login.html" style="color: var(--primary); text-decoration: none;">سجل دخولك</a>
-        </p>
+        
+        <div class="switch-link">
+            لديك حساب؟ <a href="login.html">سجل دخولك الآن</a>
+        </div>
     </div>
 </div>
+
 <script src="../../js/register.js"></script>
 </body>
 </html>
