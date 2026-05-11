@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const resendBtn = document.getElementById('resendRegBtn');
     const activateBtn = document.getElementById('activateBtn');
 
-    // عناصر التنبيه (Toast)
+    // عناصر التنبيه (Toast) المدعومة بالـ 3D
     const toastOverlay = document.getElementById('toastOverlay');
     const toastMsg = document.getElementById('toastMsg');
-    const toastIcon = document.getElementById('toastIcon');
+    const toastIconContainer = document.getElementById('toastIconContainer'); // تم التعديل لحاوية الـ 3D
 
     const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
 
@@ -34,28 +34,43 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldsToCache.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            // استرجاع القيمة من الكاش
             const savedValue = localStorage.getItem('cache_' + id);
             if (savedValue) element.value = savedValue;
 
-            // حفظ القيمة عند كل تغيير (input)
             element.addEventListener('input', () => {
                 localStorage.setItem('cache_' + id, element.value);
             });
         }
     });
 
-    // --- وظيفة التنبيه الجمالي في المنتصف ---
+    // --- وظيفة التنبيه الجمالي ثلاثي الأبعاد في المنتصف ---
     function showToast(message, isSuccess = true) {
+        // تفريغ الحاوية أولاً
+        toastIconContainer.innerHTML = '';
+        
+        // إنشاء وحقن أيقونة 3D متحركة بناءً على النتيجة
+        const icon = document.createElement('lord-icon');
+        icon.setAttribute('trigger', 'in');
+        icon.style.width = '80px';
+        icon.style.height = '80px';
+
+        if (isSuccess) {
+            icon.setAttribute('src', 'https://cdn.lordicon.com/guqkthbs.json'); // أيقونة نجاح 3D
+            icon.setAttribute('colors', 'primary:#10b981'); // أخضر
+        } else {
+            icon.setAttribute('src', 'https://cdn.lordicon.com/bmnlikjh.json'); // أيقونة خطأ 3D
+            icon.setAttribute('colors', 'primary:#ef4444'); // أحمر
+        }
+
+        toastIconContainer.appendChild(icon);
         toastMsg.textContent = message;
-        toastIcon.textContent = isSuccess ? '✅' : '⚠️';
         toastOverlay.style.display = 'block';
+        
         setTimeout(() => { toastOverlay.style.display = 'none'; }, 3000);
     }
 
     // --- 3. نظام فحص كلمة المرور (إنجليزي فقط + قوة) ---
     passwordInput.addEventListener('input', () => {
-        // منع اللغة العربية والحروف غير اللاتينية
         passwordInput.value = passwordInput.value.replace(/[^\x00-\x7F]/g, "");
 
         const val = passwordInput.value;
@@ -65,12 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
             spec: /[\W_]/.test(val)
         };
 
-        // تحديث ألوان القائمة
         if(document.getElementById('reqLen')) document.getElementById('reqLen').classList.toggle('valid', reqs.len);
         if(document.getElementById('reqChar')) document.getElementById('reqChar').classList.toggle('valid', reqs.char);
         if(document.getElementById('reqSpec')) document.getElementById('reqSpec').classList.toggle('valid', reqs.spec);
 
-        // تلوين شريط القوة بناءً على الشروط
         let score = Object.values(reqs).filter(Boolean).length;
         if (strengthFill) {
             strengthFill.style.width = (score / 3 * 100) + "%";
@@ -84,16 +97,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkMatch() {
         if (!confirmPasswordInput.value) {
-            matchMsg.style.display = 'none';
+            if(matchMsg) matchMsg.style.display = 'none';
             return;
         }
-        matchMsg.style.display = 'block';
-        if (passwordInput.value === confirmPasswordInput.value) {
-            matchMsg.textContent = "● كلمات المرور متطابقة";
-            matchMsg.style.color = "#4ade80";
-        } else {
-            matchMsg.textContent = "● كلمات المرور غير متطابقة";
-            matchMsg.style.color = "#f87171";
+        if(matchMsg) {
+            matchMsg.style.display = 'block';
+            if (passwordInput.value === confirmPasswordInput.value) {
+                matchMsg.textContent = "● كلمات المرور متطابقة";
+                matchMsg.style.color = "#4ade80";
+            } else {
+                matchMsg.textContent = "● كلمات المرور غير متطابقة";
+                matchMsg.style.color = "#f87171";
+            }
         }
     }
 
@@ -119,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // تحققات نهائية قبل الإرسال
         if (emailInput.value.trim() !== confirmEmailInput.value.trim()) {
             showToast("عذراً، البريد الإلكتروني غير متطابق!", false);
             return;
@@ -135,12 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
         
-        // تجهيز بيانات المستخدم كاملة
         tempUserData = {
             name: document.getElementById('fullName').value.trim(),
             username: document.getElementById('username').value.trim(),
             email: emailInput.value.trim(),
-            phone: document.getElementById('country').value + document.getElementById('phone').value.trim(),
+            phone: document.getElementById('countryCode').value + document.getElementById('phone').value.trim(),
             password: passwordInput.value
         };
 
@@ -160,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast("تم إرسال الكود لبريدك بنجاح", true);
                 regStep1.style.display = 'none';
                 regStep2.style.display = 'block';
-                startTimer(300); // 5 دقائق
+                startTimer(300);
             } else { throw new Error(); }
         } catch (error) {
             showToast("فشل إرسال الكود، تأكد من الاتصال", false);
@@ -174,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (otpInput.value.trim() === generatedPin) {
             showToast("تم تفعيل حسابكم بنجاح! 🎉", true);
             
-            // مسح الكاش بعد النجاح لضمان الأمان
             fieldsToCache.forEach(id => localStorage.removeItem('cache_' + id));
             
             setTimeout(() => { window.location.href = "login.html"; }, 2000);
@@ -187,9 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // وظيفة العين (خارج النطاق لتكون متاحة للـ onclick في HTML)
 function togglePass(id) {
     const input = document.getElementById(id);
-    if (input.type === 'password') {
-        input.type = 'text';
-    } else {
-        input.type = 'password';
+    if (input) {
+        input.type = input.type === 'password' ? 'text' : 'password';
     }
 }
