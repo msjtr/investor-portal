@@ -4,52 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول | بوابة المستثمرين</title>
-    <style> /* الصق نفس كود الـ CSS الموجود في الأعلى هنا لتوحيد الشكل */ </style>
+    
+    <link rel="icon" href="data:,">
+    
+    <link rel="stylesheet" href="../../styles/global.css">
 </head>
 <body>
+
+<div class="auth-container">
     <div class="glass-panel">
+        
         <div id="loginStep1">
             <h2>تسجيل الدخول</h2>
             <form id="loginForm">
-                <input type="email" id="lEmail" placeholder="البريد الإلكتروني" required>
-                <input type="password" id="lPass" placeholder="كلمة المرور" required>
-                <button type="submit" class="btn-primary">دخول</button>
+                <div class="input-group">
+                    <input type="email" id="lEmail" placeholder="البريد الإلكتروني" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="lPass" placeholder="كلمة المرور" required>
+                </div>
+                <button type="submit" class="btn-main">دخول</button>
             </form>
-            <div class="switch-link">ليس لديك حساب؟ <a href="register.html">سجل هنا</a></div>
+            <div class="switch-link">
+                ليس لديك حساب؟ <a href="register.html">سجل هنا</a>
+            </div>
         </div>
 
-        <div id="loginStep2" style="display:none;">
+        <div id="loginStep2" style="display:none; text-align: center;">
             <h2>تحقق من الهوية</h2>
-            <p style="font-size: 14px; color: #cbd5e1;">أدخل كلمة التحقق لمرة واحدة (OTP)</p>
-            <input type="text" id="lOtp" placeholder="0 0 0 0" maxlength="4" style="text-align: center; font-size: 24px; letter-spacing: 10px;">
-            <div class="timer-box">إعادة الإرسال خلال: <span id="lTimer">05:00</span></div>
-            <button id="resendLBtn" class="btn-primary" disabled style="background: #334155;">إعادة إرسال</button>
-            <button id="finishLogin" class="btn-primary">تحقق ودخول</button>
+            <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 20px;">أدخل كلمة التحقق لمرة واحدة (OTP) المرسلة لبريدك</p>
+            
+            <div class="input-group">
+                <input type="text" id="lOtp" placeholder="0 0 0 0" maxlength="4" 
+                       style="text-align: center; font-size: 28px; letter-spacing: 12px; background: rgba(0,0,0,0.35);">
+            </div>
+            
+            <div class="timer-container">
+                إعادة الإرسال خلال: <span id="lTimer" class="timer-count">05:00</span>
+            </div>
+            
+            <button id="resendLBtn" class="btn-main" disabled style="background: #334155; box-shadow: none; margin-bottom: 10px;">
+                إعادة إرسال الكود
+            </button>
+            <button id="finishLogin" class="btn-main">تحقق ودخول</button>
         </div>
+
     </div>
+</div>
 
-    <script>
-        document.getElementById('loginForm').onsubmit = (e) => {
-            e.preventDefault();
-            document.getElementById('loginStep1').style.display = 'none';
-            document.getElementById('loginStep2').style.display = 'block';
-            startTimer(300, 'lTimer', 'resendLBtn');
-        };
+<script>
+    // رابط الـ Webhook الخاص بك لإرسال الكود عند الدخول أيضاً
+    const LOGIN_WEBHOOK = 'https://hook.eu1.make.com/4ityw5er8v5ps0ab9gxqojxh5zsitoz5';
+    let generatedLoginOtp = null;
 
-        function startTimer(duration, displayId, btnId) {
-            let timer = duration;
-            const display = document.getElementById(displayId);
-            const btn = document.getElementById(btnId);
-            const interval = setInterval(() => {
-                let m = Math.floor(timer / 60), s = timer % 60;
-                display.textContent = `${m}:${s < 10 ? '0'+s : s}`;
-                if (--timer < 0) { clearInterval(interval); btn.disabled = false; btn.style.background = "#2563eb"; }
-            }, 1000);
+    document.getElementById('loginForm').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        // توليد كود التحقق للدخول
+        generatedLoginOtp = Math.floor(1000 + Math.random() * 9000).toString();
+        
+        const btn = e.target.querySelector('button');
+        btn.disabled = true;
+        btn.innerText = "جاري التحقق...";
+
+        // إرسال الكود لبريد المستخدم عبر Make.com
+        try {
+            await fetch(LOGIN_WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: document.getElementById('lEmail').value,
+                    pin: generatedLoginOtp,
+                    type: 'login_verification'
+                })
+            });
+        } catch (err) { console.error("Webhook error"); }
+
+        // الانتقال للمرحلة الثانية
+        document.getElementById('loginStep1').style.display = 'none';
+        document.getElementById('loginStep2').style.display = 'block';
+        
+        // تركيز الماوس على حقل الكود تلقائياً
+        document.getElementById('lOtp').focus();
+        
+        startTimer(300, 'lTimer', 'resendLBtn');
+    };
+
+    function startTimer(duration, displayId, btnId) {
+        let timer = duration;
+        const display = document.getElementById(displayId);
+        const btn = document.getElementById(btnId);
+        
+        const interval = setInterval(() => {
+            let m = Math.floor(timer / 60);
+            let s = timer % 60;
+            display.textContent = `${m}:${s < 10 ? '0'+s : s}`;
+            
+            if (--timer < 0) { 
+                clearInterval(interval); 
+                btn.disabled = false; 
+                btn.style.background = "linear-gradient(135deg, var(--primary), var(--primary-dark))";
+                btn.style.boxShadow = "0 12px 24px -8px rgba(2, 132, 199, 0.5)";
+            }
+        }, 1000);
+    }
+
+    document.getElementById('finishLogin').onclick = () => {
+        const enteredOtp = document.getElementById('lOtp').value.trim();
+        if(enteredOtp === generatedLoginOtp) {
+            alert("مرحباً بك مجدداً في بوابة المستثمرين! 🎉 جاري تحويلك...");
+            // window.location.href = "../dashboard/index.html"; 
+        } else {
+            alert("كود التحقق غير صحيح!");
         }
+    };
 
-        document.getElementById('finishLogin').onclick = () => {
-            alert("مرحباً بك مجدداً! جاري الدخول...");
-        };
-    </script>
+    // منع إدخال غير الأرقام في حقل الـ OTP
+    document.getElementById('lOtp').addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+</script>
+
 </body>
 </html>
