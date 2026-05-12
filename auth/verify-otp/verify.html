@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحقق من الحساب | بوابة المستثمرين</title>
+    
+    <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    
+    <link rel="stylesheet" href="../../shared/styles/variables.css">
+    <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
+    <link rel="stylesheet" href="verify.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="../../shared/scripts/storage.js"></script>
+    <script src="../../shared/scripts/constants.js"></script>
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-card text-center">
+            <div class="auth-header">
+                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                <h2 class="text-main">أدخل رمز التحقق</h2>
+                <p class="text-muted">أرسلنا كود التوثيق المكون من 6 أرقام إلى بريدك الإلكتروني</p>
+                <span id="userEmailDisplay" class="text-primary font-bold" style="display:block; margin-top:5px;"></span>
+            </div>
+
+            <form id="otpForm" class="flex-column gap-20">
+                <div class="otp-container" dir="ltr">
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required autofocus>
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                </div>
+
+                <button type="submit" id="verifyBtn" class="btn-primary w-full p-20 mt-10">
+                    <span>تأكيد الرمز</span>
+                </button>
+            </form>
+
+            <div class="auth-footer mt-20 text-center">
+                <p class="text-dim">لم يصلك الرمز؟ <button type="button" id="resendBtn" class="btn-link text-primary" disabled>إعادة إرسال <span id="timer">(60)</span></button></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../shared/scripts/api.js"></script>
+    <script src="verify.js"></script>
+
+</body>
+</html>
