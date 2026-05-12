@@ -1,11 +1,11 @@
-/* المسارات المركزية والروابط الثابتة */
+/* المسارات المركزية والروابط الثابتة - متوافق مع GitHub Pages */
 const ROUTES = {
-    HOME: "/index.html",
-    LOGIN: "/auth/login/login.html",
-    REGISTER: "/auth/register/register.html",
-    VERIFY: "/auth/verify-otp/verify.html",
-    FORGOT: "/auth/forgot-password/forgot.html",
-    RESET: "/auth/reset-password/reset.html"
+    HOME: "/investor-portal/index.html",
+    LOGIN: "/investor-portal/auth/login/login.html",
+    REGISTER: "/investor-portal/auth/register/register.html",
+    VERIFY: "/investor-portal/auth/verify-otp/verify.html",
+    FORGOT: "/investor-portal/auth/forgot-password/forgot.html",
+    RESET: "/investor-portal/auth/reset-password/reset.html"
 };
 
 const API_CONFIG = {
