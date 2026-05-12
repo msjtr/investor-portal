@@ -1,0 +1,28 @@
+:root {
+    /* الألوان الرسمية - لمسة احترافية */
+    --primary: #38bdf8;
+    --primary-dark: #0284c7;
+    --primary-glow: rgba(56, 189, 248, 0.25);
+    
+    /* ألوان الحالة */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    
+    /* ألوان النصوص */
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+    --text-dim: rgba(255, 255, 255, 0.5);
+
+    /* تأثيرات الزجاج (Glassmorphism) */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-heavy: rgba(15, 23, 42, 0.7);
+    --glass-blur: blur(20px);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    
+    /* الإعدادات الهيكلية */
+    --font-main: 'Cairo', sans-serif;
+    --radius-lg: 32px;
+    --radius-md: 16px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
