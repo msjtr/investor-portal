@@ -3,53 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المستثمرين | جاري التحميل...</title>
-    <script src="shared/scripts/storage.js"></script>
-    <script src="shared/scripts/constants.js"></script>
+    <title>تسجيل الدخول | بوابة المستثمرين</title>
     
-    <style>
-        body {
-            background: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: white;
-            font-family: sans-serif;
-        }
-        .loader {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: #38bdf8;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+    <link rel="stylesheet" href="../../shared/styles/variables.css">
+    <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
+    <link rel="stylesheet" href="login.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="../../shared/scripts/storage.js"></script>
+    <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/auth-guard.js"></script>
 </head>
 <body>
 
-    <div class="loader"></div>
+    <div class="auth-wrapper">
+        <div class="auth-card glass-card">
+            <div class="auth-header">
+                <img src="../../assets/images/logo.svg" alt="بوابة المستثمرين" class="auth-logo">
+                <h2 class="text-main">مرحباً بك مجدداً</h2>
+                <p class="text-muted">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
+            </div>
 
-    <script>
-        /**
-         * منطق التوجيه الذكي (Smart Redirect)
-         */
-        window.onload = () => {
-            const user = Storage.get('user_session');
+            <form id="loginForm" class="flex-column gap-20">
+                <div class="input-group flex-column gap-10">
+                    <label for="email" class="text-main">البريد الإلكتروني</label>
+                    <input type="email" id="email" class="w-full" placeholder="example@mail.com" required>
+                </div>
 
-            if (user) {
-                // إذا كان المستخدم مسجلاً، وجهه للوحة التحكم (Dashboard) مستقبلاً
-                // حالياً سنبقيه هنا أو نوجهه لصفحة ترحيبية
-                console.log("المستثمر مسجل دخول");
-                // window.location.href = ROUTES.DASHBOARD; 
-            } else {
-                // إذا لم يكن مسجلاً، وجهه فوراً لصفحة تسجيل الدخول
-                window.location.href = ROUTES.LOGIN;
-            }
-        };
-    </script>
+                <div class="input-group flex-column gap-10">
+                    <label for="password" class="text-main">كلمة المرور</label>
+                    <input type="password" id="password" class="w-full" placeholder="••••••••" required>
+                </div>
+
+                <div class="flex-between w-full">
+                    <label class="flex-center gap-10 text-muted" style="font-size: 0.85rem;">
+                        <input type="checkbox"> تذكرني
+                    </label>
+                    <a href="../forgot-password/forgot.html" class="text-primary" style="font-size: 0.85rem;">نسيت كلمة المرور؟</a>
+                </div>
+
+                <button type="submit" id="loginBtn" class="btn-primary w-full p-20 mt-10">
+                    <span id="btnText">دخول</span>
+                </button>
+            </form>
+
+            <div class="auth-footer mt-20 text-center">
+                <p class="text-dim">ليس لديك حساب؟ <a href="../register/register.html" class="text-primary">سجل الآن</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../shared/scripts/api.js"></script>
+    <script src="login.js"></script>
+
 </body>
 </html>
