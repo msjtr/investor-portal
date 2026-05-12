@@ -3,60 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | بوابة المستثمرين</title>
+    <title>بوابة المستثمرين | جاري التحقق...</title>
     
-    <link rel="stylesheet" href="../../shared/styles/variables.css">
-    <link rel="stylesheet" href="../../shared/styles/utilities.css">
-    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
-    <link rel="stylesheet" href="login.css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared/styles/variables.css">
+    <script src="shared/scripts/storage.js"></script>
+    <script src="shared/scripts/constants.js"></script>
 
-    <script src="../../shared/scripts/storage.js"></script>
-    <script src="../../shared/scripts/constants.js"></script>
-    <script src="../../shared/scripts/auth-guard.js"></script>
+    <style>
+        body {
+            background-color: #0f172a; /* لون داكن يتناسب مع الهوية */
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cairo', sans-serif;
+            color: white;
+        }
+
+        .loading-container {
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        /* لودر فخم يتناسب مع التصميم السماوي */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(56, 189, 248, 0.1);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        .loader::after {
+            content: '';  
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: var(--primary, #38bdf8);
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .status-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="auth-wrapper">
-        <div class="auth-card glass-card">
-            <div class="auth-header">
-                <img src="../../assets/images/logo.svg" alt="بوابة المستثمرين" class="auth-logo">
-                <h2 class="text-main">مرحباً بك مجدداً</h2>
-                <p class="text-muted">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
-            </div>
-
-            <form id="loginForm" class="flex-column gap-20">
-                <div class="input-group flex-column gap-10">
-                    <label for="email" class="text-main">البريد الإلكتروني</label>
-                    <input type="email" id="email" class="w-full" placeholder="example@mail.com" required>
-                </div>
-
-                <div class="input-group flex-column gap-10">
-                    <label for="password" class="text-main">كلمة المرور</label>
-                    <input type="password" id="password" class="w-full" placeholder="••••••••" required>
-                </div>
-
-                <div class="flex-between w-full">
-                    <label class="flex-center gap-10 text-muted" style="font-size: 0.85rem;">
-                        <input type="checkbox"> تذكرني
-                    </label>
-                    <a href="../forgot-password/forgot.html" class="text-primary" style="font-size: 0.85rem;">نسيت كلمة المرور؟</a>
-                </div>
-
-                <button type="submit" id="loginBtn" class="btn-primary w-full p-20 mt-10">
-                    <span id="btnText">دخول</span>
-                </button>
-            </form>
-
-            <div class="auth-footer mt-20 text-center">
-                <p class="text-dim">ليس لديك حساب؟ <a href="../register/register.html" class="text-primary">سجل الآن</a></p>
-            </div>
-        </div>
+    <div class="loading-container">
+        <div class="loader"></div>
+        <div class="status-text">جاري تحضير بيئة الاستثمار...</div>
     </div>
 
-    <script src="../../shared/scripts/api.js"></script>
-    <script src="login.js"></script>
+    <script>
+        /**
+         * منطق التوجيه الذكي (Smart Redirect Logic)
+         * هذا الجزء هو المسؤول عن فحص الجلسة وتوجيه المستخدم
+         */
+        window.addEventListener('load', () => {
+            // إضافة تأخير بسيط (0.8 ثانية) ليعطي طابع الفخامة والتحقق
+            setTimeout(() => {
+                const user = Storage.get('user_session');
 
+                if (!user) {
+                    // إذا لم يتم العثور على جلسة، التوجه لصفحة تسجيل الدخول
+                    window.location.href = ROUTES.LOGIN;
+                } else {
+                    // إذا كان المستخدم مسجلاً، نتحقق من حالته (مثلاً هل فعل الـ OTP؟)
+                    if (user.status === 'pending_otp') {
+                        window.location.href = ROUTES.VERIFY;
+                    } else {
+                        // التوجه للوحة التحكم الرئيسية (سيتم بناؤها لاحقاً)
+                        // حالياً سنوجهه لصفحة تسجيل الدخول كإجراء احترازي أو لصفحة Dashboard
+                        window.location.href = ROUTES.LOGIN; 
+                    }
+                }
+            }, 800);
+        });
+    </script>
 </body>
 </html>
