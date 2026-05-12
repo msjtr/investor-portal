@@ -1,0 +1,39 @@
+/* تنسيقات حقول إعادة التعيين */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.input-group label {
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.input-group input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 14px 16px;
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: var(--primary, #38bdf8);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.btn-primary {
+    background: var(--primary, #38bdf8);
+    color: #0f172a;
+    border: none;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
