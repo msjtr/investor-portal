@@ -28,7 +28,6 @@
             font-family: 'Cairo', sans-serif;
             color: white;
             overflow: hidden;
-            /* خلفية خفيفة متدرجة لتناسب الهوية */
             background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
         }
 
@@ -58,18 +57,11 @@
             height: 42px;
             border-radius: 50%;
             border: 3px solid transparent;
-            border-bottom-color: var(--primary, #38bdf8); /* دعم متغير اللون المباشر */
+            border-bottom-color: var(--primary, #38bdf8);
         }
 
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .status-text {
             margin-top: 25px;
@@ -90,30 +82,30 @@
     <script>
         /**
          * محرك التوجيه الذكي (Smart Redirect Engine)
-         * يتأكد من هوية المستخدم قبل السماح بالدخول
          */
         window.addEventListener('load', () => {
-            // تأخير بسيط لمنح تجربة مستخدم فخمة ولضمان تحميل الثوابت
+            // تأخير بسيط (1.2 ثانية) لمنح تجربة مستخدم فخمة
             setTimeout(() => {
                 try {
                     const user = Storage.get('user_session');
 
                     if (!user) {
-                        // تحويل لصفحة الدخول إذا لم تكن هناك جلسة نشطة
-                        window.location.href = ROUTES.LOGIN;
+                        // 1. إذا لم يكن هناك مستخدم، اذهب لصفحة تسجيل الدخول
+                        window.location.replace(ROUTES.LOGIN);
                     } else {
-                        // فحص حالة الحساب (مثلاً إذا كان يحتاج تفعيل OTP)
+                        // 2. إذا كان يحتاج تفعيل OTP
                         if (user.status === 'pending_otp' || user.needVerify) {
-                            window.location.href = ROUTES.VERIFY;
+                            window.location.replace(ROUTES.VERIFY);
                         } else {
-                            // التوجه للوحة التحكم (Dashboard)
-                            window.location.href = ROUTES.LOGIN; // يتم تغييرها لاحقاً لـ ROUTES.DASHBOARD
+                            // 3. إذا كان مسجلاً وجاهزاً، اذهب للوحة التحكم (Dashboard)
+                            // حالياً نوجهه لصفحة اللوجن "كمسار مؤقت" حتى نبرمج الداشبورد
+                            // لكن نستخدم replace لضمان عدم العلوق في دوامة
+                            window.location.replace(ROUTES.LOGIN); 
                         }
                     }
                 } catch (error) {
                     console.error("Redirect System Error:", error);
-                    // خيار الأمان في حال حدوث خطأ
-                    window.location.href = "/investor-portal/auth/login/login.html";
+                    window.location.replace("./auth/login/login.html");
                 }
             }, 1200); 
         });
