@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المستثمرين | جاري التحقق...</title>
     
+    <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    <meta property="og:title" content="بوابة المستثمرين | Investor Portal">
+    <meta property="og:description" content="منصة متطورة لمتابعة محفظتك الاستثمارية بأمان وسهولة.">
+    <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
+    <meta property="og:url" content="https://msjtr.github.io/investor-portal/index.html">
+    <meta property="og:type" content="website">
+
     <link rel="stylesheet" href="shared/styles/variables.css">
     <script src="shared/scripts/storage.js"></script>
     <script src="shared/scripts/constants.js"></script>
@@ -21,6 +28,8 @@
             font-family: 'Cairo', sans-serif;
             color: white;
             overflow: hidden;
+            /* خلفية خفيفة متدرجة لتناسب الهوية */
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
         }
 
         .loading-container {
@@ -28,7 +37,6 @@
             animation: fadeIn 0.8s ease-in-out;
         }
 
-        /* لودر متطور يتناسب مع الهوية البصرية الجديدة */
         .loader {
             width: 50px;
             height: 50px;
@@ -50,7 +58,7 @@
             height: 42px;
             border-radius: 50%;
             border: 3px solid transparent;
-            border-bottom-color: #38bdf8; /* لون البريميري */
+            border-bottom-color: #38bdf8; /* لون البريميري من المتغيرات */
         }
 
         @keyframes rotation {
@@ -85,7 +93,7 @@
          * يتأكد من هوية المستخدم قبل السماح بالدخول
          */
         window.addEventListener('load', () => {
-            // إضافة تأخير بسيط لمنح تجربة مستخدم فخمة ولضمان تحميل الـ Scripts
+            // تأخير بسيط لمنح تجربة مستخدم فخمة ولضمان تحميل الثوابت
             setTimeout(() => {
                 try {
                     const user = Storage.get('user_session');
@@ -94,20 +102,20 @@
                         // تحويل لصفحة الدخول إذا لم تكن هناك جلسة نشطة
                         window.location.href = ROUTES.LOGIN;
                     } else {
-                        // فحص حالة الحساب (مثلاً إذا كان يحتاج تفعيل جوال)
+                        // فحص حالة الحساب (مثلاً إذا كان يحتاج تفعيل OTP)
                         if (user.status === 'pending_otp' || user.needVerify) {
                             window.location.href = ROUTES.VERIFY;
                         } else {
-                            // التوجه للوحة التحكم (Dashboard) - حالياً نعيده للوجن للأمان
-                            window.location.href = ROUTES.LOGIN; 
+                            // التوجه للوحة التحكم (Dashboard)
+                            window.location.href = ROUTES.LOGIN; // يتم تغييرها لاحقاً لـ ROUTES.DASHBOARD
                         }
                     }
                 } catch (error) {
                     console.error("Redirect System Error:", error);
-                    // في حال حدوث خطأ تقني، نرسله لصفحة اللوجن كخيار آمن
-                    window.location.href = "auth/login/login.html";
+                    // خيار الأمان في حال حدوث خطأ
+                    window.location.href = "/investor-portal/auth/login/login.html";
                 }
-            }, 1200); // زيادة بسيطة في الوقت لضمان استقرار الحالة
+            }, 1200); 
         });
     </script>
 </body>
