@@ -7,21 +7,41 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* خلفية متدرجة فخمة */
     background: radial-gradient(circle at top right, #1e293b, #0f172a);
     padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* تأثير التوهج الخلفي (اختياري، للفخامة) */
+.auth-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: var(--primary, #38bdf8);
+    filter: blur(150px);
+    opacity: 0.2;
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
 }
 
 .auth-card {
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
+    /* تأثير الزجاج */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg, 32px);
     padding: 40px;
     width: 100%;
     max-width: 450px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     animation: fadeIn 0.6s ease-out;
+    position: relative;
+    z-index: 1;
 }
 
 .auth-header {
@@ -30,9 +50,11 @@
 }
 
 .auth-logo {
-    width: 80px;
+    width: 80px; /* حجم الشعار */
     height: auto;
     margin-bottom: 15px;
+    /* تأثير توهج خفيف على الشعار */
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
 }
 
 @keyframes fadeIn {
