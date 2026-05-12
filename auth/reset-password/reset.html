@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعيين كلمة مرور جديدة | بوابة المستثمرين</title>
+    
+    <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    
+    <link rel="stylesheet" href="../../shared/styles/variables.css">
+    <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
+    <link rel="stylesheet" href="reset.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="../../shared/scripts/storage.js"></script>
+    <script src="../../shared/scripts/constants.js"></script>
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header text-center">
+                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                <h2 class="text-main">كلمة مرور جديدة</h2>
+                <p class="text-muted">قم بإنشاء كلمة مرور قوية لحماية حسابك</p>
+            </div>
+
+            <form id="resetForm" class="flex-column gap-15">
+                <div class="input-group">
+                    <label for="newPassword">كلمة المرور الجديدة</label>
+                    <input type="password" id="newPassword" placeholder="••••••••" required autofocus>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">تأكيد كلمة المرور</label>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" id="resetBtn" class="btn-primary w-full p-20 mt-10">
+                    <span>تحديث كلمة المرور</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../shared/scripts/api.js"></script>
+    <script src="reset.js"></script>
+
+</body>
+</html>
