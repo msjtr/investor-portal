@@ -1,13 +1,14 @@
-/* استدعاء الخطوط والأيقونات الرسمية */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,fill,GRAD@20..48,100..700,0..1,-50..200');
 
 :root {
     --primary: #38bdf8;
     --primary-dark: #0284c7;
-    --primary-glow: rgba(56, 189, 248, 0.15);
-    --glass: rgba(255, 255, 255, 0.04);
+    --bg-dark: #0f172a;
+    --glass: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.1);
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
     --text-main: #ffffff;
     --text-muted: #94a3b8;
 }
@@ -23,59 +24,75 @@ body {
     direction: rtl; color: var(--text-main);
 }
 
-/* --- اللوحة الزجاجية --- */
+.auth-container { width: 92%; max-width: 480px; margin: 20px auto; padding: 10px; }
+
+/* الشعار */
+.brand-logo { text-align: center; margin-bottom: 25px; }
+.brand-logo img { width: 100px; height: auto; }
+
 .glass-panel {
     background: var(--glass);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border);
-    border-radius: 35px;
-    padding: 45px 35px;
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+    border-radius: 32px;
+    padding: 40px 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
-/* --- الشعار النظيف (Brand Logo) --- */
-.brand-logo {
-    display: block;
-    margin: 0 auto 30px auto;
-    width: 120px; /* حجم متناسق ونظيف */
-    height: auto;
-    object-fit: contain;
-    /* ظل حاد ونقي يفصل الشعار عن الخلفية دون تشويش الحواف */
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+.section-header {
+    display: flex; align-items: center; gap: 10px;
+    margin: 25px 0 15px 0; border-bottom: 1px solid var(--border);
+    padding-bottom: 8px; color: var(--primary);
 }
 
-h2 {
-    text-align: center; margin: 0 0 30px 0; font-weight: 800;
-    background: linear-gradient(to bottom, #fff, #94a3b8);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
+.section-header .material-symbols-rounded { font-size: 22px; font-variation-settings: 'FILL' 1; }
 
-/* --- الحقول والتسميات --- */
-.input-group { margin-bottom: 24px; text-align: right; }
-.input-label { display: block; margin-bottom: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; margin-right: 5px; }
+.input-group { margin-bottom: 20px; width: 100%; position: relative; }
+.input-label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); font-weight: 600; padding-right: 5px; }
 
-input {
-    width: 100%; padding: 16px 18px;
+input, select {
+    width: 100%; padding: 15px 16px;
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    color: white; font-family: 'Cairo'; font-size: 15px;
+    border-radius: 14px;
+    color: var(--text-main); font-family: 'Cairo'; font-size: 16px;
     outline: none; transition: 0.3s;
 }
 
-input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 0 4px var(--primary-glow); }
+input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); }
 
-.btn-main {
-    width: 100%; padding: 18px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border: none; border-radius: 20px;
-    color: white; font-weight: 700; font-size: 17px;
-    cursor: pointer; box-shadow: 0 12px 24px -8px rgba(2, 132, 199, 0.5);
-    margin-top: 15px;
+.phone-row { display: flex; gap: 8px; direction: ltr; }
+#countryCode { width: 95px; text-align: center; }
+
+.password-toggle {
+    position: absolute; left: 15px; top: 43px;
+    cursor: pointer; color: var(--text-muted); font-size: 20px;
 }
 
-.btn-main:active { transform: scale(0.97); }
+/* الإشعارات المركزية */
+.toast-center {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 10000; display: none;
+    background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+    border: 1px solid var(--border); padding: 30px;
+    border-radius: 24px; text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    width: 320px;
+}
 
-.switch-link { text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted); }
-.switch-link a { color: var(--primary); text-decoration: none; font-weight: 700; }
+.strength-bar-bg { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 10px; }
+.strength-fill { height: 100%; width: 0%; transition: 0.5s; border-radius: 10px; }
+
+.btn-main {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none; border-radius: 16px;
+    color: white; font-weight: 800; font-size: 16px; cursor: pointer;
+}
+
+.btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+    .glass-panel { padding: 30px 20px; border-radius: 24px; }
+}
