@@ -1,0 +1,18 @@
+/* ملاحق التنسيق السريع - Utilities */
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-column { display: flex; flex-direction: column; }
+
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+.hidden { display: none !important; }
+
+/* الهوامش (Margins) */
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.p-30 { padding: 30px; }
+
+/* الفجوات (Gaps) */
+.gap-10 { gap: 10px; }
+.gap-20 { gap: 20px; }
