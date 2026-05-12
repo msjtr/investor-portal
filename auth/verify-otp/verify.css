@@ -1,63 +1,40 @@
-/* تنسيق مربعات الـ OTP */
+/* تنسيق مربعات الـ OTP الاحترافي */
 .otp-container {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin: 15px 0;
+    margin: 20px 0;
 }
 
 .otp-input {
-    width: 48px;
-    height: 56px;
+    width: 45px;
+    height: 55px;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #ffffff;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md, 12px);
+    border-radius: 12px;
     outline: none;
     transition: all 0.3s ease;
-    font-family: 'Cairo', sans-serif;
 }
 
 .otp-input:focus {
     border-color: var(--primary, #38bdf8);
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
     background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
 }
 
 .btn-link {
     background: none;
     border: none;
     font-family: inherit;
-    font-size: inherit;
     cursor: pointer;
-    padding: 0;
+    font-weight: 600;
 }
 
 .btn-link:disabled {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.2);
     cursor: not-allowed;
-    text-decoration: none !important;
 }
-
-/* تنسيقات الأزرار والنصوص المتوافقة */
-.btn-primary {
-    background: var(--primary, #38bdf8);
-    color: #0f172a;
-    border: none;
-    border-radius: var(--radius-md, 16px);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.btn-primary:hover {
-    background: #0284c7;
-    transform: translateY(-2px);
-}
-.text-muted { color: rgba(255, 255, 255, 0.6); }
-.text-dim { color: rgba(255, 255, 255, 0.4); }
-.text-primary { color: var(--primary, #38bdf8); font-weight: 600; }
