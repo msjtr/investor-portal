@@ -19,22 +19,21 @@
 <body>
 
     <div class="auth-wrapper">
-        <div class="auth-card glass-card">
-            <div class="auth-header">
+        <div class="auth-card"> <div class="auth-header">
                 <img src="../../assets/images/logo.svg" alt="بوابة المستثمرين" class="auth-logo">
                 <h2 class="text-main">مرحباً بك مجدداً</h2>
                 <p class="text-muted">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
             </div>
 
             <form id="loginForm" class="flex-column gap-20">
-                <div class="input-group flex-column gap-10">
-                    <label for="email" class="text-main">البريد الإلكتروني</label>
-                    <input type="email" id="email" class="w-full" placeholder="example@mail.com" required>
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
                 </div>
 
-                <div class="input-group flex-column gap-10">
-                    <label for="password" class="text-main">كلمة المرور</label>
-                    <input type="password" id="password" class="w-full" placeholder="••••••••" required>
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
                 </div>
 
                 <div class="flex-between w-full">
@@ -44,9 +43,7 @@
                     <a href="/investor-portal/auth/forgot-password/forgot.html" class="text-primary" style="font-size: 0.85rem;">نسيت كلمة المرور؟</a>
                 </div>
 
-                <button type="submit" id="loginBtn" class="btn-primary w-full p-20 mt-10">
-                    <span id="btnText">دخول</span>
-                </button>
+                <button type="submit" id="loginBtn" class="btn-primary w-full p-20 mt-10">دخول</button>
             </form>
 
             <div class="auth-footer mt-20 text-center">
