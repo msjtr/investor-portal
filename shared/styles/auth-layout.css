@@ -1,14 +1,15 @@
 /**
  * التنسيق الموحد لصفحات المصادقة
- * نظام الزجاج الفاخر (Glassmorphism)
+ * نظام الزجاج الفاخر (Glassmorphism) مدعوم بالخلفية المركزية
  */
 .auth-wrapper {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* خلفية متدرجة فخمة */
-    background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    /* دمج الخلفية المركزية مع تدرج لوني فخم لزيادة التباين والعمق */
+    background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), 
+                var(--bg-auth-central) no-repeat center center/cover;
     padding: 20px;
     position: relative;
     overflow: hidden;
