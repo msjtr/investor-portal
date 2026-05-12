@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب | بوابة المستثمرين</title>
+    
+    <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    <meta property="og:title" content="بوابة المستثمرين | إنشاء حساب">
+    <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء.">
+    <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
+    
+    <link rel="stylesheet" href="../../shared/styles/variables.css">
+    <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
+    <link rel="stylesheet" href="register.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="../../shared/scripts/storage.js"></script>
+    <script src="../../shared/scripts/constants.js"></script>
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                <h2 class="text-main">انضم إلينا كمسؤول محفظة</h2>
+                <p class="text-muted">أنشئ حسابك الاستثماري الجديد بخطوات بسيطة</p>
+            </div>
+
+            <form id="registerForm" class="flex-column gap-15">
+                <div class="input-group">
+                    <label for="fullName">الاسم الكامل</label>
+                    <input type="text" id="fullName" placeholder="محمد صالح..." required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">رقم الجوال</label>
+                    <input type="tel" id="phone" placeholder="05xxxxxxxx" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn-primary w-full p-20 mt-10">
+                    <span>إنشاء الحساب</span>
+                </button>
+            </form>
+
+            <div class="auth-footer mt-20 text-center">
+                <p class="text-dim">لديك حساب بالفعل؟ <a href="https://msjtr.github.io/investor-portal/auth/login/login.html" class="text-primary">سجل دخولك</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../shared/scripts/api.js"></script>
+    <script src="register.js"></script>
+
+</body>
+</html>
