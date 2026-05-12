@@ -50,12 +50,17 @@
     margin-bottom: 30px;
 }
 
+/* التنسيق الجديد والمطور للشعار */
 .auth-logo {
-    width: 80px; /* حجم الشعار */
+    width: 240px; /* حجم كبير وبارز */
+    max-width: 100%; /* مرونة التوافق مع شاشات الجوالات */
     height: auto;
-    margin-bottom: 15px;
-    /* تأثير توهج خفيف على الشعار */
-    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+    background-color: #ffffff; /* خلفية بيضاء ناصعة تبرز تفاصيل الشعار */
+    padding: 15px 25px; /* مساحة داخلية مريحة حول الشعار */
+    border-radius: 16px; /* زوايا ناعمة تتماشى مع البطاقة الزجاجية */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* ظل ناعم يعطي عمق واحترافية */
+    margin-bottom: 25px;
+    object-fit: contain; /* يمنع تمطيط الصورة ويحافظ على دقتها الأصلية */
 }
 
 @keyframes fadeIn {
