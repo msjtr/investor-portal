@@ -1,37 +1,94 @@
 /* =================================================================
-   تنسيقات صفحة استعادة كلمة المرور (متوافقة مع النسق الزجاجي المركزي)
+   تنسيقات صفحة استعادة كلمة المرور (Premium Forgot Theme - Tera)
 ================================================================= */
 
-/* ملاحظة: التنسيقات الأساسية للحقول (.auth-input)، الأزرار (.btn-primary)،
-  وإصلاحات الإكمال التلقائي للمتصفح يتم وراثتها تلقائياً من ملف auth-layout.css 
-*/
+/* ملاحظة: التنسيقات الأساسية موروثة من shared/styles/auth-layout.css */
 
-/* تنسيق الحاوية الخاصة بحقل الإدخال إذا تطلب تباعداً مخصصاً */
-.forgot-wrapper .input-group {
-    margin-bottom: 25px; /* زيادة التباعد قليلاً للتركيز على الحقل الوحيد */
+.forgot-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-/* تخصيص إضافي لزر الاستعادة (إعطاؤه مساحة تنفس أعلى) */
-.forgot-wrapper .btn-primary {
-    margin-top: 10px;
-    padding: 16px; /* زر بارز وواضح للضغط */
-    letter-spacing: 0.5px;
+/* زر الرجوع الدائري العلوي (Glass Style) */
+.btn-back-circle {
+    position: absolute;
+    top: 25px;
+    right: 25px; /* محاذاة يمين للنسق العربي */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition, all 0.3s ease);
+    z-index: 10;
 }
 
-/* تنسيق منطقة الملاحظات أو التنبيهات الخاصة بصفحة الاستعادة */
+.btn-back-circle:hover {
+    background: var(--primary, #38bdf8);
+    border-color: var(--primary);
+    color: #0f172a;
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* زيادة التباعد للتركيز على حقل البريد الوحيد */
+.input-group {
+    margin-bottom: 25px !important;
+}
+
+/* تنسيق النصوص التوضيحية داخل المربع */
+.auth-input::placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+    font-size: 0.9rem;
+}
+
+/* تخصيص زر الاستعادة الفخم */
+.btn-primary {
+    box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
+    font-size: 1.1rem;
+    height: 55px; /* توحيد الارتفاع مع الهوية الجديدة */
+}
+
+/* تنسيق الفوتر (العودة لتسجيل الدخول) */
+.forgot-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.forgot-footer p {
+    color: #ffffff !important;
+    font-size: 0.95rem;
+}
+
+.register-link {
+    color: var(--primary, #38bdf8) !important;
+    text-decoration: none;
+    font-weight: 800;
+    transition: var(--transition);
+}
+
+.register-link:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+
+/* صندوق التنبيه الزجاجي (في حال أردت إضافة تعليمات) */
 .forgot-alert-box {
-    background: rgba(56, 189, 248, 0.08);
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    border-radius: var(--radius-md, 12px);
-    padding: 12px 15px;
-    margin-bottom: 20px;
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    border-radius: var(--radius-md, 14px);
+    padding: 15px;
+    margin-bottom: 25px;
     text-align: right;
-    font-size: 0.85rem;
-    color: #cbd5e1;
+    font-size: 0.9rem;
+    color: #ffffff;
     line-height: 1.6;
-}
-
-.forgot-alert-box i {
-    color: var(--primary, #38bdf8);
-    margin-left: 8px;
+    backdrop-filter: blur(5px);
 }
