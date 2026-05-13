@@ -1,104 +1,115 @@
 /* =================================================================
-   تنسيقات صفحة التحقق من الرمز (متوافقة مع النسق الزجاجي المركزي)
+   تنسيقات صفحة التحقق من الرمز (Premium Verify Theme - Tera)
 ================================================================= */
 
-/* ملاحظة: التنسيقات العامة للبطاقة والأزرار موروثة من auth-layout.css */
+/* ملاحظة: التنسيقات العامة للبطاقة موروثة من auth-layout.css */
 
 .verify-card {
     position: relative;
-    padding-top: 50px;
+    padding-top: 60px; /* مساحة لزر الرجوع العلوي */
 }
 
-/* زر الرجوع/الإغلاق العلوي */
-.btn-close {
+/* زر الرجوع الدائري العلوي */
+.btn-back-circle {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 25px;
+    right: 25px; /* وضعناه جهة اليمين ليتناسب مع الاتجاه العربي */
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition, all 0.3s ease);
     z-index: 10;
 }
 
-.btn-close:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: #ef4444;
-    color: #ef4444;
-    transform: rotate(90deg);
+.btn-back-circle:hover {
+    background: var(--primary, #38bdf8);
+    border-color: var(--primary);
+    color: #0f172a;
+    transform: scale(1.1) rotate(5deg);
 }
 
 /* حاوية مربعات التحقق الستة */
 .otp-inputs-container {
     display: flex;
-    justify-content: center; /* تمركز في الوسط */
-    gap: 12px;
-    margin: 25px 0;
-    direction: ltr; /* لضمان ترتيب الأرقام من اليسار لليمين برمجياً */
+    justify-content: center;
+    gap: 10px; /* مسافة متزنة للجوال */
+    margin: 30px 0;
+    direction: ltr; /* الأرقام دائماً من اليسار لليمين */
 }
 
-/* تصميم خانة الرقم الواحدة */
+/* تصميم خانة الرقم الزجاجية (الاحترافية) */
 .otp-input {
     width: 48px;
-    height: 58px;
+    height: 60px;
     text-align: center;
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 800;
     color: #ffffff;
-    background: rgba(15, 23, 42, 0.7); /* خلفية داكنة لتباين عالي */
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 14px;
     outline: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'Cairo', sans-serif;
+    backdrop-filter: blur(5px);
 }
 
 .otp-input:focus {
-    border-color: var(--primary, #38bdf8);
-    background: rgba(15, 23, 42, 0.9);
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
-    transform: translateY(-3px);
+    border-color: var(--primary, #38bdf8) !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    transform: translateY(-4px);
+}
+
+/* تمييز الخانة النشطة عند الكتابة */
+.otp-input:not(:placeholder-shown) {
+    border-color: var(--primary);
 }
 
 /* منطقة العداد وإعادة الإرسال */
 .resend-container {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.timer-area {
-    font-size: 0.9rem;
-    color: #94a3b8;
+#timerCount {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
-.btn-resend {
-    background: none;
-    border: none;
+/* زر إعادة الإرسال (Outline Style) */
+.btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--primary, #38bdf8);
     color: var(--primary, #38bdf8);
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.9rem;
+    padding: 12px;
+    border-radius: var(--radius-md, 14px);
     font-weight: 700;
+    font-family: 'Cairo', sans-serif;
     cursor: pointer;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
-.btn-resend:hover {
+.btn-outline:hover {
+    background: var(--primary);
+    color: #0f172a;
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
+}
+
+/* تأثير التنبيه للبريد الإلكتروني المعروض */
+#userEmailDisplay {
+    display: inline-block;
+    padding: 4px 12px;
     background: rgba(56, 189, 248, 0.1);
-    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.95rem;
 }
-
-/* الفئات المساعدة */
-.hidden { display: none !important; }
-.text-primary { color: var(--primary, #38bdf8); }
-.font-bold { font-weight: 700; }
