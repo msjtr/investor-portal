@@ -1,5 +1,6 @@
 /* =================================================================
    تنسيقات صفحة التحقق من الرمز (Premium Verify Theme - Tera)
+   متوافقة مع معايير الأمان المتقدمة وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
 /* ملاحظة: التنسيقات العامة للبطاقة موروثة من auth-layout.css */
@@ -13,7 +14,7 @@
 .btn-back-circle {
     position: absolute;
     top: 25px;
-    right: 25px; /* وضعناه جهة اليمين ليتناسب مع الاتجاه العربي */
+    right: 25px; /* محاذاة لليمين للنسق العربي */
     background: rgba(255, 255, 255, 0.05);
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
@@ -39,12 +40,12 @@
 .otp-inputs-container {
     display: flex;
     justify-content: center;
-    gap: 10px; /* مسافة متزنة للجوال */
-    margin: 30px 0;
+    gap: 10px;
+    margin: 25px 0 15px 0; /* تعديل التباعد لاستيعاب عداد المحاولات أدناه */
     direction: ltr; /* الأرقام دائماً من اليسار لليمين */
 }
 
-/* تصميم خانة الرقم الزجاجية (الاحترافية) */
+/* تصميم خانة الرقم الزجاجية الاحترافية */
 .otp-input {
     width: 48px;
     height: 60px;
@@ -68,14 +69,45 @@
     transform: translateY(-4px);
 }
 
-/* تمييز الخانة النشطة عند الكتابة */
+/* تمييز الخانة النشطة عند إدخال قيمة */
 .otp-input:not(:placeholder-shown) {
     border-color: var(--primary);
 }
 
-/* منطقة العداد وإعادة الإرسال */
+/* =================================================================
+   تأثيرات الحماية ومنع التخمين (Anti-Brute Force UX)
+================================================================= */
+
+/* حركة الاهتزاز عند إدخال رمز خاطئ */
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+/* تطبيق الخطأ على الحاوية والخانات */
+.otp-error .otp-input {
+    border-color: var(--danger, #ef4444) !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+    animation: shakeError 0.4s ease-in-out;
+    color: var(--danger, #ef4444);
+}
+
+/* تنسيق عداد المحاولات الأمنية */
+#attemptsContainer {
+    transition: var(--transition, all 0.3s ease);
+}
+
+.text-danger {
+    color: var(--danger, #ef4444);
+}
+
+/* =================================================================
+   منطقة العداد وإعادة الإرسال والتنبيه الأمني
+================================================================= */
+
 .resend-container {
-    margin-top: 25px;
+    margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -86,7 +118,7 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
-/* زر إعادة الإرسال (Outline Style) */
+/* زر إعادة الإرسال المطور */
 .btn-outline {
     background: transparent;
     border: 1.5px solid var(--primary, #38bdf8);
@@ -112,4 +144,12 @@
     background: rgba(56, 189, 248, 0.1);
     border-radius: 8px;
     font-size: 0.95rem;
+}
+
+/* تنسيق التنويه الأمني المعتمد أسفل البطاقة */
+.security-notice {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+    margin-top: 25px;
 }
