@@ -1,39 +1,26 @@
-/* تنسيقات حقول إعادة التعيين */
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
+/* =================================================================
+   تنسيقات صفحة إعادة تعيين كلمة المرور (النسق الزجاجي الموحد)
+================================================================= */
+
+/* ملاحظة: التنسيقات الأساسية للحقول (.auth-input)، الأزرار (.btn-primary)،
+   وحلول مشاكل المتصفح موروثة تلقائياً من auth-layout.css */
+
+.reset-wrapper .input-group {
+    margin-bottom: 20px;
 }
 
-.input-group label {
-    color: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 600;
+/* زر الحفظ النهائي */
+.reset-wrapper .btn-primary {
+    margin-top: 15px;
+    padding: 16px;
+    width: 100%;
 }
 
-.input-group input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 14px 16px;
-    color: white;
-    font-family: 'Cairo', sans-serif;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-.input-group input:focus {
-    border-color: var(--primary, #38bdf8);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-}
-
-.btn-primary {
-    background: var(--primary, #38bdf8);
-    color: #0f172a;
-    border: none;
-    border-radius: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* صندوق تنبيه اختياري (للتأكد من تطابق كلمتي المرور) */
+.password-hint {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: -12px;
+    margin-bottom: 15px;
+    padding-right: 5px;
 }
