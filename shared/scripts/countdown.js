@@ -1,33 +1,76 @@
 /**
- * محرك العداد التنازلي (Countdown Timer) لصفحات التحقق
+ * محرك العداد التنازلي (Countdown Timer) - منصة تيرا
+ * النسخة المحدثة: إدارة ذكية للعد التنازلي مع دعم التنسيق الرقمي الفخم
  */
 const Countdown = {
-    start: (durationInSeconds, displayElement, onComplete) => {
-        let timer = durationInSeconds, minutes, seconds;
+    interval: null, // مخزن داخلي لمنع تداخل العدادات
+
+    /**
+     * بدء العداد التنازلي
+     * @param {number} durationInSeconds - المدة بالثواني
+     * @param {HTMLElement} displayElement - العنصر الذي سيظهر فيه الوقت
+     * @param {function} onComplete - ما سيحدث عند انتهاء الوقت
+     */
+    start(durationInSeconds, displayElement, onComplete) {
+        // 1. إيقاف أي عداد نشط سابقاً لضمان عدم حدوث تضارب
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+
+        let timer = durationInSeconds;
         
-        const interval = setInterval(() => {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
+        // تحديث أولي فوراً قبل بدء الـ Interval لتجنب تأخير ثانية واحدة
+        this.updateDisplay(timer, displayElement);
 
-            // إضافة صفر على اليسار إذا كان الرقم أقل من 10
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+        this.interval = setInterval(() => {
+            timer--;
 
-            // عرض الوقت في العنصر المحدد
-            if (displayElement) {
-                displayElement.textContent = minutes + ":" + seconds;
-            }
-
-            // عند انتهاء الوقت
-            if (--timer < 0) {
-                clearInterval(interval);
+            if (timer >= 0) {
+                this.updateDisplay(timer, displayElement);
+            } else {
+                // 2. عند انتهاء الوقت
+                this.stop();
                 if (typeof onComplete === 'function') {
                     onComplete();
                 }
             }
         }, 1000);
+
+        return this.interval;
+    },
+
+    /**
+     * تحديث شكل الأرقام في الواجهة
+     */
+    updateDisplay(timer, displayElement) {
+        if (!displayElement) return;
+
+        const minutes = parseInt(timer / 60, 10);
+        const seconds = parseInt(timer % 60, 10);
+
+        // تنسيق الوقت بصيغة 00:00
+        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        displayElement.textContent = `${formattedMinutes}:${formattedSeconds}`;
         
-        // إرجاع رقم العداد في حال أردنا إيقافه يدوياً لاحقاً
-        return interval; 
+        // إضافة نبض خفيف للأرقام عند اقتراب النهاية (آخر 10 ثواني)
+        if (timer <= 10) {
+            displayElement.style.color = "var(--error, #ef4444)";
+            displayElement.classList.add('animate-pulse');
+        } else {
+            displayElement.style.color = "var(--primary, #38bdf8)";
+            displayElement.classList.remove('animate-pulse');
+        }
+    },
+
+    /**
+     * إيقاف العداد يدوياً
+     */
+    stop() {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
     }
 };
