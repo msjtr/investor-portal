@@ -1,6 +1,6 @@
 /**
  * وظائف مساعدة عامة (Helpers Engine) - منصة تيرا
- * النسخة الاحترافية: تشمل محرك إظهار كلمة المرور ومعالجة البيانات
+ * النسخة النخبوية: محرك تبديل النصوص الصريح ومعالجة البيانات المالية
  */
 const Helpers = {
     /**
@@ -17,75 +17,84 @@ const Helpers = {
     },
 
     /**
-     * محرك إظهار/إخفاء كلمة المرور (حل مشكلة اختفاء النص التوضيحي)
-     * يبحث عن حقول كلمة المرور ويضيف لها ميزة التبديل ويجبر النص على الظهور
+     * محرك تبديل رؤية كلمة المرور عبر (النص الصريح)
+     * يضيف جملة "عرض كلمة المرور" بجانب العنوان ويتحكم في الحقل
      */
     setupPasswordVisibility: () => {
         const passwordInputs = document.querySelectorAll('input[type="password"]');
         
         passwordInputs.forEach(input => {
-            // 1. إجبار النص التوضيحي برمجياً
+            // 1. تثبيت النص التوضيحي داخل المربع
             input.setAttribute('placeholder', 'عرض كلمة المرور');
 
-            // 2. إضافة زر العين (Toggle) داخل الـ Wrapper
-            const wrapper = input.closest('.input-wrapper');
-            if (wrapper && !wrapper.querySelector('.password-toggle')) {
+            // 2. البحث عن العنوان (Label) أو رأس المجموعة لإضافة زر النص
+            const group = input.closest('.input-group');
+            if (group && !group.querySelector('.toggle-password-text')) {
+                // إنشاء حاوية العنوان إذا لم تكن موجودة بتنسيق Flex
+                let header = group.querySelector('.input-header');
+                if (!header) {
+                    const label = group.querySelector('label');
+                    header = document.createElement('div');
+                    header.className = 'input-header';
+                    header.style.display = 'flex';
+                    header.style.justifyContent = 'space-between';
+                    header.style.alignItems = 'center';
+                    header.style.marginBottom = '8px';
+                    
+                    if (label) {
+                        label.parentNode.insertBefore(header, label);
+                        header.appendChild(label);
+                    }
+                }
+
+                // 3. إضافة جملة "عرض كلمة المرور" كزر نصي
                 const toggleBtn = document.createElement('span');
-                toggleBtn.className = 'password-toggle';
-                // نستخدم أيقونة العين من مكتبتنا (أو نص مؤقت)
-                toggleBtn.innerHTML = Icons.eye || '👁️';
+                toggleBtn.className = 'toggle-password-text';
+                toggleBtn.innerText = 'عرض كلمة المرور';
                 
-                // تنسيق الزر برمجياً لضمان المحاذاة
+                // تنسيق الزر النصي ليكون متوافقاً مع هوية تيرا السماوية
                 Object.assign(toggleBtn.style, {
-                    position: 'absolute',
-                    left: '15px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    cursor: 'pointer',
                     color: '#38bdf8',
-                    zIndex: '10',
-                    display: 'flex',
-                    opacity: '0.6',
+                    fontSize: '0.85rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    userSelect: 'none',
                     transition: '0.3s'
                 });
 
-                wrapper.appendChild(toggleBtn);
+                header.appendChild(toggleBtn);
 
-                // حدث الضغط لإظهار/إخفاء النص
+                // 4. حدث الضغط للتبديل بين (عرض / إخفاء)
                 toggleBtn.addEventListener('click', () => {
                     const isPassword = input.type === 'password';
                     input.type = isPassword ? 'text' : 'password';
-                    toggleBtn.style.opacity = isPassword ? '1' : '0.6';
-                    // إعادة تأكيد الـ Placeholder عند التبديل
-                    input.placeholder = "عرض كلمة المرور";
+                    toggleBtn.innerText = isPassword ? 'إخفاء كلمة المرور' : 'عرض كلمة المرور';
+                    
+                    // تأثير نبض خفيف عند الضغط
+                    toggleBtn.style.opacity = '0.5';
+                    setTimeout(() => toggleBtn.style.opacity = '1', 100);
                 });
             }
         });
     },
 
     /**
-     * نسخ نص إلى الحافظة
+     * نسخ نص إلى الحافظة مع إشعار نجاح
      */
     copyToClipboard: async (text) => {
         try {
             await navigator.clipboard.writeText(text);
-            if (typeof Notify !== 'undefined') {
-                Notify.success('تم النسخ إلى الحافظة');
-            }
+            if (typeof Notify !== 'undefined') Notify.success('تم النسخ بنجاح');
             return true;
-        } catch (err) {
-            return false;
-        }
+        } catch (err) { return false; }
     },
 
     isValidEmail: (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
 
     isValidSaudiPhone: (phone) => {
-        const regex = /^(05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/;
-        return regex.test(phone);
+        return /^(05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/.test(phone);
     },
 
     generateUID: () => {
@@ -93,7 +102,7 @@ const Helpers = {
     }
 };
 
-// تفعيل ميزة إظهار كلمة المرور تلقائياً عند تحميل الصفحة
+// تشغيل المحرك تلقائياً فور جاهزية الصفحة
 document.addEventListener('DOMContentLoaded', () => {
     Helpers.setupPasswordVisibility();
 });
