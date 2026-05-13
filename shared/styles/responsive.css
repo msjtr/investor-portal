@@ -1,0 +1,59 @@
+/* =========================================
+   التجاوب مع الشاشات (Responsive Design)
+========================================= */
+
+/* الشاشات المتوسطة والصغيرة (الآيباد والجوالات الأفقية) - 992px وما دون */
+@media screen and (max-width: 992px) {
+    .auth-wrapper {
+        padding: 20px;
+    }
+    
+    .auth-card {
+        width: 100%;
+        max-width: 450px;
+        padding: 30px 20px;
+    }
+}
+
+/* شاشات الجوالات (768px وما دون) */
+@media screen and (max-width: 768px) {
+    /* تصغير العناوين في الجوال */
+    .auth-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .auth-header p {
+        font-size: 0.9rem;
+    }
+
+    /* تعديل حجم مربعات إدخال الـ OTP لتناسب شاشة الجوال */
+    .otp-inputs-container {
+        gap: 5px;
+    }
+    
+    .otp-input {
+        width: 40px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    /* تحويل العناصر المعروضة بجانب بعضها إلى فوق بعضها */
+    .flex-row-mobile-stack {
+        flex-direction: column !important;
+        gap: 15px;
+    }
+}
+
+/* شاشات الجوالات الصغيرة جداً (مثل iPhone SE) */
+@media screen and (max-width: 480px) {
+    .otp-input {
+        width: 35px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    .btn-primary {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
