@@ -1,15 +1,14 @@
 /**
- * محرك صفحة التسجيل (Registration Engine)
- * يستقبل بيانات المستثمر الجديد ويرسلها فوراً إلى Make.com
+ * محرك صفحة التسجيل (Registration Engine) - منصة تيرا
+ * النسخة المحدثة: فحص أمني شامل، إشعارات احترافية، وإدارة الجلسات المؤقتة
  */
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // 1. جلب عناصر الواجهة
     const registerBtn = document.getElementById('registerBtn');
     
-    // 2. تجميع وتنظيف البيانات المدخلة
+    // 1. تجميع وتنظيف البيانات
     const payloadData = {
         fullName: document.getElementById('fullName').value.trim(),
         email: document.getElementById('email').value.trim(),
@@ -17,9 +16,35 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         password: document.getElementById('password').value
     };
 
-    // 3. تأمين واجهة المستخدم (تغيير حالة الزر لمنع الإرسال المزدوج)
+    // 2. فحص أمني مكثف قبل الإرسال (Front-end Validation)
+    if (!Validation.isValidName(payloadData.fullName)) {
+        Notify.error("يرجى إدخال الاسم الكامل (الاسم الأول والأخير)");
+        return;
+    }
+
+    if (!Validation.isEmail(payloadData.email)) {
+        Notify.error("صيغة البريد الإلكتروني غير صحيحة");
+        return;
+    }
+
+    if (!Validation.isSaudiPhone(payloadData.phone)) {
+        Notify.error("يرجى إدخال رقم جوال سعودي صحيح (05xxxxxxxx)");
+        return;
+    }
+
+    if (!Validation.isStrongPassword(payloadData.password)) {
+        Notify.error("كلمة المرور ضعيفة (يجب أن تشمل 8 أحرف وأرقام)");
+        return;
+    }
+
+    // 3. تأمين الواجهة وتفعيل وضع "جاري المعالجة"
     registerBtn.disabled = true;
-    registerBtn.innerHTML = `<span>جاري معالجة البيانات...</span>`;
+    registerBtn.classList.add('animate-pulse');
+    registerBtn.innerHTML = `
+        <span style="display:flex; align-items:center; gap:10px;">
+            <div class="spinner-small"></div> جاري معالجة طلبك...
+        </span>
+    `;
 
     try {
         // 4. إرسال البيانات للـ Webhook المركزي (Make.com)
@@ -33,28 +58,48 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             }
         });
 
-        // 5. معالجة الرد القادم من الخادم
+        // 5. معالجة الرد الذكي
         if (response && response.success) {
-            // حفظ بيانات المستخدم مؤقتاً في التخزين المحلي لاستخدامها في صفحة التوثيق
+            // حفظ بيانات المستثمر مؤقتاً لتمريرها لصفحة OTP
             Storage.set('temp_user', { 
                 email: payloadData.email, 
                 phone: payloadData.phone,
-                fullName: payloadData.fullName 
+                fullName: payloadData.fullName,
+                type: 'registration'
             });
 
-            // توجيه المستثمر فوراً لصفحة إدخال رمز التحقق (OTP)
-            window.location.href = ROUTES.VERIFY;
+            Notify.success("تم إنشاء الحساب بنجاح! جاري إرسال كود التحقق...");
+            
+            // التوجيه لصفحة التحقق بعد ثانية واحدة
+            setTimeout(() => {
+                window.location.href = ROUTES.VERIFY;
+            }, 1000);
+
         } else {
-            // في حال رفض الخادم للطلب (مثلاً: البريد مسجل مسبقاً)
-            alert(response?.message || "عذراً، تعذر إنشاء الحساب. يرجى المحاولة مرة أخرى.");
+            // معالجة حالات الرفض (مثلاً: الإيميل موجود مسبقاً)
+            Notify.error(response?.message || "تعذر إكمال التسجيل، يرجى المحاولة لاحقاً");
+            this.resetBtn(registerBtn);
         }
 
     } catch (error) {
-        console.error("Registration Engine Error:", error);
-        alert("تعذر الاتصال بالخادم. يرجى التأكد من اتصالك بالإنترنت وتفعيل سيناريو Make.com.");
-    } finally {
-        // 6. إعادة الزر لحالته الطبيعية في حال حدوث خطأ
-        registerBtn.disabled = false;
-        registerBtn.innerHTML = `<span>إنشاء الحساب</span>`;
+        console.error("[Registration Engine] Error:", error);
+        Notify.error("عذراً، حدث خطأ فني أثناء الاتصال بالخادم");
+        this.resetBtn(registerBtn);
     }
+});
+
+/**
+ * إعادة الزر لحالته الطبيعية
+ */
+function resetBtn(btn) {
+    btn.disabled = false;
+    btn.classList.remove('animate-pulse');
+    btn.innerHTML = `<span>إنشاء الحساب</span>`;
+}
+
+/**
+ * تنظيف أي بيانات قديمة عند تحميل الصفحة
+ */
+window.addEventListener('load', () => {
+    Storage.remove('temp_user');
 });
