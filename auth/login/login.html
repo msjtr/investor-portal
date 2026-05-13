@@ -20,6 +20,7 @@
     <script src="../../shared/scripts/constants.js"></script>
     <script src="../../shared/scripts/auth-guard.js"></script>
     <script src="../../shared/scripts/icons.js"></script>
+    <script src="../../shared/scripts/helpers.js"></script>
 </head>
 <body class="animate-fade-in">
 
@@ -45,7 +46,9 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="password">كلمة المرور</label>
+                    <div class="input-header">
+                        <label for="password">كلمة المرور</label>
+                        </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
                         <input type="password" id="password" class="auth-input" placeholder="عرض كلمة المرور" required>
@@ -55,7 +58,7 @@
                 <div class="login-options flex-between w-full mt-20">
                     <label class="custom-checkbox">
                         <input type="checkbox" id="rememberMe">
-                        <span class="text-white">تذكرني</span>
+                        <span class="text-white font-bold">تذكرني</span>
                     </label>
                     <a href="../forgot-password/forgot.html" class="forgot-password-link">نسيت كلمة المرور؟</a>
                 </div>
