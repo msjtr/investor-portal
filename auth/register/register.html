@@ -9,6 +9,10 @@
     <meta property="og:title" content="بوابة المستثمرين | إنشاء حساب">
     <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء.">
     <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
+    <meta property="og:url" content="https://msjtr.github.io/investor-portal/auth/register/register.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
     
     <link rel="stylesheet" href="../../shared/styles/variables.css">
     <link rel="stylesheet" href="../../shared/styles/utilities.css">
@@ -19,6 +23,7 @@
 
     <script src="../../shared/scripts/storage.js"></script>
     <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/icons.js"></script>
 </head>
 <body>
 
@@ -33,22 +38,34 @@
             <form id="registerForm" class="flex-column gap-15">
                 <div class="input-group">
                     <label for="fullName">الاسم الكامل</label>
-                    <input type="text" id="fullName" placeholder="محمد صالح..." required>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="user"></span>
+                        <input type="text" id="fullName" placeholder="محمد صالح..." required>
+                    </div>
                 </div>
 
                 <div class="input-group">
                     <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" placeholder="example@mail.com" required>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="email"></span>
+                        <input type="email" id="email" placeholder="example@mail.com" required>
+                    </div>
                 </div>
 
                 <div class="input-group">
                     <label for="phone">رقم الجوال</label>
-                    <input type="tel" id="phone" placeholder="05xxxxxxxx" required>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="phone"></span>
+                        <input type="tel" id="phone" placeholder="05xxxxxxxx" required>
+                    </div>
                 </div>
 
                 <div class="input-group">
                     <label for="password">كلمة المرور</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="lock"></span>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
                 </div>
 
                 <button type="submit" id="registerBtn" class="btn-primary w-full p-20 mt-10">
@@ -57,7 +74,7 @@
             </form>
 
             <div class="auth-footer mt-20 text-center">
-                <p class="text-dim">لديك حساب بالفعل؟ <a href="https://msjtr.github.io/investor-portal/auth/login/login.html" class="text-primary">سجل دخولك</a></p>
+                <p class="text-dim">لديك حساب بالفعل؟ <a href="../login/login.html" class="text-primary">سجل دخولك</a></p>
             </div>
         </div>
     </div>
