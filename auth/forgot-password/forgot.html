@@ -9,6 +9,10 @@
     <meta property="og:title" content="بوابة المستثمرين | استعادة كلمة المرور">
     <meta property="og:description" content="أدخل بريدك الإلكتروني لاستعادة الوصول إلى حسابك الاستثماري.">
     <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
+    <meta property="og:url" content="https://msjtr.github.io/investor-portal/auth/forgot-password/forgot.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
     
     <link rel="stylesheet" href="../../shared/styles/variables.css">
     <link rel="stylesheet" href="../../shared/styles/utilities.css">
@@ -19,6 +23,7 @@
 
     <script src="../../shared/scripts/storage.js"></script>
     <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/icons.js"></script>
 </head>
 <body>
 
@@ -33,7 +38,10 @@
             <form id="forgotForm" class="flex-column gap-15">
                 <div class="input-group">
                     <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" placeholder="example@mail.com" required autofocus>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="email"></span>
+                        <input type="email" id="email" placeholder="example@mail.com" required autofocus>
+                    </div>
                 </div>
 
                 <button type="submit" id="forgotBtn" class="btn-primary w-full p-20 mt-10">
@@ -42,7 +50,7 @@
             </form>
 
             <div class="auth-footer mt-20 text-center">
-                <p class="text-dim">تذكرت كلمة المرور؟ <a href="https://msjtr.github.io/investor-portal/auth/login/login.html" class="text-primary">سجل دخولك</a></p>
+                <p class="text-dim">تذكرت كلمة المرور؟ <a href="../login/login.html" class="text-primary">سجل دخولك</a></p>
             </div>
         </div>
     </div>
