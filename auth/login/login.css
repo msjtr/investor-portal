@@ -2,7 +2,7 @@
    تنسيقات صفحة تسجيل الدخول (Premium Login Theme - Tera)
 ================================================================= */
 
-/* ملاحظة: التنسيقات المشتركة للحقول والبطاقة تُسحب من auth-layout.css */
+/* ملاحظة: التنسيقات المشتركة تُسحب من auth-layout.css */
 
 .login-wrapper {
     width: 100%;
@@ -10,27 +10,32 @@
     flex-direction: column;
 }
 
-/* إصلاح التداخل الموضح في الصورة 
-   تم زيادة المسافة العلوية لفك الاشتباك مع مربع الإدخال
-*/
+/* 1. حل مشكلة التداخل وضبط المسافات */
 .login-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px !important; /* مسافة أمان عمودية */
+    margin-top: 20px !important; /* مسافة أمان واضحة تحت المربعات */
     margin-bottom: 25px;
     font-size: 0.9rem;
     padding: 0 5px;
 }
 
-/* تنسيق النصوص التوضيحية داخل المربعات */
+/* 2. الحل الجذري لإظهار نص (عرض كلمة المرور) بوضوح ناصع */
 .auth-input::placeholder {
-    color: rgba(255, 255, 255, 0.45) !important; /* لون أبيض شفاف وواضح */
-    font-size: 0.9rem;
-    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7) !important; /* زيادة السطوع للوضوح */
+    opacity: 1 !important; /* منع المتصفح من بهتان النص */
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'Cairo', sans-serif;
 }
 
-/* تنسيق رابط نسيت كلمة المرور */
+/* دعم المتصفحات المختلفة لضمان ظهور النص */
+.auth-input::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.7) !important; opacity: 1 !important; }
+.auth-input::-moz-placeholder { color: rgba(255, 255, 255, 0.7) !important; opacity: 1 !important; }
+.auth-input:-ms-input-placeholder { color: rgba(255, 255, 255, 0.7) !important; opacity: 1 !important; }
+
+/* 3. تنسيق رابط نسيت كلمة المرور */
 .forgot-password-link {
     color: var(--primary, #38bdf8) !important;
     text-decoration: none;
@@ -43,7 +48,7 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
-/* تنسيق الفوتر */
+/* 4. تنسيق الفوتر (التحويل للتسجيل) */
 .login-footer {
     margin-top: 30px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -61,21 +66,25 @@
     font-weight: 800;
     text-decoration: none;
     margin-right: 5px;
+    transition: var(--transition);
 }
 
 .register-link:hover {
     color: #ffffff !important;
+    text-decoration: underline;
 }
 
-/* تحسين زر تسجيل الدخول */
+/* 5. تحسين زر تسجيل الدخول */
 .login-wrapper .btn-primary {
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
     height: 55px;
+    font-weight: 800;
 }
 
-/* ضمان تباعد نصوص الاختيار */
+/* 6. تنسيق خيار تذكرني */
 .custom-checkbox span {
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: 600;
+    font-size: 0.9rem;
 }
