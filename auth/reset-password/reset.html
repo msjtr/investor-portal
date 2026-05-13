@@ -6,6 +6,9 @@
     <title>تعيين كلمة مرور جديدة | بوابة المستثمرين</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    <meta property="og:title" content="بوابة المستثمرين | تعيين كلمة مرور جديدة">
+    <meta property="og:description" content="قم بإنشاء كلمة مرور قوية وجديدة لحماية حسابك الاستثماري.">
+    <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
     
     <link rel="stylesheet" href="../../shared/styles/variables.css">
     <link rel="stylesheet" href="../../shared/styles/utilities.css">
@@ -16,6 +19,7 @@
 
     <script src="../../shared/scripts/storage.js"></script>
     <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/icons.js"></script>
 </head>
 <body>
 
@@ -30,12 +34,18 @@
             <form id="resetForm" class="flex-column gap-15">
                 <div class="input-group">
                     <label for="newPassword">كلمة المرور الجديدة</label>
-                    <input type="password" id="newPassword" placeholder="••••••••" required autofocus>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="lock"></span>
+                        <input type="password" id="newPassword" placeholder="••••••••" required autofocus>
+                    </div>
                 </div>
 
                 <div class="input-group">
                     <label for="confirmPassword">تأكيد كلمة المرور</label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                    <div class="input-with-icon">
+                        <span class="input-icon" data-icon="lock"></span>
+                        <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                    </div>
                 </div>
 
                 <button type="submit" id="resetBtn" class="btn-primary w-full p-20 mt-10">
