@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التحقق من الحساب | بوابة المستثمرين</title>
+    <title>التحقق من الرمز | بوابة المستثمرين</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
     
@@ -16,36 +16,49 @@
 
     <script src="../../shared/scripts/storage.js"></script>
     <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/countdown.js"></script>
 </head>
 <body>
 
     <div class="auth-wrapper">
-        <div class="auth-card">
-            <div class="auth-header text-center">
+        <div class="auth-card verify-card">
+            
+            <button onclick="history.back()" class="btn-close" title="تعديل البيانات / رجوع">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <div class="auth-header">
                 <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
                 <h2 class="text-main">أدخل رمز التحقق</h2>
-                <p class="text-muted">أرسلنا رمز التوثيق المكون من 6 أرقام إلى:</p>
-                <span id="userEmailDisplay" class="text-primary font-bold" style="display:block; margin-top:5px;"></span>
+                <p class="text-muted">تم إرسال رمز مكون من 6 أرقام إلى بريدك الإلكتروني</p>
+                <span id="userEmailDisplay" class="text-primary font-bold"></span>
             </div>
 
             <form id="otpForm" class="flex-column gap-20">
-                <div class="otp-container" dir="ltr">
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required autofocus>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <div class="otp-inputs-container" dir="ltr">
+                    <input type="text" class="otp-input" maxlength="1" autofocus required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
                 </div>
 
-                <button type="submit" id="verifyBtn" class="btn-primary w-full p-20 mt-10">
+                <button type="submit" id="verifyBtn" class="btn-primary w-full p-15">
                     <span>تأكيد الرمز</span>
                 </button>
             </form>
 
-            <div class="auth-footer mt-20 text-center">
-                <p class="text-dim">لم يصلك الرمز؟ <button type="button" id="resendBtn" class="btn-link text-primary" disabled>إعادة إرسال <span id="timer">(60)</span></button></p>
+            <div class="resend-container mt-20 text-center">
+                <p class="text-dim">لم تصلك الرسالة؟</p>
+                <div class="timer-area mt-5">
+                    <span id="timerText" class="text-muted">يمكنك إعادة الطلب بعد: <b id="timerCount" class="text-primary">01:00</b></span>
+                    <button id="resendBtn" class="btn-resend hidden">إعادة إرسال الرمز</button>
+                </div>
             </div>
+
         </div>
     </div>
 
