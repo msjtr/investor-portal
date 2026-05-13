@@ -1,18 +1,80 @@
-/* ملاحق التنسيق السريع - Utilities */
+/**
+ * ملاحق التنسيق السريع - Utilities
+ * فئات مساعدة لتسريع بناء الواجهات وضمان دقة المحاذاة والمسافات
+ */
+
+/* =========================================
+   تنسيقات المرونة والمحاذاة (Flexbox)
+========================================= */
 .flex-center { display: flex; justify-content: center; align-items: center; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
 .flex-column { display: flex; flex-direction: column; }
 
+/* =========================================
+   التحكم بالنصوص والأبعاد العامة
+========================================= */
 .text-center { text-align: center; }
+.text-right { text-align: right; }
 .w-full { width: 100%; }
 .hidden { display: none !important; }
+.font-bold { font-weight: 700; }
 
-/* الهوامش (Margins) */
+/* =========================================
+   الهوامش (Margins)
+========================================= */
+.mt-5 { margin-top: 5px; }
 .mt-10 { margin-top: 10px; }
 .mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+
+.mb-10 { margin-bottom: 10px; }
 .mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+
+/* =========================================
+   الحشوات الداعمة (Paddings)
+========================================= */
+.p-15 { padding: 15px; }
+.p-20 { padding: 20px; }
 .p-30 { padding: 30px; }
 
-/* الفجوات (Gaps) */
+/* =========================================
+   الفجوات (Gaps)
+========================================= */
 .gap-10 { gap: 10px; }
+.gap-15 { gap: 15px; }
 .gap-20 { gap: 20px; }
+.gap-30 { gap: 30px; }
+
+/* =========================================
+   الأزرار الأساسية المشتركة (Buttons)
+========================================= */
+.btn-primary {
+    background: var(--primary, #38bdf8);
+    color: #0f172a;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.btn-primary:hover {
+    background: #0284c7;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.5);
+}
+
+.btn-primary:disabled {
+    background: #475569;
+    color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
