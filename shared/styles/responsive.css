@@ -1,59 +1,113 @@
 /* =========================================
-   التجاوب مع الشاشات (Responsive Design)
+   التجاوب الذكي (Responsive Design) - منصة تيرا
+   تحسين العرض على الجوال والآيباد بوضوح عالٍ
 ========================================= */
 
-/* الشاشات المتوسطة والصغيرة (الآيباد والجوالات الأفقية) - 992px وما دون */
+/* 1. الشاشات المتوسطة (الآيباد والتابلت) - 992px وما دون */
 @media screen and (max-width: 992px) {
     .auth-wrapper {
-        padding: 20px;
+        padding: 30px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .auth-card {
-        width: 100%;
-        max-width: 450px;
-        padding: 30px 20px;
+        max-width: 420px; /* تقليل العرض قليلاً ليتناسب مع التابلت */
+        padding: 35px 25px;
+    }
+
+    .logo-container {
+        padding: 15px; /* تصغير طفيف لمربع الشعار */
     }
 }
 
-/* شاشات الجوالات (768px وما دون) */
+/* 2. شاشات الجوالات القياسية - 768px وما دون */
 @media screen and (max-width: 768px) {
-    /* تصغير العناوين في الجوال */
+    /* تحسين العناوين لتكون واضحة بدون زحام */
     .auth-header h2 {
-        font-size: 1.5rem;
+        font-size: 1.6rem !important;
+        margin-bottom: 10px;
     }
     
     .auth-header p {
-        font-size: 0.9rem;
+        font-size: 1rem !important;
+        line-height: 1.6;
     }
 
-    /* تعديل حجم مربعات إدخال الـ OTP لتناسب شاشة الجوال */
+    /* تعديل مربعات الـ OTP لتظل محاذية تماماً */
     .otp-inputs-container {
-        gap: 5px;
+        gap: 8px;
+        margin: 25px 0;
     }
     
     .otp-input {
-        width: 40px;
-        height: 50px;
-        font-size: 1.2rem;
+        width: 48px !important;
+        height: 58px !important;
+        font-size: 1.4rem !important;
+        border-radius: 12px !important;
     }
 
-    /* تحويل العناصر المعروضة بجانب بعضها إلى فوق بعضها */
+    /* تكديس العناصر التي كانت بجانب بعضها */
     .flex-row-mobile-stack {
         flex-direction: column !important;
-        gap: 15px;
+        gap: 12px;
+    }
+
+    /* تحسين الأزرار في الجوال لسهولة النقر */
+    .btn-primary {
+        height: 52px !important;
+        font-size: 1rem !important;
     }
 }
 
-/* شاشات الجوالات الصغيرة جداً (مثل iPhone SE) */
+/* 3. الجوالات الصغيرة جداً (iPhone SE / أجهزة قديمة) - 480px وما دون */
 @media screen and (max-width: 480px) {
-    .otp-input {
-        width: 35px;
-        height: 45px;
-        font-size: 1.1rem;
+    .auth-card {
+        padding: 30px 15px;
+        border-radius: 20px; /* زوايا أنعم قليلاً للشاشات الصغيرة */
     }
-    
-    .btn-primary {
-        padding: 12px;
-        font-size: 1rem;
+
+    .auth-header h2 {
+        font-size: 1.4rem !important;
+    }
+
+    /* ضمان عدم خروج مربعات الـ OTP عن شاشة الجوال */
+    .otp-inputs-container {
+        gap: 5px;
+    }
+
+    .otp-input {
+        width: 42px !important;
+        height: 52px !important;
+        font-size: 1.2rem !important;
+    }
+
+    /* تعديل الهوامش لتقليل الطول الكلي للصفحة */
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .auth-input {
+        height: 50px !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+/* 4. معالجة الشاشات في وضعية الـ Landscape (الأفقية) للجوال */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .auth-wrapper {
+        padding: 10px;
+    }
+    .auth-card {
+        margin: 10px auto;
+        padding: 20px;
+    }
+    .auth-header {
+        margin-bottom: 15px;
+    }
+    .logo-container {
+        padding: 10px;
+        margin-bottom: 15px;
     }
 }
