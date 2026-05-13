@@ -12,9 +12,11 @@
     <meta property="og:url" content="https://msjtr.github.io/investor-portal/index.html">
     <meta property="og:type" content="website">
 
-    <link rel="stylesheet" href="shared/styles/variables.css">
-    <script src="shared/scripts/storage.js"></script>
-    <script src="shared/scripts/constants.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./shared/styles/variables.css">
+    <script src="./shared/scripts/storage.js"></script>
+    <script src="./shared/scripts/constants.js"></script>
 
     <style>
         body {
@@ -46,6 +48,7 @@
             box-sizing: border-box;
             animation: rotation 1s linear infinite;
         }
+        
         .loader::after {
             content: '';  
             box-sizing: border-box;
@@ -60,8 +63,15 @@
             border-bottom-color: var(--primary, #38bdf8);
         }
 
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rotation { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
         .status-text {
             margin-top: 25px;
@@ -84,27 +94,27 @@
          * محرك التوجيه الذكي (Smart Redirect Engine)
          */
         window.addEventListener('load', () => {
-            // تأخير بسيط (1.2 ثانية) لمنح تجربة مستخدم فخمة
+            // تأخير بسيط (1.2 ثانية) لمنح تجربة مستخدم سلسة واحترافية
             setTimeout(() => {
                 try {
                     const user = Storage.get('user_session');
 
                     if (!user) {
-                        // 1. إذا لم يكن هناك مستخدم، اذهب لصفحة تسجيل الدخول
+                        // 1. إذا لم يكن هناك جلسة نشطة، التوجيه لصفحة الدخول
                         window.location.replace(ROUTES.LOGIN);
                     } else {
-                        // 2. إذا كان يحتاج تفعيل OTP
+                        // 2. التحقق من حالة التوثيق (OTP)
                         if (user.status === 'pending_otp' || user.needVerify) {
                             window.location.replace(ROUTES.VERIFY);
                         } else {
-                            // 3. إذا كان مسجلاً وجاهزاً، اذهب للوحة التحكم (Dashboard)
-                            // حالياً نوجهه لصفحة اللوجن "كمسار مؤقت" حتى نبرمج الداشبورد
-                            // لكن نستخدم replace لضمان عدم العلوق في دوامة
-                            window.location.replace(ROUTES.LOGIN); 
+                            // 3. المستخدم موثق وجاهز ➔ التوجيه للوحة التحكم
+                            // إذا لم يكن مسار الداشبورد جاهزاً، سيوجه برمجياً للمسار الافتراضي
+                            window.location.replace(ROUTES.DASHBOARD || './dashboard/index.html'); 
                         }
                     }
                 } catch (error) {
                     console.error("Redirect System Error:", error);
+                    // مسار طوارئ آمن في حال حدوث أي خطأ
                     window.location.replace("./auth/login/login.html");
                 }
             }, 1200); 
