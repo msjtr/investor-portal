@@ -1,7 +1,8 @@
 /**
- * محرك صفحة استعادة كلمة المرور
- * يرسل طلب الاستعادة إلى الـ Webhook المركزي في Make.com
+ * محرك صفحة استعادة كلمة المرور (Forgot Password Engine) - منصة تيرا
+ * النسخة المحدثة: فحص استباقي، إشعارات زجاجية، وتكامل مع Webhook الاستعادة
  */
+
 document.addEventListener('DOMContentLoaded', () => {
     const forgotForm = document.getElementById('forgotForm');
 
@@ -12,36 +13,66 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailInput = document.getElementById('email');
         const email = emailInput.value.trim();
 
-        // تأمين الواجهة لمنع تكرار الإرسال
+        // 1. التحقق الأولي من صحة البريد قبل إزعاج الخادم
+        if (!Validation.isEmail(email)) {
+            Notify.error("يرجى إدخال بريد إلكتروني صحيح");
+            return;
+        }
+
+        // 2. تأمين الواجهة وتفعيل حالة "جاري الإرسال"
         forgotBtn.disabled = true;
-        forgotBtn.innerHTML = `<span>جاري إرسال الرابط...</span>`;
+        forgotBtn.classList.add('animate-pulse');
+        forgotBtn.innerHTML = `
+            <span style="display:flex; align-items:center; gap:10px;">
+                <div class="spinner-small"></div> جاري إرسال الرمز...
+            </span>
+        `;
 
         try {
-            // إرسال حزمة البيانات إلى Make.com
+            // 3. إرسال الطلب لـ Make.com (Action: forgot_password)
             const response = await API.post(API_CONFIG.BASE_URL, {
                 action: 'forgot_password',
-                payload: { email }
+                payload: { email },
+                metadata: {
+                    timestamp: new Date().toISOString(),
+                    platform: APP_INFO.NAME
+                }
             });
 
-            // قراءة الرد القادم من الخادم
+            // 4. معالجة الرد الذكي من الخادم
             if (response && response.success) {
-                // حفظ البريد محلياً للتعرف عليه في صفحة إعادة التعيين (Reset) لاحقاً
-                Storage.set('reset_email', email);
+                // حفظ البريد مؤقتاً لصفحة الـ OTP (في حال أردت تفعيل التحقق قبل التغيير)
+                Storage.set('temp_user', { 
+                    email: email,
+                    type: 'reset_password'
+                });
                 
-                alert("تم إرسال تعليمات استعادة كلمة المرور إلى بريدك الإلكتروني بنجاح.");
-                // إعادة توجيه المستثمر لصفحة الدخول
-                window.location.href = "https://msjtr.github.io/investor-portal/auth/login/login.html";
+                Notify.success("تم إرسال رمز الاستعادة بنجاح، يرجى فحص بريدك.");
+                
+                // التوجيه لصفحة التحقق بعد ثانية ونصف
+                setTimeout(() => {
+                    window.location.href = ROUTES.VERIFY;
+                }, 1500);
+
             } else {
-                alert(response?.message || "عذراً، البريد الإلكتروني غير مسجل لدينا.");
+                // عرض رسالة الخطأ (مثل: البريد غير مسجل)
+                Notify.error(response?.message || "عذراً، البريد الإلكتروني غير موجود لدينا.");
+                this.resetBtn(forgotBtn);
             }
+
         } catch (error) {
-            console.error("Forgot Password Error:", error);
-            alert("حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة لاحقاً وتأكيد تفعيل السيناريو.");
-        } finally {
-            // إعادة الزر لحالته الأصلية
-            forgotBtn.disabled = false;
-            forgotBtn.innerHTML = `<span>إرسال رابط الاستعادة</span>`;
-            emailInput.value = '';
+            console.error("[Forgot Engine] Error:", error);
+            Notify.error("حدث خطأ في الاتصال، يرجى المحاولة لاحقاً.");
+            this.resetBtn(forgotBtn);
         }
     });
+
+    /**
+     * إعادة الزر لحالته الطبيعية
+     */
+    function resetBtn(btn) {
+        btn.disabled = false;
+        btn.classList.remove('animate-pulse');
+        btn.innerHTML = `<span>إرسال رمز الاستعادة</span>`;
+    }
 });
