@@ -1,64 +1,75 @@
 /**
  * حارس الوصول الذكي (Auth Guard Engine) - منصة تيرا
- * يضمن أمن المسارات ويمنع الوصول غير المصرح به أو حلقات التوجيه اللانهائية
+ * النسخة المحدثة: حماية المسارات، إدارة الجلسات، ومنع حلقات التوجيه.
  */
 const AuthGuard = {
     check() {
         try {
-            const user = Storage.get('user_session'); // الجلسة النهائية بعد النجاح
-            const tempUser = Storage.get('temp_user'); // المستخدم في مرحلة التحقق (OTP)
+            const user = Storage.get('user_session'); // الجلسة المعتمدة
+            const tempUser = Storage.get('temp_user'); // المستخدم في انتظار التحقق
             const currentPath = window.location.pathname.toLowerCase();
 
-            // 1. تعريف صفحات الدخول العامة (متاحة للجميع)
-            const isAuthPage = currentPath.includes('/auth/login') || 
-                               currentPath.includes('/auth/register') ||
-                               currentPath.includes('/auth/forgot') ||
-                               currentPath.includes('/auth/reset');
+            // 1. تحديد تصنيفات الصفحات بدقة
+            const isAuthPage = ['login', 'register', 'forgot', 'reset'].some(page => currentPath.includes(page));
+            const isVerifyPage = currentPath.includes('verify-otp');
+            const isIndexPage = currentPath.endsWith('/') || currentPath.endsWith('/index.html');
 
-            const isVerifyPage = currentPath.includes('/auth/verify-otp');
-            
-            const isIndexPage = currentPath.endsWith('/') || 
-                                currentPath.endsWith('/index.html');
-
-            // 2. الحماية الأمنية: إذا حاول الدخول لصفحة التحقق وهو لم يسجل دخول أصلاً
-            if (isVerifyPage && !tempUser && !user) {
-                console.warn("[Auth Guard] وصول غير مصرح لصفحة التحقق.");
-                window.location.replace(ROUTES.LOGIN);
-                return;
+            // 2. منطق الحماية لصفحة التحقق (OTP)
+            // لا يسمح بدخولها إلا لمن لديه جلسة مؤقتة (سجل بياناته للتو) ولم يكمل التفعيل بعد
+            if (isVerifyPage) {
+                if (user) {
+                    // إذا كان مسجلاً أصلاً، يذهب للوحة التحكم
+                    this.redirect(ROUTES.DASHBOARD || '../../dashboard/index.html');
+                    return;
+                }
+                if (!tempUser) {
+                    // إذا حاول الدخول مباشرة بدون بريد مؤقت، يطرد للوجن
+                    console.warn("[Auth Guard] محاولة وصول غير شرعي لصفحة التحقق.");
+                    this.redirect(ROUTES.LOGIN);
+                    return;
+                }
             }
 
-            // 3. منع الدخول للوحة التحكم (Dashboard) بدون جلسة نشطة
-            // افترضنا أن أي مسار لا يشمل auth أو index هو مسار محمي
+            // 3. حماية المسارات المغلقة (لوحة التحكم والملف الشخصي)
+            // أي مسار ليس صفحة دخول أو صفحة رئيسية يعتبر مساراً محمياً
             const isProtectedRoute = !isAuthPage && !isVerifyPage && !isIndexPage;
 
             if (isProtectedRoute && !user) {
-                console.warn("[Auth Guard] مسار محمي، جاري التوجيه لتسجيل الدخول.");
-                window.location.replace(ROUTES.LOGIN);
+                console.warn("[Auth Guard] وصول مرفوض لمسار محمي.");
+                this.redirect(ROUTES.LOGIN);
                 return;
             }
 
-            // 4. إذا كان المستخدم مسجلاً بالفعل وحاول العودة لصفحات الدخول
-            if (user && (isAuthPage || isVerifyPage)) {
-                console.info("[Auth Guard] جلسة نشطة بالفعل، التوجيه للوحة التحكم.");
-                // التوجيه للوحة التحكم مباشرة
-                window.location.replace(ROUTES.DASHBOARD || '../../dashboard/index.html');
+            // 4. منع الازدواجية: إذا كان المستخدم مسجلاً وحاول فتح اللوجن أو التسجيل
+            if (user && isAuthPage) {
+                console.info("[Auth Guard] المستخدم مسجل بالفعل، تحويل للوحة التحكم.");
+                this.redirect(ROUTES.DASHBOARD || '../../dashboard/index.html');
                 return;
             }
 
         } catch (error) {
-            console.error("Auth Guard Error:", error);
+            console.error("Auth Guard Critical Error:", error);
         }
     },
 
-    // وظيفة تسجيل الخروج الآمن
+    // محرك التوجيه الآمن لمنع التعليق
+    redirect(path) {
+        if (!path) return;
+        // التأكد من عدم إعادة التوجيه لنفس الصفحة الحالية لتجنب الـ Loop
+        if (window.location.href !== new URL(path, window.location.origin).href) {
+            window.location.replace(path);
+        }
+    },
+
+    // تسجيل الخروج وتنظيف الذاكرة
     logout() {
         Storage.clearAll();
-        console.log("[Auth Guard] تم تسجيل الخروج بنجاح.");
+        console.log("[Auth Guard] تم إنهاء الجلسة.");
         window.location.replace(ROUTES.LOGIN);
     }
 };
 
-// تشغيل الفحص فوراً قبل تحميل محتوى الصفحة لضمان الأمن
+// التنفيذ الفوري قبل رندر الصفحة لضمان أقصى درجات الأمان
 (function() {
     AuthGuard.check();
 })();
