@@ -1,31 +1,48 @@
+/**
+ * محرك صفحة تسجيل الدخول (Login Engine)
+ */
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const loginBtn = document.getElementById('loginBtn');
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const emailInput = document.getElementById('email').value.trim();
+    const passwordInput = document.getElementById('password').value;
 
-    // تغيير حالة الزر للتوضيح
-    loginBtn.innerText = "جاري التحقق...";
+    // تغيير حالة الزر لمنع الضغط المتكرر
     loginBtn.disabled = true;
+    loginBtn.innerHTML = `<span>جاري التحقق...</span>`;
 
     try {
+        // إرسال الطلب لـ Make.com (لاحظ أن الأكشن هنا هو login)
         const response = await API.post(API_CONFIG.BASE_URL, {
             action: 'login',
-            email: email,
-            password: password
+            payload: {
+                email: emailInput,
+                password: passwordInput
+            },
+            metadata: {
+                timestamp: new Date().toISOString(),
+                platform: APP_INFO.NAME
+            }
         });
 
-        if (response.success) {
-            Storage.set('user_session', response.user);
-            window.location.href = ROUTES.HOME;
+        // إذا استلمنا الرد السحري من Webhook Response اللي سويناه (200 OK)
+        if (response && response.success) {
+            // حفظ البريد مؤقتاً عشان صفحة التوثيق تعرف لمين ترسل رسالة الإعادة
+            Storage.set('temp_user', { email: emailInput });
+            
+            // التوجيه فوراً لصفحة التوثيق (OTP)
+            window.location.href = ROUTES.VERIFY;
         } else {
-            alert("خطأ: " + response.message);
+            alert(response?.message || "تعذر تسجيل الدخول، تأكد من البيانات.");
         }
+
     } catch (error) {
-        alert("فشل الاتصال بالسيرفر، حاول مرة أخرى");
+        console.error("Login Engine Error:", error);
+        alert("حدث خطأ في الاتصال بالخادم. يرجى التأكد من تشغيل سيناريو Make.com.");
     } finally {
-        loginBtn.innerText = "دخول";
+        // إعادة الزر لحالته
         loginBtn.disabled = false;
+        loginBtn.innerHTML = `<span>تسجيل الدخول</span>`;
     }
 });
