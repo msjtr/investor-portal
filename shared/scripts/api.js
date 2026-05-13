@@ -1,40 +1,39 @@
 /**
- * محرك طلبات الـ API الموحد 
- * يتعامل مع الإرسال، الاستقبال، والأخطاء بذكاء ومرونة
+ * المحرك المركزي للاتصال بالخادم (API Engine)
+ * مطور للتعامل مع ردود Make.com بذكاء وتجنب انهيار الـ JSON
  */
 const API = {
-    async post(endpoint, data) {
+    post: async (url, data) => {
         try {
-            const response = await fetch(endpoint, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
             });
 
-            if (!response.ok) {
-                throw new Error(`خطأ في السيرفر: ${response.status}`);
-            }
-
-            // 1. قراءة الرد كنص خام أولاً لتجنب أخطاء التحويل المباشر
-            const responseText = await response.text();
-
-            // 2. محاولة تحويل النص إلى JSON إن أمكن
-            try {
-                return JSON.parse(responseText);
-            } catch (jsonError) {
-                // 3. معالجة ذكية لرد Make.com الافتراضي (Accepted)
-                if (responseText.trim() === "Accepted") {
-                    return { success: true, message: "تمت العملية بنجاح (Accepted)" };
-                }
-                // في حال رجع نص آخر غير الـ JSON
-                return { success: true, message: responseText };
+            // فحص نوعية الرد القادم من الخادم
+            const contentType = response.headers.get("content-type");
+            
+            // إذا كان الرد JSON حقيقي، اقرأه بشكل طبيعي
+            if (contentType && contentType.includes("application/json")) {
+                return await response.json();
+            } else {
+                // إذا كان الرد نص عادي (مثل كلمة "Accepted" من Make)، تعامل معه بأمان
+                const textResponse = await response.text();
+                console.warn("[API Engine] الخادم رد بنص عادي بدلاً من JSON:", textResponse);
+                return { 
+                    success: response.ok, 
+                    message: textResponse 
+                };
             }
         } catch (error) {
             console.error("API Fetch Error:", error);
-            // هنا سيتم استدعاء نظام الإشعارات لاحقاً
-            throw error;
+            return { 
+                success: false, 
+                message: "فشل الاتصال بالخادم. يرجى المحاولة لاحقاً." 
+            };
         }
     }
 };
