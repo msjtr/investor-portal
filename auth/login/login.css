@@ -10,17 +10,27 @@
     flex-direction: column;
 }
 
-/* تنسيق منطقة الخيارات (تذكرني / نسيت كلمة المرور) */
+/* إصلاح التداخل الموضح في الصورة 
+   تم زيادة المسافة العلوية لفك الاشتباك مع مربع الإدخال
+*/
 .login-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: -10px;
+    margin-top: 15px !important; /* مسافة أمان عمودية */
     margin-bottom: 25px;
     font-size: 0.9rem;
+    padding: 0 5px;
 }
 
-/* تنسيق رابط نسيت كلمة المرور بوضوح عالٍ */
+/* تنسيق النصوص التوضيحية داخل المربعات */
+.auth-input::placeholder {
+    color: rgba(255, 255, 255, 0.45) !important; /* لون أبيض شفاف وواضح */
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+/* تنسيق رابط نسيت كلمة المرور */
 .forgot-password-link {
     color: var(--primary, #38bdf8) !important;
     text-decoration: none;
@@ -33,10 +43,10 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
-/* تنسيق الفوتر (ليس لديك حساب؟) */
+/* تنسيق الفوتر */
 .login-footer {
     margin-top: 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* خط شفاف وأنيق */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 20px;
     text-align: center;
 }
@@ -51,32 +61,21 @@
     font-weight: 800;
     text-decoration: none;
     margin-right: 5px;
-    transition: var(--transition);
 }
 
 .register-link:hover {
     color: #ffffff !important;
-    text-decoration: underline;
 }
 
-/* تحسين زر تسجيل الدخول الحصري */
+/* تحسين زر تسجيل الدخول */
 .login-wrapper .btn-primary {
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
-    letter-spacing: 0.3px;
     font-size: 1.1rem;
+    height: 55px;
 }
 
-/* إضافة أيقونة تسجيل الدخول البرمجية (إذا وجدت) */
-.login-wrapper .btn-primary::after {
-    content: ''; /* يمكن إضافة سهم هنا مستقبلاً */
-    margin-right: 10px;
-}
-
-/* تحسين تجربة الاختيار (Checkbox) في صفحة اللوجن */
-.remember-me {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+/* ضمان تباعد نصوص الاختيار */
+.custom-checkbox span {
     color: #ffffff;
-    cursor: pointer;
+    font-weight: 600;
 }
