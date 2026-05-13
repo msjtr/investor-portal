@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إشعار من منصة تيرا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* التنسيقات الأساسية لضمان التوافق مع كافة مزودي البريد */
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            text-align: right;
+            -webkit-font-smoothing: antialiased;
+        }
+        .email-wrapper {
+            width: 100%;
+            background-color: #0f172a;
+            padding: 20px 10px;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        /* الهيدر المستقل مع الهوية البصرية */
+        .email-header {
+            background-color: #0b0f19;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 2px solid #38bdf8;
+        }
+        .email-header img {
+            height: 50px;
+            width: auto;
+            margin-bottom: 10px;
+        }
+        .brand-title {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .brand-slogan {
+            color: #38bdf8;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 5px 0 0 0;
+        }
+        /* جسم البريد */
+        .email-body {
+            padding: 35px 30px;
+        }
+        .greeting {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .operation-type {
+            display: inline-block;
+            background-color: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        /* صندوق الكود الفخم (يظهر في حالات الـ OTP) */
+        .otp-box {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border: 2px dashed #38bdf8;
+            border-radius: 12px;
+            text-align: center;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .otp-code {
+            font-size: 38px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 12px;
+            margin: 0;
+            font-family: monospace;
+        }
+        .otp-timer {
+            font-size: 13px;
+            color: #ef4444;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+        /* جدول الميتا داتا (بيانات الطلب) */
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: rgba(15, 23, 42, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .meta-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+        }
+        .meta-label {
+            color: #94a3b8;
+            width: 35%;
+            font-weight: 700;
+        }
+        .meta-value {
+            color: #e2e8f0;
+            text-align: left;
+            direction: ltr;
+            font-family: monospace;
+        }
+        /* التنويه الأمني الداخلي */
+        .security-banner {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-right: 4px solid #ef4444;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .security-banner h4 {
+            color: #ef4444;
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+        .security-banner p {
+            margin: 0;
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        /* الفوتر القانوني وإخلاء المسؤولية */
+        .email-footer {
+            background-color: #0b0f19;
+            padding: 30px 20px;
+            text-align: justify;
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .email-footer h5 {
+            color: #94a3b8;
+            font-size: 12px;
+            margin: 0 0 10px 0;
+        }
+        .divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.05);
+            margin: 20px 0;
+        }
+        .en-disclaimer {
+            direction: ltr;
+            text-align: left;
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 25px;
+            color: #38bdf8;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .copyright a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="email-wrapper">
+    <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="email-header">
+                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="شعار منصة تيرا">
+                <h1 class="brand-title">بوابة المستثمر</h1>
+                <p class="brand-slogan">عالمك بلا حدود</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="email-body">
+                <div class="greeting">مرحباً {{CLIENT_NAME}}،</div>
+                
+                <div class="operation-type">{{TYPE}}</div>
+                
+                <p style="font-size: 15px; line-height: 1.8; margin-top: 0;">
+                    لقد تلقينا طلباً لإجراء هذه العملية على حسابك الاستثماري في منصة تيرا. لإتمام الإجراء بأمان، يرجى استخدام رمز التحقق أدناه:
+                </p>
+
+                <div class="otp-box">
+                    <p class="otp-code">{{CODE}}</p>
+                    <div class="otp-timer">هذا الرمز صالح لمدة {{TIME}} دقائق فقط</div>
+                </div>
+
+                <table class="meta-table">
+                    <tr>
+                        <td class="meta-label">التاريخ والوقت:</td>
+                        <td class="meta-value">{{DATE_TIME}}</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">عنوان الـ IP:</td>
+                        <td class="meta-value">{{IP_ADDRESS}}</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">الجهاز:</td>
+                        <td class="meta-value">{{DEVICE}}</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">المتصفح:</td>
+                        <td class="meta-value">{{BROWSER}} ({{OS}})</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label">الموقع التقريبي:</td>
+                        <td class="meta-value">{{LOCATION}}</td>
+                    </tr>
+                    <tr>
+                        <td class="meta-label" style="border: none;">مستوى الخطر:</td>
+                        <td class="meta-value" style="border: none; color: #38bdf8;">{{RISK_LEVEL}}</td>
+                    </tr>
+                </table>
+
+                <div class="security-banner">
+                    <h4>تنويه أمني هام</h4>
+                    <p>
+                        • لا تشارك هذا الرمز أو بيانات دخولك مع أي شخص مطلقاً.<br>
+                        • منصة تيرا وموظفوها لا يطلبون هذا الرمز عبر الهاتف أو الرسائل.<br>
+                        • إذا لم تقم بهذا الطلب، يرجى التواصل فوراً مع الدعم الفني لحماية حسابك.
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="email-footer">
+                <h5>إخلاء المسؤولية القانونية</h5>
+                <p>
+                    المعلومات الواردة في هذا البريد الإلكتروني وأي مرفقات تُعد معلومات سرية ومخصصة حصريًا للمستلم، ويُعتبر هذا البريد وسيلة الإشعار الرسمية المعتمدة لدى منصة تيرا للخدمات المتكاملة، كما يُعد وصول الإشعار إلى البريد الإلكتروني المسجل في الحساب إشعارًا صحيحًا ومنتجًا لآثاره النظامية.
+                </p>
+                <p>
+                    ويقر مستخدم المنصة بأن البريد الإلكتروني المرتبط بالحساب تم تسجيله من قبله بشكل مباشر، وأن جميع العمليات المنفذة من خلال وسائل التحقق المرتبطة بالحساب تعتبر صادرة من صاحب الحساب نفسه. المنصة غير مسؤولة عن أي استخدام غير مصرح به ناتج عن مشاركة الرمز أو ضعف حماية جهاز المستخدم. في حال استلام هذه الرسالة بالخطأ، يرجى إشعارنا فوراً عبر البريد أدناه ثم حذف الرسالة.
+                </p>
+
+                <div class="divider"></div>
+
+                <div class="en-disclaimer">
+                    <h5 style="margin: 0 0 5px 0;">Legal Disclaimer</h5>
+                    <p style="margin: 0;">
+                        The information contained in this email is confidential and intended solely for the addressed recipient. Delivery to the registered email shall be deemed a legally valid notice. TERA shall not be liable for unauthorized access resulting from credential sharing or insecure devices. If received in error, please notify support immediately and delete the message.
+                    </p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="copyright">
+                    الدعم الفني: <a href="mailto:{{SUPPORT_EMAIL}}">{{SUPPORT_EMAIL}}</a><br>
+                    رابط المنصة: <a href="{{PLATFORM_LINK}}" target="_blank">{{PLATFORM_LINK}}</a>
+                    <p style="margin-top: 15px; font-size: 10px; color: #64748b;">
+                        هذه رسالة تلقائية مشفرة صادرة من منصة تيرا للخدمات المتكاملة، يرجى عدم الرد عليها.
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
