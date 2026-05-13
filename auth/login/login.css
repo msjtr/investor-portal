@@ -1,58 +1,43 @@
-/* تنسيقات خاصة بصفحة تسجيل الدخول */
+/* =================================================================
+   تنسيقات صفحة تسجيل الدخول (متوافقة مع النسق الزجاجي المركزي)
+================================================================= */
 
-.input-group {
+/* ملاحظة هامة: التنسيقات الأساسية للحقول (.auth-input)، الأزرار (.btn-primary)،
+  وحاوية الأيقونات (.input-wrapper) يتم سحبها تلقائياً من ملف auth-layout.css 
+*/
+
+/* تنسيق خاص بحاوية رابط "نسيت كلمة المرور" والخيارات الإضافية */
+.login-options {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -5px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
 }
 
-.input-group label {
-    color: var(--text-main, #ffffff);
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.input-group input {
-    /* حقول إدخال زجاجية */
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md, 16px);
+/* تخصيص تباعد الأزرار في صفحة تسجيل الدخول */
+.login-wrapper .btn-primary {
+    margin-top: 10px;
     padding: 15px;
-    color: white;
-    font-family: var(--font-main, 'Cairo', sans-serif);
-    outline: none;
-    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
 }
 
-.input-group input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+/* تنسيق الفوتر الخاص بالتسجيل الجديد */
+.login-footer {
+    margin-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 15px;
 }
 
-.input-group input:focus {
-    border-color: var(--primary, #38bdf8);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    background: rgba(255, 255, 255, 0.08);
+/* تأثيرات حصرية لروابط صفحة تسجيل الدخول */
+.login-wrapper .text-primary {
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.btn-primary {
-    background: var(--primary, #38bdf8);
-    color: #0f172a;
-    border: none;
-    border-radius: var(--radius-md, 16px);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: var(--font-main, 'Cairo', sans-serif);
+.login-wrapper .text-primary:hover {
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
-
-.btn-primary:hover {
-    background: var(--primary-dark, #0284c7);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.5);
-}
-
-.text-muted { color: rgba(255, 255, 255, 0.6); }
-.text-dim { color: rgba(255, 255, 255, 0.4); }
-.text-primary { color: var(--primary, #38bdf8); text-decoration: none; }
-.text-primary:hover { text-decoration: underline; }
