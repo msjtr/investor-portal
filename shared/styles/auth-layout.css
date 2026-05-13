@@ -1,6 +1,6 @@
 /**
  * التنسيق الموحد لصفحات المصادقة
- * نظام الزجاج الفاخر (Glassmorphism) مدعوم بالخلفية المركزية
+ * نظام الزجاج الفاخر (Glassmorphism) مع شعار بخلفية بيضاء بارزة
  */
 .auth-wrapper {
     min-height: 100vh;
@@ -15,7 +15,7 @@
     overflow: hidden;
 }
 
-/* تأثير التوهج الخلفي (اختياري، للفخامة) */
+/* تأثير التوهج الخلفي للفخامة */
 .auth-wrapper::before {
     content: '';
     position: absolute;
@@ -50,17 +50,95 @@
     margin-bottom: 30px;
 }
 
-/* التنسيق الجديد والمطور للشعار */
+/* التنسيق المطور للشعار بخلفية بيضاء */
 .auth-logo {
     width: 240px; /* حجم كبير وبارز */
-    max-width: 100%; /* مرونة التوافق مع شاشات الجوالات */
+    max-width: 100%;
     height: auto;
     background-color: #ffffff; /* خلفية بيضاء ناصعة تبرز تفاصيل الشعار */
-    padding: 15px 25px; /* مساحة داخلية مريحة حول الشعار */
-    border-radius: 16px; /* زوايا ناعمة تتماشى مع البطاقة الزجاجية */
+    padding: 15px 25px; /* مساحة داخلية مريحة */
+    border-radius: 16px; /* زوايا ناعمة تتماشى مع تصميم البطاقة */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* ظل ناعم يعطي عمق واحترافية */
     margin-bottom: 25px;
-    object-fit: contain; /* يمنع تمطيط الصورة ويحافظ على دقتها الأصلية */
+    object-fit: contain;
+}
+
+/* إصلاح ألوان النصوص الأساسية */
+.auth-header h1, 
+.auth-header h2 {
+    color: #ffffff !important;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.auth-header p {
+    color: #94a3b8 !important;
+    font-size: 0.95rem;
+}
+
+.auth-card .text-muted, 
+.auth-footer p {
+    color: #94a3b8;
+}
+
+/* تنسيق حقول الإدخال والأيقونات المدمجة */
+.input-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.input-group label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 14px 45px 14px 15px; 
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: #ffffff;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.auth-input:focus {
+    border-color: var(--primary, #38bdf8);
+    background: rgba(15, 23, 42, 0.9);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    color: #64748b;
+    display: flex;
+    pointer-events: none;
+}
+
+.input-wrapper:focus-within .input-icon {
+    color: var(--primary, #38bdf8);
+}
+
+/* إصلاح الإكمال التلقائي */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px;
 }
 
 @keyframes fadeIn {
