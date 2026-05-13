@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأمان وإدارة الجلسات | بوابة المستثمر</title>
+    
+    <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared/styles/variables.css">
+    <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/animations.css">
+    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
+    <link rel="stylesheet" href="sessions.css">
+    
+    <script src="../../shared/scripts/storage.js"></script>
+    <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/auth-guard.js"></script>
+    <script src="../../shared/scripts/icons.js"></script>
+</head>
+<body class="animate-fade-in dashboard-bg">
+
+    <header class="dashboard-header flex-between p-15">
+        <div class="flex-center gap-10">
+            <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="nav-logo">
+            <span class="text-white font-bold text-sm">بوابة المستثمر <span class="text-primary text-xs">| الأمان</span></span>
+        </div>
+        <button onclick="window.location.replace('../../dashboard/index.html')" class="btn-outline-sm" title="العودة للرئيسية">
+            <span>الرئيسية</span>
+        </button>
+    </header>
+
+    <main class="security-container mt-30 animate-slide-up">
+        
+        <div class="page-title mb-25">
+            <h1 class="text-white font-black text-xl m-0">الأمان وإدارة الجلسات</h1>
+            <p class="text-dim text-xs mt-5">راقب الأجهزة المتصلة بحسابك وقم بإنهاء الجلسات المشبوهة بضغطة زر.</p>
+        </div>
+
+        <section class="security-card mb-25">
+            <div class="card-header flex-between mb-15">
+                <div class="flex-center gap-10">
+                    <span class="section-icon text-primary" data-icon="devices"></span>
+                    <h2 class="text-white font-bold text-md m-0">الأجهزة المتصلة</h2>
+                </div>
+                <button id="revokeAllBtn" class="btn-danger-sm">
+                    <span>إنهاء جميع الجلسات الأخرى</span>
+                </button>
+            </div>
+
+            <div class="sessions-list flex-column gap-10" id="sessionsContainer">
+                
+                <div class="device-item current-device flex-between p-15">
+                    <div class="device-info flex-center gap-15">
+                        <div class="device-icon-wrapper active">
+                            <span data-icon="phone"></span>
+                        </div>
+                        <div class="device-meta">
+                            <div class="flex-center gap-5">
+                                <span class="text-white font-bold text-sm">iPhone 14 Pro Max</span>
+                                <span class="badge-active">الجهاز الحالي</span>
+                            </div>
+                            <span class="text-dim text-xs block mt-5">Safari | الرياض، السعودية | IP: 176.44.xx.xx</span>
+                            <span class="text-primary text-xs block mt-2">نشط الآن</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-item flex-between p-15">
+                    <div class="device-info flex-center gap-15">
+                        <div class="device-icon-wrapper">
+                            <span data-icon="desktop"></span>
+                        </div>
+                        <div class="device-meta">
+                            <span class="text-white font-bold text-sm">Chrome — Windows 11</span>
+                            <span class="text-dim text-xs block mt-5">حائل، السعودية | IP: 37.106.xx.xx</span>
+                            <span class="text-dim text-xs block mt-2">آخر ظهور: منذ يومين</span>
+                        </div>
+                    </div>
+                    <button class="btn-revoke-icon" data-session="sess_windows" title="إنهاء هذه الجلسة">
+                        <span data-icon="trash"></span>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="security-card">
+            <div class="card-header flex-center gap-10 mb-15">
+                <span class="section-icon text-primary" data-icon="shield-check"></span>
+                <h2 class="text-white font-bold text-md m-0">سجل النشاط الأمني</h2>
+            </div>
+            
+            <div class="audit-table-wrapper">
+                <table class="audit-table w-full text-right text-xs">
+                    <thead>
+                        <tr class="text-dim">
+                            <th>العملية</th>
+                            <th>التاريخ والوقت</th>
+                            <th>الموقع والـ IP</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditLogsBody">
+                        <tr>
+                            <td class="text-white font-bold">تسجيل دخول ناجح</td>
+                            <td class="text-dim">2026/05/14 - 02:30 ص</td>
+                            <td class="text-dim" dir="ltr">Riyadh (176.44.xx)</td>
+                            <td><span class="text-success font-bold">نجاح</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-white font-bold">إدخال OTP خاطئ</td>
+                            <td class="text-dim">2026/05/13 - 11:15 م</td>
+                            <td class="text-dim" dir="ltr">Hail (37.106.xx)</td>
+                            <td><span class="text-danger font-bold">مرفوض</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="../../shared/scripts/api.js"></script>
+    <script src="../../shared/scripts/notifications.js"></script>
+    <script src="sessions.js"></script>
+
+</body>
+</html>
