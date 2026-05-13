@@ -1,147 +1,146 @@
 /**
- * محرك صفحة التحقق من الرمز (OTP Verification Engine)
+ * محرك صفحة التحقق من الرمز (OTP Verification Engine) - منصة تيرا
+ * النسخة المحدثة: تنقل ذكي، إدارة عداد إعادة الإرسال، وتوثيق آمن مع Make.com
  */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. جلب بيانات المستخدم المؤقتة لعرض بريده الإلكتروني
+    // 1. تأمين المسار وجلب بيانات المستخدم المؤقتة
     const tempUser = Storage.get('temp_user');
     const emailDisplay = document.getElementById('userEmailDisplay');
+    const inputs = document.querySelectorAll('.otp-input');
     
-    if (tempUser && tempUser.email) {
-        emailDisplay.innerText = tempUser.email;
-    } else {
-        // إذا لم توجد بيانات، نرجعه لصفحة تسجيل الدخول لحماية المسار
-        window.location.href = ROUTES.LOGIN;
+    if (!tempUser || !tempUser.email) {
+        console.warn("[Verify Engine] لا توجد جلسة مؤقتة، العودة لتسجيل الدخول.");
+        window.location.replace(ROUTES.LOGIN);
         return;
     }
 
-    // 2. تفعيل العداد التنازلي لإعادة الإرسال (60 ثانية)
+    // عرض البريد الإلكتروني للمستخدم للتأكيد
+    emailDisplay.innerText = tempUser.email;
+
+    // 2. إدارة العداد التنازلي لإعادة الإرسال
     const timerDisplay = document.getElementById('timerCount');
-    const timerTextContainer = document.getElementById('timerText');
+    const timerWrapper = document.getElementById('timerWrapper');
     const resendBtn = document.getElementById('resendBtn');
 
     function startResendTimer() {
         resendBtn.classList.add('hidden');
-        timerTextContainer.classList.remove('hidden');
+        timerWrapper.classList.remove('hidden');
         
+        // استخدام محرك العداد الذي طورناه سابقاً (60 ثانية)
         Countdown.start(60, timerDisplay, () => {
-            // عند انتهاء الوقت
-            timerTextContainer.classList.add('hidden');
+            timerWrapper.classList.add('hidden');
             resendBtn.classList.remove('hidden');
+            Notify.info("يمكنك الآن طلب رمز جديد إذا لم يصلك القديم.");
         });
     }
 
     startResendTimer();
 
-    // 3. التنقل الذكي التلقائي بين خانات إدخال الرمز
-    const inputs = document.querySelectorAll('.otp-input');
+    // 3. التنقل الذكي التلقائي بين خانات إدخال الرمز (User Experience)
     inputs.forEach((input, index) => {
+        // عند الكتابة: انتقل للمربع التالي
         input.addEventListener('input', (e) => {
             if (e.target.value.length === 1 && index < inputs.length - 1) {
                 inputs[index + 1].focus();
             }
         });
 
+        // عند المسح (Backspace): ارجع للمربع السابق
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Backspace' && !e.target.value && index > 0) {
                 inputs[index - 1].focus();
             }
         });
+
+        // منع إدخال غير الأرقام
+        input.addEventListener('keypress', (e) => {
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
     });
 
-    // 4. معالجة إرسال الرمز وتأكيده
+    // 4. معالجة إرسال الرمز وتأكيده مع الخادم
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const verifyBtn = document.getElementById('verifyBtn');
 
-        // تجميع الأرقام من الخانات الستة
-        let otpCode = '';
+        // تجميع الرمز من الخانات
+        let otpCode = "";
         inputs.forEach(input => otpCode += input.value);
 
         if (otpCode.length < 6) {
-            if (typeof Notify !== 'undefined') {
-                Notify.show('الرجاء إدخال رمز التحقق بالكامل', 'error');
-            } else {
-                alert('الرجاء إدخال رمز التحقق بالكامل');
-            }
+            Notify.error("يرجى إكمال رمز التحقق المكون من 6 أرقام");
             return;
         }
 
+        // تفعيل حالة التحميل في الزر
         verifyBtn.disabled = true;
-        verifyBtn.innerHTML = `<span>جاري التحقق...</span>`;
+        verifyBtn.classList.add('animate-pulse');
+        verifyBtn.innerHTML = `<span>جاري تأكيد الرمز...</span>`;
 
         try {
             const response = await API.post(API_CONFIG.BASE_URL, {
                 action: 'verify_otp',
                 payload: {
                     email: tempUser.email,
-                    otp: otpCode
+                    otp: otpCode,
+                    type: tempUser.type || 'login'
                 }
             });
 
             if (response && response.success) {
-                // مسح بيانات المستخدم المؤقتة بعد التوثيق الناجح
-                Storage.remove('temp_user');
+                // حفظ الجلسة النهائية بنجاح
+                Storage.set('user_session', response.user_data);
+                Storage.remove('temp_user'); // تنظيف البيانات المؤقتة
                 
-                // إشعار المستخدم بالنجاح
-                if (typeof Notify !== 'undefined') {
-                    Notify.show('تم التحقق بنجاح! جاري توجيهك...', 'success');
-                } else {
-                    alert('تم التحقق بنجاح! مرحباً بك.');
-                }
+                Notify.success("تم التحقق بنجاح! مرحباً بك في منصة تيرا.");
 
-                // التوجيه التلقائي للوحة التحكم بعد ثانية ونصف
+                // التوجيه للوحة التحكم بعد نجاح العملية
                 setTimeout(() => {
-                    window.location.href = ROUTES.DASHBOARD || '../../dashboard/index.html';
+                    window.location.replace(ROUTES.DASHBOARD || '../../dashboard/index.html');
                 }, 1500);
 
             } else {
-                const errorMessage = response?.message || 'رمز التحقق غير صحيح، حاول مجدداً.';
-                if (typeof Notify !== 'undefined') {
-                    Notify.show(errorMessage, 'error');
-                } else {
-                    alert(errorMessage);
-                }
-                // تفريغ الخانات وإعادة التركيز على الخانة الأولى
-                inputs.forEach(input => input.value = '');
+                Notify.error(response?.message || "رمز التحقق غير صحيح، يرجى المحاولة مجدداً.");
+                // تفريغ الخانات وإعادة التركيز للبدء من جديد
+                inputs.forEach(input => input.value = "");
                 inputs[0].focus();
+                
+                verifyBtn.disabled = false;
+                verifyBtn.classList.remove('animate-pulse');
+                verifyBtn.innerHTML = `<span>تأكيد الرمز</span>`;
             }
         } catch (error) {
-            console.error('Verify Engine Error:', error);
-            if (typeof Notify !== 'undefined') {
-                Notify.show('تعذر الاتصال بالخادم.', 'error');
-            } else {
-                alert('تعذر الاتصال بالخادم.');
-            }
-        } finally {
+            console.error('[Verify Engine] Error:', error);
+            Notify.error("عذراً، حدث خطأ فني أثناء الاتصال.");
             verifyBtn.disabled = false;
+            verifyBtn.classList.remove('animate-pulse');
             verifyBtn.innerHTML = `<span>تأكيد الرمز</span>`;
         }
     });
 
-    // 5. زر إعادة إرسال الكود
+    // 5. محرك إعادة إرسال الرمز
     resendBtn.addEventListener('click', async () => {
         resendBtn.disabled = true;
+        Notify.info("جاري طلب رمز جديد...");
+
         try {
-            // إرسال طلب إعادة الإرسال لـ Make.com
-            await API.post(API_CONFIG.BASE_URL, {
+            const response = await API.post(API_CONFIG.BASE_URL, {
                 action: 'resend_otp',
                 payload: { email: tempUser.email }
             });
-            
-            startResendTimer();
-            
-            if (typeof Notify !== 'undefined') {
-                Notify.show('تم إرسال رمز جديد إلى بريدك الإلكتروني.', 'success');
+
+            if (response && response.success) {
+                Notify.success("تم إرسال رمز جديد بنجاح.");
+                startResendTimer();
             } else {
-                alert('تم إرسال رمز جديد إلى بريدك الإلكتروني.');
+                Notify.error("فشل إرسال الرمز، حاول مجدداً بعد قليل.");
+                resendBtn.disabled = false;
             }
         } catch (err) {
-            if (typeof Notify !== 'undefined') {
-                Notify.show('حدث خطأ أثناء محاولة إعادة الإرسال.', 'error');
-            } else {
-                alert('حدث خطأ أثناء محاولة إعادة الإرسال.');
-            }
-        } finally {
+            Notify.error("تعذر الاتصال بالخادم لإعادة الإرسال.");
             resendBtn.disabled = false;
         }
     });
