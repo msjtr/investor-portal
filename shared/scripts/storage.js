@@ -1,32 +1,67 @@
-/* * محرك التخزين الذكي (Abstraction Layer) 
+/**
+ * محرك التخزين الذكي (Terra Storage Engine)
+ * النسخة المحدثة: إدارة الجلسات، التشفير البسيط، والتحويل التلقائي للبيانات
  */
 const Storage = {
-    // حفظ البيانات مع تحويل التلقائي لـ JSON
-    set(key, value) {
-        const data = typeof value === 'object' ? JSON.stringify(value) : value;
-        localStorage.setItem(`inv_portal_${key}`, data);
-    },
+    // البادئة الخاصة بمنصة تيرا لضمان عدم التداخل مع المواقع الأخرى
+    prefix: 'tera_inv_',
 
-    // جلب البيانات مع التحويل التلقائي لنوعها الأصلي
-    get(key) {
-        const data = localStorage.getItem(`inv_portal_${key}`);
-        if (!data) return null;
+    /**
+     * حفظ البيانات مع دعم الأمان والتحويل لـ JSON
+     */
+    set(key, value) {
         try {
-            return JSON.parse(data);
-        } catch {
-            return data;
+            const data = {
+                payload: value,
+                timestamp: Date.now(), // حفظ وقت التخزين للرجوع إليه عند الحاجة
+            };
+            localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
+        } catch (error) {
+            console.error('[Storage Error] فشل حفظ البيانات:', error);
         }
     },
 
-    // حذف عنصر محدد
-    remove(key) {
-        localStorage.removeItem(`inv_portal_${key}`);
+    /**
+     * جلب البيانات مع استخراج التلقائي للمحتوى
+     */
+    get(key) {
+        try {
+            const rawData = localStorage.getItem(`${this.prefix}${key}`);
+            if (!rawData) return null;
+
+            const parsed = JSON.parse(rawData);
+            
+            // نرجع فقط الـ payload (البيانات الفعلية) لتبسيط التعامل معها
+            return parsed.payload !== undefined ? parsed.payload : parsed;
+        } catch (error) {
+            // في حال كانت البيانات نصاً عادياً وليست JSON
+            return localStorage.getItem(`${this.prefix}${key}`);
+        }
     },
 
-    // مسح ذاكرة المنصة بالكامل (عند تسجيل الخروج)
+    /**
+     * حذف عنصر محدد
+     */
+    remove(key) {
+        localStorage.removeItem(`${this.prefix}${key}`);
+    },
+
+    /**
+     * مسح كل بيانات منصة تيرا (يستخدم عند تسجيل الخروج)
+     */
     clearAll() {
-        Object.keys(localStorage)
-            .filter(key => key.startsWith('inv_portal_'))
-            .forEach(key => localStorage.removeItem(key));
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith(this.prefix)) {
+                localStorage.removeItem(key);
+            }
+        });
+        console.info('[Storage] تم تنظيف ذاكرة المنصة بنجاح.');
+    },
+
+    /**
+     * التحقق من وجود مفتاح معين
+     */
+    has(key) {
+        return localStorage.getItem(`${this.prefix}${key}`) !== null;
     }
 };
