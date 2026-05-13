@@ -5,11 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. جلب بيانات المستخدم المؤقتة لعرض بريده الإلكتروني
     const tempUser = Storage.get('temp_user');
     const emailDisplay = document.getElementById('userEmailDisplay');
+    
     if (tempUser && tempUser.email) {
         emailDisplay.innerText = tempUser.email;
     } else {
         // إذا لم توجد بيانات، نرجعه لصفحة تسجيل الدخول لحماية المسار
         window.location.href = ROUTES.LOGIN;
+        return;
     }
 
     // 2. تفعيل العداد التنازلي لإعادة الإرسال (60 ثانية)
@@ -56,7 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
         inputs.forEach(input => otpCode += input.value);
 
         if (otpCode.length < 6) {
-            alert('الرجاء إدخال رمز التحقق بالكامل');
+            if (typeof Notify !== 'undefined') {
+                Notify.show('الرجاء إدخال رمز التحقق بالكامل', 'error');
+            } else {
+                alert('الرجاء إدخال رمز التحقق بالكامل');
+            }
             return;
         }
 
@@ -73,18 +79,39 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response && response.success) {
-                // نقل المستخدم للوحة التحكم فوراً بعد نجاح التوثيق
+                // مسح بيانات المستخدم المؤقتة بعد التوثيق الناجح
                 Storage.remove('temp_user');
-                alert('تم التحقق بنجاح! مرحباً بك.');
-                // window.location.href = ROUTES.DASHBOARD; // فعلها لاحقاً
+                
+                // إشعار المستخدم بالنجاح
+                if (typeof Notify !== 'undefined') {
+                    Notify.show('تم التحقق بنجاح! جاري توجيهك...', 'success');
+                } else {
+                    alert('تم التحقق بنجاح! مرحباً بك.');
+                }
+
+                // التوجيه التلقائي للوحة التحكم بعد ثانية ونصف
+                setTimeout(() => {
+                    window.location.href = ROUTES.DASHBOARD || '../../dashboard/index.html';
+                }, 1500);
+
             } else {
-                alert(response?.message || 'رمز التحقق غير صحيح، حاول مجدداً.');
+                const errorMessage = response?.message || 'رمز التحقق غير صحيح، حاول مجدداً.';
+                if (typeof Notify !== 'undefined') {
+                    Notify.show(errorMessage, 'error');
+                } else {
+                    alert(errorMessage);
+                }
+                // تفريغ الخانات وإعادة التركيز على الخانة الأولى
                 inputs.forEach(input => input.value = '');
                 inputs[0].focus();
             }
         } catch (error) {
             console.error('Verify Engine Error:', error);
-            alert('تعذر الاتصال بالخادم.');
+            if (typeof Notify !== 'undefined') {
+                Notify.show('تعذر الاتصال بالخادم.', 'error');
+            } else {
+                alert('تعذر الاتصال بالخادم.');
+            }
         } finally {
             verifyBtn.disabled = false;
             verifyBtn.innerHTML = `<span>تأكيد الرمز</span>`;
@@ -100,10 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 action: 'resend_otp',
                 payload: { email: tempUser.email }
             });
+            
             startResendTimer();
-            alert('تم إرسال رمز جديد إلى بريدك الإلكتروني.');
+            
+            if (typeof Notify !== 'undefined') {
+                Notify.show('تم إرسال رمز جديد إلى بريدك الإلكتروني.', 'success');
+            } else {
+                alert('تم إرسال رمز جديد إلى بريدك الإلكتروني.');
+            }
         } catch (err) {
-            alert('حدث خطأ أثناء محاولة إعادة الإرسال.');
+            if (typeof Notify !== 'undefined') {
+                Notify.show('حدث خطأ أثناء محاولة إعادة الإرسال.', 'error');
+            } else {
+                alert('حدث خطأ أثناء محاولة إعادة الإرسال.');
+            }
         } finally {
             resendBtn.disabled = false;
         }
