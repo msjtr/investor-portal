@@ -1,59 +1,37 @@
-/* تنسيقات خاصة بصفحة استعادة كلمة المرور */
+/* =================================================================
+   تنسيقات صفحة استعادة كلمة المرور (متوافقة مع النسق الزجاجي المركزي)
+================================================================= */
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px;
+/* ملاحظة: التنسيقات الأساسية للحقول (.auth-input)، الأزرار (.btn-primary)،
+  وإصلاحات الإكمال التلقائي للمتصفح يتم وراثتها تلقائياً من ملف auth-layout.css 
+*/
+
+/* تنسيق الحاوية الخاصة بحقل الإدخال إذا تطلب تباعداً مخصصاً */
+.forgot-wrapper .input-group {
+    margin-bottom: 25px; /* زيادة التباعد قليلاً للتركيز على الحقل الوحيد */
 }
 
-.input-group label {
-    color: var(--text-main, #ffffff);
-    font-size: 0.9rem;
-    font-weight: 600;
+/* تخصيص إضافي لزر الاستعادة (إعطاؤه مساحة تنفس أعلى) */
+.forgot-wrapper .btn-primary {
+    margin-top: 10px;
+    padding: 16px; /* زر بارز وواضح للضغط */
+    letter-spacing: 0.5px;
 }
 
-.input-group input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md, 16px);
-    padding: 14px 16px;
-    color: white;
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.3s ease;
+/* تنسيق منطقة الملاحظات أو التنبيهات الخاصة بصفحة الاستعادة */
+.forgot-alert-box {
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: var(--radius-md, 12px);
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    text-align: right;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    line-height: 1.6;
 }
 
-.input-group input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+.forgot-alert-box i {
+    color: var(--primary, #38bdf8);
+    margin-left: 8px;
 }
-
-.input-group input:focus {
-    border-color: var(--primary, #38bdf8);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.btn-primary {
-    background: var(--primary, #38bdf8);
-    color: #0f172a;
-    border: none;
-    border-radius: var(--radius-md, 16px);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Cairo', sans-serif;
-}
-
-.btn-primary:hover {
-    background: #0284c7;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.5);
-}
-
-.text-muted { color: rgba(255, 255, 255, 0.6); }
-.text-dim { color: rgba(255, 255, 255, 0.4); }
-.text-primary { color: var(--primary, #38bdf8); text-decoration: none; font-weight: 600; }
-.text-primary:hover { text-decoration: underline; }
