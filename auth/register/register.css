@@ -1,39 +1,67 @@
 /* =================================================================
-   تنسيقات صفحة إنشاء الحساب (متوافقة مع النسق الزجاجي المركزي)
+   تنسيقات صفحة إنشاء الحساب (Premium Register Theme - Tera)
 ================================================================= */
 
-/* ملاحظة: التنسيقات الأساسية للحقول (.auth-input)، الأزرار (.btn-primary)،
-  وحاوية الأيقونات (.input-wrapper) موروثة بالكامل من shared/styles/auth-layout.css 
-*/
+/* ملاحظة: التنسيقات الأساسية موروثة من shared/styles/auth-layout.css */
 
-/* تقليل التباعد في صفحة التسجيل لاستيعاب الحقول الأربعة بشكل متناسق */
-.register-wrapper .input-group {
-    margin-bottom: 15px;
+.register-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-/* تخصيص التباعد العلوي لزر إنشاء الحساب */
+/* توزيع الحقول بشكل متناسق لضمان عدم الطول الزائد للبطاقة */
+.input-group {
+    margin-bottom: 18px !important; /* مسافة متزنة بين الحقول */
+}
+
+/* تنسيق النصوص التوضيحية (Placeholders) بوضوح عالٍ */
+.auth-input::placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+/* تخصيص زر إنشاء الحساب الفخم */
 .register-wrapper .btn-primary {
-    margin-top: 15px;
-    padding: 15px;
-    letter-spacing: 0.5px;
+    margin-top: 10px;
+    height: 55px;
+    box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
+    font-size: 1.1rem;
+    font-weight: 800;
 }
 
-/* تنسيق قسم تسجيل الدخول السفلي */
+/* تنسيق الفوتر (لديك حساب بالفعل؟) */
 .register-footer {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.85rem;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* خط شفاف وأنيق */
+    text-align: center;
 }
 
-/* تأثيرات حصرية للروابط في صفحة التسجيل */
-.register-wrapper .text-primary {
-    font-weight: 600;
-    transition: all 0.2s ease;
+.register-footer p {
+    color: #ffffff !important;
+    font-size: 0.95rem;
 }
 
-.register-wrapper .text-primary:hover {
-    color: #ffffff;
+/* تنسيق رابط "سجل دخولك" مع تأثير التوهج */
+.register-link {
+    color: var(--primary, #38bdf8) !important;
     text-decoration: none;
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    font-weight: 800;
+    margin-right: 5px;
+    transition: var(--transition, all 0.3s ease);
+}
+
+.register-link:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    text-decoration: underline;
+}
+
+/* تحسين استجابة الحقول عند التركيز (Focus) */
+.auth-input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
 }
