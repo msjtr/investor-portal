@@ -3,59 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعيين كلمة مرور جديدة | بوابة المستثمرين</title>
+    <title>تعيين كلمة مرور جديدة | بوابة المستثمر</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمرين | تعيين كلمة مرور جديدة">
+    <meta property="og:title" content="بوابة المستثمر | تعيين كلمة مرور جديدة">
     <meta property="og:description" content="قم بإنشاء كلمة مرور قوية وجديدة لحماية حسابك الاستثماري.">
     
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
     <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/animations.css">
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     <link rel="stylesheet" href="reset.css">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
     <script src="../../shared/scripts/storage.js"></script>
     <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/auth-guard.js"></script>
     <script src="../../shared/scripts/icons.js"></script>
 </head>
-<body>
+<body class="animate-fade-in">
 
     <div class="auth-wrapper">
-        <div class="auth-card reset-wrapper">
+        <div class="auth-card reset-card animate-slide-up">
+            
             <div class="auth-header text-center">
-                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
-                <h2 class="text-main">كلمة مرور جديدة</h2>
-                <p class="text-muted">قم بإنشاء كلمة مرور قوية لحماية حسابك</p>
+                <div class="logo-container">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                </div>
+                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
+                <p class="text-primary font-bold text-sm">عالمك بلا حدود</p>
+                <p class="text-white opacity-80 mt-10 text-xs">تعيين كلمة مرور جديدة ومطابقتها للشروط الأمنية.</p>
             </div>
 
-            <form id="resetForm" class="flex-column gap-15">
+            <form id="resetForm" class="flex-column mt-25">
                 
                 <div class="input-group">
-                    <label for="newPassword">كلمة المرور الجديدة</label>
+                    <div class="flex-between w-full mb-5">
+                        <label for="newPassword">كلمة المرور الجديدة</label>
+                        <span id="toggleNewPass" class="toggle-password-text">عرض كلمة المرور</span>
+                    </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
-                        <input type="password" id="newPassword" class="auth-input" placeholder="••••••••" required autofocus>
+                        <input type="password" id="newPassword" class="auth-input" placeholder="••••••••••••" required autofocus>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="confirmPassword">تأكيد كلمة المرور</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon" data-icon="lock"></span>
-                        <input type="password" id="confirmPassword" class="auth-input" placeholder="••••••••" required>
+                <div class="strength-meter-container mt-15">
+                    <div class="flex-between text-xs font-bold mb-5">
+                        <span class="text-dim">قوة كلمة المرور:</span>
+                        <span id="strengthText" class="strength-weak">ضعيفة</span>
+                    </div>
+                    <div class="meter-bar-bg">
+                        <div id="meterBar" class="meter-bar"></div>
                     </div>
                 </div>
 
-                <button type="submit" id="resetBtn" class="btn-primary w-full p-15 mt-10">
-                    <span>تحديث كلمة المرور</span>
+                <div class="password-rules-box mt-10 text-right">
+                    <span class="text-white font-bold text-xs block mb-10 opacity-90">الشروط المطلوبة:</span>
+                    <ul class="rules-list text-xs" id="rulesList">
+                        <li id="rule-length" class="rule-item invalid">8 أحرف على الأقل</li>
+                        <li id="rule-upper" class="rule-item invalid">حرف كبير (A-Z)</li>
+                        <li id="rule-lower" class="rule-item invalid">حرف صغير (a-z)</li>
+                        <li id="rule-number" class="rule-item invalid">رقم واحد (0-9)</li>
+                        <li id="rule-special" class="rule-item invalid">رمز خاص (!@#$%^&*)</li>
+                    </ul>
+                </div>
+
+                <div class="input-group mt-15">
+                    <div class="flex-between w-full mb-5">
+                        <label for="confirmPassword">تأكيد كلمة المرور</label>
+                        <span id="toggleConfirmPass" class="toggle-password-text">عرض كلمة المرور</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="lock-check"></span>
+                        <input type="password" id="confirmPassword" class="auth-input" placeholder="••••••••••••" required>
+                    </div>
+                    <span id="matchError" class="text-danger text-xs font-bold mt-5 hidden block text-right">كلمتا المرور غير متطابقتين</span>
+                </div>
+
+                <button type="submit" id="resetBtn" class="btn-primary mt-25" disabled>
+                    <span>حفظ كلمة المرور والدخول</span>
                 </button>
             </form>
+
         </div>
     </div>
 
     <script src="../../shared/scripts/api.js"></script>
+    <script src="../../shared/scripts/notifications.js"></script>
+    <script src="../../shared/scripts/helpers.js"></script>
     <script src="reset.js"></script>
 
 </body>
