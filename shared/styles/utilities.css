@@ -1,31 +1,41 @@
 /**
- * ملاحق التنسيق السريع - Utilities
- * فئات مساعدة لتسريع بناء الواجهات وضمان دقة المحاذاة والمسافات
+ * ملاحق التنسيق السريع - Utilities (نسخة منصة تيرا المحدثة)
+ * فئات مساعدة لضمان دقة المحاذاة، المسافات، والوضوح العالي
  */
 
 /* =========================================
    تنسيقات المرونة والمحاذاة (Flexbox)
 ========================================= */
-.flex-center { display: flex; justify-content: center; align-items: center; }
+.flex-center  { display: flex; justify-content: center; align-items: center; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
-.flex-column { display: flex; flex-direction: column; }
+.flex-column  { display: flex; flex-direction: column; }
+.flex-row     { display: flex; flex-direction: row; }
+.items-center { align-items: center; }
 
 /* =========================================
    التحكم بالنصوص والأبعاد العامة
 ========================================= */
 .text-center { text-align: center; }
-.text-right { text-align: right; }
-.w-full { width: 100%; }
-.hidden { display: none !important; }
-.font-bold { font-weight: 700; }
+.text-right  { text-align: right; }
+.text-left   { text-align: left; }
+.w-full      { width: 100% !important; }
+.hidden      { display: none !important; }
+.font-bold   { font-weight: 700; }
+.font-black  { font-weight: 900; }
+
+/* توحيد لون النصوص باللون الأبيض الناصع */
+.text-white  { color: var(--text-main, #ffffff) !important; }
+.text-primary { color: var(--primary, #38bdf8) !important; }
 
 /* =========================================
    الهوامش (Margins)
 ========================================= */
-.mt-5 { margin-top: 5px; }
+.mt-5  { margin-top: 5px; }
 .mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
 .mt-20 { margin-top: 20px; }
 .mt-30 { margin-top: 30px; }
+.mt-40 { margin-top: 40px; }
 
 .mb-10 { margin-bottom: 10px; }
 .mb-20 { margin-bottom: 20px; }
@@ -36,6 +46,7 @@
 ========================================= */
 .p-15 { padding: 15px; }
 .p-20 { padding: 20px; }
+.p-25 { padding: 25px; }
 .p-30 { padding: 30px; }
 
 /* =========================================
@@ -48,33 +59,62 @@
 
 /* =========================================
    الأزرار الأساسية المشتركة (Buttons)
+   تم تحديثها لتكون أكثر فخامة وتجاوباً
 ========================================= */
 .btn-primary {
     background: var(--primary, #38bdf8);
-    color: #0f172a;
+    color: #0f172a !important; /* تباين عالي مع الخلفية السماوية */
     border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
+    border-radius: var(--radius-md, 14px);
+    font-weight: 800;
+    font-size: 1.1rem;
+    height: var(--input-height, 55px);
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Cairo', sans-serif;
+    transition: var(--transition);
+    font-family: var(--font-main);
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
+    width: 100%;
+    box-shadow: 0 4px 15px -5px rgba(56, 189, 248, 0.4);
 }
 
 .btn-primary:hover {
-    background: #0284c7;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.5);
+    background: #ffffff; /* يتحول للأبيض الناصع عند التمرير */
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px -8px rgba(56, 189, 248, 0.6);
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
 }
 
 .btn-primary:disabled {
-    background: #475569;
-    color: #94a3b8;
+    background: #1e293b;
+    color: #475569;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* زر ثانوي شفاف (Outline) */
+.btn-outline {
+    background: transparent;
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md, 14px);
+    font-weight: 700;
+    height: var(--input-height, 55px);
+    transition: var(--transition);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #ffffff;
 }
