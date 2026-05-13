@@ -1,45 +1,114 @@
+/**
+ * مكتبة الحركات والتأثيرات (Animations) - منصة تيرا
+ * تم التحديث لإضافة لمسات فخمة وتأثيرات زجاجية تفاعلية
+ */
+
 /* =========================================
-   مكتبة الحركات والتأثيرات (Animations)
+   1. حركات الظهور (Entrance Animations)
 ========================================= */
 
-/* حركة الظهور التدريجي (Fade In) */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* ظهور تدريجي مع زوم خفيف */
+@keyframes fadeInZoom {
+    from { 
+        opacity: 0; 
+        transform: scale(0.97); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
 }
 
 .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out forwards;
+    animation: fadeInZoom 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* حركة الصعود للأعلى بسلاسة (Slide Up) */
+/* حركة الصعود الاحترافية (Smooth Slide Up) */
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
+        filter: blur(5px); /* تأثير تغبيش بسيط أثناء الصعود */
     }
     to {
         opacity: 1;
         transform: translateY(0);
+        filter: blur(0);
     }
 }
 
 .animate-slide-up {
-    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* حركة النبض (Pulse) للأزرار أو التنبيهات المهمة */
-@keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
-    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+/* =========================================
+   2. حركات التفاعل المستمر (Infinite Effects)
+========================================= */
+
+/* نبض احترافي مع توهج سماوي للأزرار المهمة */
+@keyframes pulseGlow {
+    0% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); 
+    }
+    70% { 
+        transform: scale(1.02); 
+        box-shadow: 0 0 20px 10px rgba(56, 189, 248, 0); 
+    }
+    100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); 
+    }
 }
 
 .animate-pulse {
-    animation: pulse 2s infinite;
+    animation: pulseGlow 2.5s infinite ease-in-out;
 }
 
-/* تأخير الحركات للعناصر المتتالية */
+/* حركة اهتزاز خفيفة للخطأ (Shake) */
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.animate-shake {
+    animation: shakeError 0.4s ease-in-out;
+}
+
+/* =========================================
+   3. تأثيرات الزجاج والتوهج (Glass Effects)
+========================================= */
+
+/* وميض زجاجي يمر فوق العنصر (Glass Shine) */
+@keyframes shine {
+    from { transform: translateX(-100%) skewX(-15deg); }
+    to { transform: translateX(200%) skewX(-15deg); }
+}
+
+.glass-shine {
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shine 3s infinite;
+}
+
+/* =========================================
+   4. فئات التحكم بالتوقيت (Timing Classes)
+========================================= */
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* تبطيء الحركة للعناصر الكبيرة */
+.duration-slow { animation-duration: 1.2s; }
