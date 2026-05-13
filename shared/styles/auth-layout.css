@@ -1,7 +1,7 @@
 /* =========================================
     PLATFORM: TERA - FINAL ELITE LAYOUT
-    =========================================
-*/
+    REVISION: PASSWORD TOGGLE & WHITE PLACEHOLDERS
+   ========================================= */
 
 /* 1. الخلفية الداكنة الفخمة */
 body {
@@ -40,12 +40,39 @@ body {
     text-align: center;
 }
 
-/* 4. الحقول والحل السحري لظهور (عرض كلمة المرور) */
+/* 4. الحقول وتنسيق (عرض كلمة المرور) */
+.input-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+/* الهيكل العلوي للحقل (العنوان + زر العرض) */
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 5px;
+}
+
+.toggle-password-text {
+    color: #38bdf8 !important; /* لون سماوي مضيء */
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.3s;
+}
+
+.toggle-password-text:hover {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    opacity: 0.8;
+}
+
 .input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    margin-top: 12px;
     width: 100%;
 }
 
@@ -53,7 +80,7 @@ body {
     width: 100% !important;
     height: 58px !important;
     padding: 0 55px 0 20px !important;
-    background: rgba(15, 23, 42, 0.6) !important; /* خلفية داكنة قليلاً داخل الحقل للتباين */
+    background: rgba(15, 23, 42, 0.6) !important;
     border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 16px !important;
     color: #ffffff !important;
@@ -62,25 +89,13 @@ body {
     transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- الفرض القوي لظهور الـ Placeholder --- */
-/* قمت برفع درجة الوضوح لـ 0.9 (أبيض ناصع تقريباً) */
+/* --- الفرض القوي لظهور الـ Placeholder بالأبيض الناصع --- */
 .auth-input::placeholder {
     color: #ffffff !important;
     opacity: 0.9 !important;
-    font-size: 0.95rem;
 }
 
 .auth-input::-webkit-input-placeholder {
-    color: #ffffff !important;
-    opacity: 0.9 !important;
-}
-
-.auth-input::-moz-placeholder {
-    color: #ffffff !important;
-    opacity: 0.9 !important;
-}
-
-.auth-input:-ms-input-placeholder {
     color: #ffffff !important;
     opacity: 0.9 !important;
 }
@@ -111,7 +126,7 @@ body {
     border: none;
     width: 100%;
     cursor: pointer;
-    margin-top: 25px;
+    margin-top: 15px;
     box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
     transition: 0.3s;
 }
