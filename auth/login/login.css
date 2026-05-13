@@ -15,27 +15,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px !important; /* مسافة أمان واضحة تحت المربعات */
+    margin-top: 15px !important; /* مسافة أمان متزنة تحت الحقول */
     margin-bottom: 25px;
     font-size: 0.9rem;
     padding: 0 5px;
 }
 
-/* 2. الحل الجذري لإظهار نص (عرض كلمة المرور) بوضوح ناصع */
+/* 2. التنسيق الحصري للنص التوضيحي (عرض كلمة المرور) */
+/* تم رفع درجة البياض لتكون ناصعة جداً فوق الخلفية الداكنة */
 .auth-input::placeholder {
-    color: rgba(255, 255, 255, 0.7) !important; /* زيادة السطوع للوضوح */
-    opacity: 1 !important; /* منع المتصفح من بهتان النص */
+    color: #ffffff !important; 
+    opacity: 0.8 !important; /* درجة وضوح عالية جداً */
     font-size: 0.95rem;
     font-weight: 500;
-    font-family: 'Cairo', sans-serif;
 }
 
-/* دعم المتصفحات المختلفة لضمان ظهور النص */
-.auth-input::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.7) !important; opacity: 1 !important; }
-.auth-input::-moz-placeholder { color: rgba(255, 255, 255, 0.7) !important; opacity: 1 !important; }
-.auth-input:-ms-input-placeholder { color: rgba(255, 255, 255, 0.7) !important; opacity: 1 !important; }
-
-/* 3. تنسيق رابط نسيت كلمة المرور */
+/* 3. تنسيق رابط نسيت كلمة المرور بتوهج سماوي */
 .forgot-password-link {
     color: var(--primary, #38bdf8) !important;
     text-decoration: none;
@@ -48,7 +43,7 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
-/* 4. تنسيق الفوتر (التحويل للتسجيل) */
+/* 4. تنسيق الفوتر (ليس لديك حساب؟) */
 .login-footer {
     margin-top: 30px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -59,6 +54,7 @@
 .login-footer p {
     color: #ffffff !important;
     font-size: 0.95rem;
+    opacity: 0.9;
 }
 
 .register-link {
@@ -74,17 +70,31 @@
     text-decoration: underline;
 }
 
-/* 5. تحسين زر تسجيل الدخول */
-.login-wrapper .btn-primary {
+/* 5. تحسين زر تسجيل الدخول (Elite Style) */
+.btn-primary {
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
-    height: 55px;
+    height: 58px; /* توحيد الارتفاع مع الحقول */
     font-weight: 800;
 }
 
-/* 6. تنسيق خيار تذكرني */
+/* 6. تنسيق خيار تذكرني (أبيض ناصع) */
 .custom-checkbox span {
     color: #ffffff !important;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.9rem;
+}
+
+/* تنسيق جملة (عرض كلمة المرور) التي يحقنها الهيلبر */
+.toggle-password-text {
+    color: var(--primary, #38bdf8) !important;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle-password-text:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
