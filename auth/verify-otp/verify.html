@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التحقق من الرمز | بوابة المستثمرين</title>
+    <title>التحقق من الرمز | بوابة المستثمر</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمرين | التحقق من الرمز">
+    <meta property="og:title" content="بوابة المستثمر | التحقق من الرمز">
     <meta property="og:description" content="أدخل رمز التحقق المرسل لإتمام عملية الدخول الآمن.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -35,27 +35,32 @@
                 <div class="logo-container">
                     <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
                 </div>
-                <h2 class="text-white font-black mt-20">رمز التحقق (OTP)</h2>
-                <p class="text-white opacity-80 mt-5">أدخل الرمز المكون من 6 أرقام المرسل إلى:</p>
-                <div id="userEmailDisplay" class="text-primary font-bold mt-5 animate-pulse"></div>
+                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
+                <p class="text-primary font-bold text-sm">عالمك بلا حدود</p>
+                <p class="text-white opacity-80 mt-10">أدخل رمز التحقق (OTP) المرسل إلى:</p>
+                <div id="userEmailDisplay" class="text-primary font-bold mt-5 animate-pulse" dir="ltr"></div>
             </div>
 
             <form id="otpForm" class="flex-column mt-30">
                 <div class="otp-inputs-container" dir="ltr">
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autofocus required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" autofocus required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
                 </div>
 
-                <button type="submit" id="verifyBtn" class="btn-primary mt-30">
+                <div id="attemptsContainer" class="text-center mt-5 hidden">
+                    <span class="text-danger font-bold text-sm">المحاولات المتبقية: <span id="attemptsCount">3</span></span>
+                </div>
+
+                <button type="submit" id="verifyBtn" class="btn-primary mt-20">
                     <span>تأكيد الرمز</span>
                 </button>
             </form>
 
-            <div class="resend-container mt-30 text-center">
+            <div class="resend-container mt-25 text-center">
                 <p class="text-white opacity-70">لم يصلك الرمز؟</p>
                 <div class="timer-area mt-10">
                     <div id="timerWrapper" class="flex-center gap-10">
@@ -66,6 +71,16 @@
                         إعادة إرسال الرمز
                     </button>
                 </div>
+            </div>
+
+            <div class="security-notice mt-30 text-right">
+                <div class="flex-center gap-5 mb-5 text-primary">
+                    <span data-icon="shield"></span>
+                    <span class="font-bold text-sm">تنويه أمني</span>
+                </div>
+                <p class="text-dim text-xs m-0" style="line-height: 1.6;">
+                    منصة تيرا لا تطلب رمز التحقق عبر الاتصال أو الرسائل الخاصة. عدم مشاركة الرمز مع أي شخص يضمن حماية حسابك.
+                </p>
             </div>
 
         </div>
