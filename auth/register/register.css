@@ -1,60 +1,39 @@
-/* تنسيقات حقول وأزرار صفحة التسجيل (متوافقة مع النسق الزجاجي العام) */
+/* =================================================================
+   تنسيقات صفحة إنشاء الحساب (متوافقة مع النسق الزجاجي المركزي)
+================================================================= */
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
+/* ملاحظة: التنسيقات الأساسية للحقول (.auth-input)، الأزرار (.btn-primary)،
+  وحاوية الأيقونات (.input-wrapper) موروثة بالكامل من shared/styles/auth-layout.css 
+*/
+
+/* تقليل التباعد في صفحة التسجيل لاستيعاب الحقول الأربعة بشكل متناسق */
+.register-wrapper .input-group {
+    margin-bottom: 15px;
 }
 
-.input-group label {
-    color: var(--text-main, #ffffff);
-    font-size: 0.9rem;
+/* تخصيص التباعد العلوي لزر إنشاء الحساب */
+.register-wrapper .btn-primary {
+    margin-top: 15px;
+    padding: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* تنسيق قسم تسجيل الدخول السفلي */
+.register-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.85rem;
+}
+
+/* تأثيرات حصرية للروابط في صفحة التسجيل */
+.register-wrapper .text-primary {
     font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.input-group input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md, 16px);
-    padding: 14px 16px;
-    color: white;
-    font-family: var(--font-main, 'Cairo', sans-serif);
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.3s ease;
+.register-wrapper .text-primary:hover {
+    color: #ffffff;
+    text-decoration: none;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
-
-.input-group input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-}
-
-.input-group input:focus {
-    border-color: var(--primary, #38bdf8);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.btn-primary {
-    background: var(--primary, #38bdf8);
-    color: #0f172a;
-    border: none;
-    border-radius: var(--radius-md, 16px);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: var(--font-main, 'Cairo', sans-serif);
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark, #0284c7);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.5);
-}
-
-/* تنسيقات النصوص السفلية */
-.text-muted { color: rgba(255, 255, 255, 0.6); }
-.text-dim { color: rgba(255, 255, 255, 0.4); }
-.text-primary { color: var(--primary, #38bdf8); text-decoration: none; font-weight: 600; }
-.text-primary:hover { text-decoration: underline; }
