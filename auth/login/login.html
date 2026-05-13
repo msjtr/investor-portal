@@ -7,70 +7,74 @@
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
     <meta property="og:title" content="بوابة المستثمرين | تسجيل الدخول">
-    <meta property="og:description" content="سجل دخولك لمتابعة محفظتك الاستثمارية بأمان وسهولة.">
+    <meta property="og:description" content="سجل دخولك لمتابعة محفظتك الاستثمارية بأمان وسهولة عبر منصة تيرا.">
     <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
-    <meta property="og:url" content="https://msjtr.github.io/investor-portal/auth/login/login.html">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
-
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
     <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/animations.css">
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     <link rel="stylesheet" href="login.css">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
     <script src="../../shared/scripts/storage.js"></script>
     <script src="../../shared/scripts/constants.js"></script>
+    <script src="../../shared/scripts/auth-guard.js"></script>
     <script src="../../shared/scripts/icons.js"></script>
 </head>
-<body>
+<body class="animate-fade-in">
 
     <div class="auth-wrapper">
-        <div class="auth-card"> 
-            <div class="auth-header">
-                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="بوابة المستثمرين" class="auth-logo">
-                <h2 class="text-main">مرحباً بك مجدداً</h2>
-                <p class="text-muted">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
+        <div class="auth-card animate-slide-up"> 
+            
+            <div class="auth-header text-center">
+                <div class="logo-container">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="بوابة المستثمرين" class="auth-logo">
+                </div>
+                <h2 class="text-white font-black mt-20">مرحباً بك مجدداً</h2>
+                <p class="text-white opacity-80 mt-5">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
             </div>
 
-            <form id="loginForm" class="flex-column gap-20">
+            <form id="loginForm" class="flex-column mt-30">
+                
                 <div class="input-group">
                     <label for="email">البريد الإلكتروني</label>
-                    <div class="input-with-icon">
+                    <div class="input-wrapper">
                         <span class="input-icon" data-icon="email"></span>
-                        <input type="email" id="email" placeholder="example@mail.com" required>
+                        <input type="email" id="email" class="auth-input" placeholder="msjt301@gmail.com" required>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label for="password">كلمة المرور</label>
-                    <div class="input-with-icon">
+                    <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
-                        <input type="password" id="password" placeholder="••••••••" required>
+                        <input type="password" id="password" class="auth-input" placeholder="••••••••" required>
                     </div>
                 </div>
 
-                <div class="flex-between w-full">
-                    <label class="flex-center gap-10 text-muted" style="font-size: 0.85rem; cursor: pointer;">
-                        <input type="checkbox"> تذكرني
+                <div class="login-options flex-between w-full">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="rememberMe">
+                        <span>تذكرني</span>
                     </label>
-                    <a href="../forgot-password/forgot.html" class="text-primary" style="font-size: 0.85rem;">نسيت كلمة المرور؟</a>
+                    <a href="../forgot-password/forgot.html" class="forgot-password-link">نسيت كلمة المرور؟</a>
                 </div>
 
-                <button type="submit" id="loginBtn" class="btn-primary w-full p-20 mt-10">
-                    <span>دخول</span>
+                <button type="submit" id="loginBtn" class="btn-primary mt-10">
+                    <span>تسجيل الدخول</span>
                 </button>
             </form>
 
-            <div class="auth-footer mt-20 text-center">
-                <p class="text-dim">ليس لديك حساب؟ <a href="../register/register.html" class="text-primary">سجل الآن</a></p>
+            <div class="login-footer">
+                <p>ليس لديك حساب؟ <a href="../register/register.html" class="register-link">سجل الآن</a></p>
             </div>
         </div>
     </div>
 
     <script src="../../shared/scripts/api.js"></script>
+    <script src="../../shared/scripts/validation.js"></script>
+    <script src="../../shared/scripts/notifications.js"></script>
     <script src="login.js"></script>
 
 </body>
