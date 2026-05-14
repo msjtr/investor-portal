@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب | بوابة المستثمرين</title>
+    <title>إنشاء حساب | بوابة المستثمر</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمرين | إنشاء حساب">
+    <meta property="og:title" content="بوابة المستثمر | إنشاء حساب">
     <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء عبر منصة تيرا.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -29,31 +29,32 @@
             
             <div class="auth-header text-center">
                 <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
                 </div>
-                <h2 class="text-white font-black mt-20">انضم إلينا كمسؤول محفظة</h2>
-                <p class="text-white opacity-80 mt-5">أنشئ حسابك الاستثماري الجديد بخطوات بسيطة</p>
+                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
+                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
+                <p class="text-white opacity-80 mt-10 text-xs">أنشئ حسابك الاستثماري الجديد بخطوات بسيطة</p>
             </div>
 
-            <form id="registerForm" class="flex-column mt-30">
+            <form id="registerForm" class="flex-column mt-25">
                 
-                <div class="input-group">
+                <div class="input-group mb-15">
                     <label for="fullName">الاسم الكامل</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="user"></span>
-                        <input type="text" id="fullName" class="auth-input" placeholder="مثال: محمد بن صالح" required>
+                        <input type="text" id="fullName" class="auth-input" placeholder="مثال: محمد بن صالح" required autofocus>
                     </div>
                 </div>
 
-                <div class="input-group">
+                <div class="input-group mb-15">
                     <label for="email">البريد الإلكتروني</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="email"></span>
-                        <input type="email" id="email" class="auth-input" placeholder="example@mail.com" required>
+                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required>
                     </div>
                 </div>
 
-                <div class="input-group">
+                <div class="input-group mb-15">
                     <label for="phone">رقم الجوال</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="phone"></span>
@@ -61,8 +62,8 @@
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <div class="input-header">
+                <div class="input-group mb-15">
+                    <div class="input-header flex-between mb-5">
                         <label for="password">كلمة المرور</label>
                     </div>
                     <div class="input-wrapper">
@@ -71,14 +72,32 @@
                     </div>
                 </div>
 
-                <button type="submit" id="registerBtn" class="btn-primary mt-20">
+                <div class="register-agreement mt-10 mb-15 text-right">
+                    <label class="custom-checkbox flex-center gap-5 cursor-pointer" style="justify-content: flex-start;">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span class="text-dim text-xs">أوافق على <a href="#" class="text-primary font-bold" target="_blank">الشروط والأحكام</a> وسياسة الخصوصية</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn-primary mt-10">
                     <span>إنشاء الحساب</span>
                 </button>
             </form>
 
-            <div class="register-footer mt-30 text-center">
-                <p class="text-white">لديك حساب بالفعل؟ <a href="../login/login.html" class="register-link font-bold">سجل دخولك</a></p>
+            <div class="register-footer text-center mt-20 pt-15 border-top">
+                <p class="text-white text-xs m-0">لديك حساب بالفعل؟ <a href="../login/login.html" class="register-link text-primary font-bold">سجل دخولك</a></p>
             </div>
+
+            <div class="security-notice mt-25 text-right">
+                <div class="flex-center gap-5 mb-5 text-primary">
+                    <span data-icon="shield"></span>
+                    <span class="font-bold text-xs">حماية الهوية الرقمية</span>
+                </div>
+                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
+                    يقر المستخدم بأن جميع البيانات المدخلة صحيحة وتعود له شخصياً. المنصة تطبق معايير التشفير المتقدمة لحماية بياناتك.
+                </p>
+            </div>
+
         </div>
     </div>
 
