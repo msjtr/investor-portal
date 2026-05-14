@@ -1,8 +1,9 @@
 /* =================================================================
    تنسيقات صفحة تسجيل الدخول (Premium Login Theme - Tera)
+   متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات المشتركة تُسحب من auth-layout.css */
+/* ملاحظة: التنسيقات المشتركة للبطاقة والحقول تُسحب من auth-layout.css */
 
 .login-wrapper {
     width: 100%;
@@ -10,27 +11,27 @@
     flex-direction: column;
 }
 
-/* 1. حل مشكلة التداخل وضبط المسافات */
+/* 1. حل مشكلة التداخل وضبط المسافات المتزنة */
 .login-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px !important; /* مسافة أمان متزنة تحت الحقول */
+    margin-top: 15px !important; /* مسافة أمان تحت الحقول */
     margin-bottom: 25px;
     font-size: 0.9rem;
     padding: 0 5px;
 }
 
-/* 2. التنسيق الحصري للنص التوضيحي (عرض كلمة المرور) */
-/* تم رفع درجة البياض لتكون ناصعة جداً فوق الخلفية الداكنة */
+/* 2. التنسيق الحصري للنص التوضيحي (Placeholder) */
+/* سطوع أبيض ناصع جداً لضمان أعلى درجات الوضوح فوق الخلفية الداكنة */
 .auth-input::placeholder {
     color: #ffffff !important; 
-    opacity: 0.8 !important; /* درجة وضوح عالية جداً */
+    opacity: 0.8 !important; 
     font-size: 0.95rem;
     font-weight: 500;
 }
 
-/* 3. تنسيق رابط نسيت كلمة المرور بتوهج سماوي */
+/* 3. تنسيق رابط استعادة كلمة المرور بتوهج سماوي */
 .forgot-password-link {
     color: var(--primary, #38bdf8) !important;
     text-decoration: none;
@@ -43,9 +44,9 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
-/* 4. تنسيق الفوتر (ليس لديك حساب؟) */
+/* 4. تنسيق الفوتر التوجيهي (ليس لديك حساب؟) */
 .login-footer {
-    margin-top: 30px;
+    margin-top: 25px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 20px;
     text-align: center;
@@ -55,6 +56,7 @@
     color: #ffffff !important;
     font-size: 0.95rem;
     opacity: 0.9;
+    margin: 0;
 }
 
 .register-link {
@@ -62,7 +64,7 @@
     font-weight: 800;
     text-decoration: none;
     margin-right: 5px;
-    transition: var(--transition);
+    transition: var(--transition, all 0.3s ease);
 }
 
 .register-link:hover {
@@ -74,27 +76,42 @@
 .btn-primary {
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
-    height: 58px; /* توحيد الارتفاع مع الحقول */
+    height: 58px; /* توحيد الارتفاع مع حقول الإدخال */
     font-weight: 800;
+    margin-top: 10px;
 }
 
-/* 6. تنسيق خيار تذكرني (أبيض ناصع) */
+/* 6. تنسيق خيار تذكرني (أبيض ناصع متناسق) */
 .custom-checkbox span {
     color: #ffffff !important;
     font-weight: 700;
     font-size: 0.9rem;
 }
 
-/* تنسيق جملة (عرض كلمة المرور) التي يحقنها الهيلبر */
+/* 7. تنسيق زر (عرض كلمة المرور) الذي يحقن برمجياً عبر helpers.js */
 .toggle-password-text {
     color: var(--primary, #38bdf8) !important;
     font-size: 0.85rem;
     font-weight: 800;
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transition, all 0.3s ease);
 }
 
 .toggle-password-text:hover {
     color: #ffffff !important;
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+/* 8. تنسيق إطار التنويه الأمني السفلي المعتمد */
+.security-notice {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+    margin-top: 25px;
+}
+
+/* حدود الخطأ في حال رفض المصادقة */
+.input-error .auth-input {
+    border-color: var(--danger, #ef4444) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
 }
