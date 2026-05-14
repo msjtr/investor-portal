@@ -1,21 +1,22 @@
 /**
+ * =================================================================
  * محرك إعادة تعيين كلمة المرور (Enterprise Reset Engine) - منصة تيرا
- * التحقق اللحظي، مؤشر القوة، وتأمين الجلسة النهائية
+ * التحقق اللحظي، مؤشر القوة، وتأمين الجلسة النهائية بصمة الجهاز
+ * =================================================================
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. حماية المسار: التأكد من أن المستخدم اجتاز الـ OTP بنجاح
     const tempUser = Storage.get('temp_user');
-    if (!tempUser || !tempUser.email) {
-        console.warn("[Reset Engine] محاولة وصول غير مصرح بها. التوجيه لبوابة الدخول.");
+    if (!tempUser || !tempUser.email || tempUser.type !== 'reset_password') {
+        console.warn("[Reset Engine] محاولة وصول غير مصرح بها أو انتهاء الجلسة. التوجيه لبوابة الدخول.");
         window.location.replace(ROUTES.LOGIN);
         return;
     }
 
-    // 2. تفعيل ميزة إظهار/إخفاء كلمة المرور (باستخدام Helper المشترك)
-    if (typeof setupPasswordToggle === 'function') {
-        setupPasswordToggle('newPassword', 'toggleNewPass');
-        setupPasswordToggle('confirmPassword', 'toggleConfirmPass');
+    // 2. تفعيل ميزة إظهار كلمة المرور عبر المساعد المركزي (Helpers)
+    if (typeof Helpers !== 'undefined' && typeof Helpers.setupPasswordVisibility === 'function') {
+        Helpers.setupPasswordVisibility();
     }
 
     // 3. جلب عناصر الواجهة
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const meterBar = document.getElementById('meterBar');
     const strengthText = document.getElementById('strengthText');
 
-    // تعريف الشروط الأمنية الخمسة
+    // تعريف الشروط الأمنية الخمسة المعتمدة في منصة تيرا
     const rules = {
         length: { regex: /.{8,}/, element: document.getElementById('rule-length') },
         upper: { regex: /[A-Z]/, element: document.getElementById('rule-upper') },
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const val = newPassword.value;
         let score = 0;
 
-        // فحص الشروط وتحديث العلامات (✔/✖)
+        // فحص الشروط وتحديث العلامات البصرية (✔/✖)
         for (const key in rules) {
             const rule = rules[key];
             if (rule.regex.test(val)) {
@@ -55,17 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // تحديد ما إذا كانت كلمة المرور مطابقة لكل الشروط
+        // تحديد ما إذا كانت كلمة المرور مطابقة لكافة المعايير الأمنية
         isPasswordSecure = (score === 5);
 
-        // تحديث مؤشر القوة البصري
+        // تحديث مؤشر القوة البصري (Color & Width)
         updateStrengthMeter(score, val.length);
         
-        // التحقق من تفعيل الزر
+        // التحقق من تفعيل زر الحفظ
         validateForm();
     });
 
-    // 5. التحقق من تطابق الخانتين
+    // 5. التحقق من تطابق الخانتين اللحظي
     confirmPassword.addEventListener('input', validateForm);
 
     function validateForm() {
@@ -78,11 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
             matchError.classList.add('hidden');
         }
 
-        // تفعيل الزر فقط عند اكتمال الشروط وتطابق الخانتين
+        // تفعيل الزر فقط عند اكتمال القوة وتطابق الخانتين تماماً
         resetBtn.disabled = !(isPasswordSecure && passwordsMatch);
     }
 
-    // دالة تحديث شريط القوة
+    // دالة تحديث شريط القوة (Strength Levels)
     function updateStrengthMeter(score, length) {
         if (length === 0) {
             meterBar.style.width = '0%';
@@ -107,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         strengthText.className = level.class;
     }
 
-    // 6. إرسال الطلب النهائي لـ Make.com
+    // 6. إرسال الطلب النهائي لـ Make.com مع بصمة الجهاز
     resetForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -116,6 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBtn.innerHTML = `<span>جاري تحديث البيانات...</span>`;
 
         try {
+            // جلب بصمة الجهاز لتوثيق العملية أمنياً
+            let deviceMeta = { fingerprint: "unknown" };
+            if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
+                deviceMeta = Helpers.generateDeviceFingerprint();
+            }
+
             const response = await API.post(API_CONFIG.BASE_URL, {
                 action: 'reset_password',
                 payload: {
@@ -123,7 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     new_password: newPassword.value
                 },
                 metadata: {
-                    platform: APP_INFO.NAME,
+                    device_id: deviceMeta.fingerprint,
+                    browser: deviceMeta.browser,
+                    os: deviceMeta.os,
+                    platform: typeof APP_INFO !== 'undefined' ? APP_INFO.NAME : 'Tera Investor Portal',
                     timestamp: new Date().toISOString()
                 }
             });
@@ -131,19 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response && response.success) {
                 Notify.success("تم تحديث كلمة المرور بنجاح. مرحباً بك مجدداً!");
                 
-                // تنظيف البيانات المؤقتة وحفظ الجلسة الجديدة
+                // تنظيف البيانات المؤقتة وحفظ جلسة الدخول المعتمدة والجديدة
                 Storage.remove('temp_user');
                 if (response.user_data) {
                     Storage.set('user_session', response.user_data);
                 }
 
-                // التوجيه للوحة التحكم بعد نجاح العملية
+                // التوجيه السلس للوحة التحكم (Dashboard) بعد النجاح
                 setTimeout(() => {
                     window.location.replace(ROUTES.DASHBOARD || '../../dashboard/index.html');
                 }, 1500);
 
             } else {
-                Notify.error(response?.message || "عذراً، تعذر تحديث كلمة المرور.");
+                Notify.error(response?.message || "عذراً، تعذر تحديث كلمة المرور حالياً.");
                 resetBtnState(resetBtn);
             }
         } catch (error) {
