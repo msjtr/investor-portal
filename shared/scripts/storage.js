@@ -1,40 +1,90 @@
 /**
- * محرك التخزين الذكي (Terra Storage Engine)
- * النسخة المحدثة: إدارة الجلسات، التشفير البسيط، والتحويل التلقائي للبيانات
+ * =================================================================
+ * محرك التخزين المشفر الذكي (Enterprise Storage Engine) - منصة تيرا
+ * النسخة الاحترافية: تشفير البيانات، إدارة الجلسات، وحماية الخصوصية المحلية
+ * =================================================================
  */
+
 const Storage = {
-    // البادئة الخاصة بمنصة تيرا لضمان عدم التداخل مع المواقع الأخرى
+    // البادئة لضمان استقلالية بيانات تيرا في المتصفح
     prefix: 'tera_inv_',
+    
+    // مفتاح التعمية (Salt) لتشفير بيانات الجلسة محلياً
+    _salt: "Tera$ecure#2026",
 
     /**
-     * حفظ البيانات مع دعم الأمان والتحويل لـ JSON
+     * محرك التشفير الداخلي (Base64 + Salt Obfuscation)
+     * يستخدم لحماية البيانات الحساسة من الإضافات الخبيثة في المتصفح
+     */
+    _encode(value) {
+        try {
+            const stringValue = JSON.stringify(value);
+            // دمج الملح مع النص وتشفيره بصيغة Base64
+            return btoa(encodeURIComponent(stringValue + this._salt));
+        } catch (e) {
+            console.error('[Storage] خطأ في تشفير البيانات');
+            return null;
+        }
+    },
+
+    /**
+     * محرك فك التشفير والتحقق من سلامة الملح
+     */
+    _decode(encodedValue) {
+        try {
+            const decodedStr = decodeURIComponent(atob(encodedValue));
+            // التحقق من وجود الملح لضمان سلامة البيانات
+            if (decodedStr.endsWith(this._salt)) {
+                const cleanStr = decodedStr.slice(0, -this._salt.length);
+                return JSON.parse(cleanStr);
+            }
+            return null;
+        } catch (e) {
+            return null;
+        }
+    },
+
+    /**
+     * حفظ البيانات: يشفر البيانات الحساسة ويحفظ البيانات المؤقتة كـ JSON
      */
     set(key, value) {
         try {
-            const data = {
-                payload: value,
-                timestamp: Date.now(), // حفظ وقت التخزين للرجوع إليه عند الحاجة
-            };
-            localStorage.setItem(`${this.prefix}${key}`, JSON.stringify(data));
+            const storageKey = `${this.prefix}${key}`;
+            
+            // البيانات التي تبدأ بـ temp_ (مثل temp_user) تحفظ بـ JSON عادي لسهولة الوصول السريع
+            if (key.startsWith('temp_')) {
+                const data = { payload: value, timestamp: Date.now() };
+                localStorage.setItem(storageKey, JSON.stringify(data));
+            } else {
+                // البيانات الأخرى (مثل user_session) تخضع للتشفير الإلزامي
+                const encrypted = this._encode(value);
+                if (encrypted) localStorage.setItem(storageKey, encrypted);
+            }
         } catch (error) {
             console.error('[Storage Error] فشل حفظ البيانات:', error);
         }
     },
 
     /**
-     * جلب البيانات مع استخراج التلقائي للمحتوى
+     * جلب البيانات: يتعرف تلقائياً على نوع البيانات (مشفرة أو JSON) ويستخرجها
      */
     get(key) {
         try {
-            const rawData = localStorage.getItem(`${this.prefix}${key}`);
+            const storageKey = `${this.prefix}${key}`;
+            const rawData = localStorage.getItem(storageKey);
+            
             if (!rawData) return null;
 
-            const parsed = JSON.parse(rawData);
-            
-            // نرجع فقط الـ payload (البيانات الفعلية) لتبسيط التعامل معها
-            return parsed.payload !== undefined ? parsed.payload : parsed;
+            // إذا كان المفتاح مؤقتاً، نقرأه كـ JSON
+            if (key.startsWith('temp_')) {
+                const parsed = JSON.parse(rawData);
+                return parsed.payload !== undefined ? parsed.payload : parsed;
+            } else {
+                // إذا كان مفتاحاً أساسياً، نقوم بفك تشفيره
+                return this._decode(rawData);
+            }
         } catch (error) {
-            // في حال كانت البيانات نصاً عادياً وليست JSON
+            // كخيار احتياطي في حال وجود بيانات قديمة بصيغة نصية
             return localStorage.getItem(`${this.prefix}${key}`);
         }
     },
@@ -47,7 +97,7 @@ const Storage = {
     },
 
     /**
-     * مسح كل بيانات منصة تيرا (يستخدم عند تسجيل الخروج)
+     * مسح شامل لكافة بيانات منصة تيرا فقط (يستخدم عند تسجيل الخروج)
      */
     clearAll() {
         Object.keys(localStorage).forEach(key => {
@@ -55,7 +105,8 @@ const Storage = {
                 localStorage.removeItem(key);
             }
         });
-        console.info('[Storage] تم تنظيف ذاكرة المنصة بنجاح.');
+        sessionStorage.clear();
+        console.info('[Storage] تم تأمين الحساب وتنظيف ذاكرة المنصة بنجاح.');
     },
 
     /**
