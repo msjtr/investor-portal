@@ -1,9 +1,9 @@
 /* =================================================================
-   تنسيقات صفحة إنشاء الحساب (Premium Register Theme - Tera)
+   تنسيقات صفحة إنشاء الحساب (Premium Register Theme - TERA)
    متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات الأساسية للحقول والبطاقة تُسحب من auth-layout.css */
+/* التنسيقات الأساسية للحقول والبطاقة تُسحب من auth-layout.css */
 
 .register-wrapper {
     width: 100%;
@@ -17,17 +17,18 @@
     text-align: right;
 }
 
-/* الحل الجذري لإظهار نص (عرض كلمة المرور) ناصع البياض داخل المربعات */
+/* التنسيق الحصري للنص التوضيحي (Placeholder) */
+/* استخدام لون محايد فاتح يضمن تباين ممتاز لسهولة القراءة دون إزعاج بصري */
 .auth-input::placeholder {
-    color: #ffffff !important; /* أبيض ناصع */
-    opacity: 0.8 !important; /* وضوح عالي جداً فوق الخلفية الداكنة */
+    color: #e2e8f0 !important; 
+    opacity: 0.75 !important; 
     font-size: 0.95rem;
     font-weight: 500;
 }
 
-/* دعم المتصفحات المختلفة لضمان ظهور البياض الناصع */
-.auth-input::-webkit-input-placeholder { color: #ffffff !important; opacity: 0.8 !important; }
-.auth-input::-moz-placeholder { color: #ffffff !important; opacity: 0.8 !important; }
+/* دعم المتصفحات المختلفة لضمان استقرار اللون */
+.auth-input::-webkit-input-placeholder { color: #e2e8f0 !important; opacity: 0.75 !important; }
+.auth-input::-moz-placeholder { color: #e2e8f0 !important; opacity: 0.75 !important; }
 
 /* تنسيق جملة (عرض كلمة المرور) السماوية التي يحقنها الهيلبر */
 .toggle-password-text {
@@ -47,16 +48,30 @@
 .btn-primary {
     margin-top: 15px;
     height: 58px;
+    width: 100%;
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
     font-weight: 800;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius, 8px);
+    background-color: var(--primary, #38bdf8);
+    color: #0a2540; /* تباين قوي لسهولة القراءة */
+    transition: var(--transition, all 0.3s ease);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
+    background-color: #0284c7;
+    color: #ffffff;
 }
 
 /* تنسيق منطقة الموافقة على الشروط */
 .register-agreement {
     background: rgba(255, 255, 255, 0.02);
     padding: 10px;
-    border-radius: 8px;
+    border-radius: var(--radius, 8px);
 }
 
 .register-agreement .text-dim {
@@ -98,6 +113,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 15px;
     margin-top: 25px;
+    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
 }
 
 /* تحسين استجابة الحقول عند التركيز */
@@ -105,6 +121,7 @@
     background: rgba(15, 23, 42, 0.8) !important;
     border-color: var(--primary) !important;
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    outline: none;
 }
 
 /* حالة الخطأ البرمجية */
