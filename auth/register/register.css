@@ -1,8 +1,9 @@
 /* =================================================================
    تنسيقات صفحة إنشاء الحساب (Premium Register Theme - Tera)
+   متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات الأساسية موروثة من shared/styles/auth-layout.css */
+/* ملاحظة: التنسيقات الأساسية للحقول والبطاقة تُسحب من auth-layout.css */
 
 .register-wrapper {
     width: 100%;
@@ -12,19 +13,19 @@
 
 /* توزيع الحقول بشكل متناسق لضمان عدم الطول الزائد للبطاقة */
 .input-group {
-    margin-bottom: 20px !important; /* مسافة متزنة لفك التداخل */
+    margin-bottom: 15px !important; /* تقليل المسافة قليلاً لتناسب عدد الحقول الأكبر */
     text-align: right;
 }
 
 /* الحل الجذري لإظهار نص (عرض كلمة المرور) ناصع البياض داخل المربعات */
 .auth-input::placeholder {
     color: #ffffff !important; /* أبيض ناصع */
-    opacity: 0.8 !important; /* وضوح عالي جداً */
+    opacity: 0.8 !important; /* وضوح عالي جداً فوق الخلفية الداكنة */
     font-size: 0.95rem;
     font-weight: 500;
 }
 
-/* دعم المتصفحات لضمان ظهور البياض */
+/* دعم المتصفحات المختلفة لضمان ظهور البياض الناصع */
 .auth-input::-webkit-input-placeholder { color: #ffffff !important; opacity: 0.8 !important; }
 .auth-input::-moz-placeholder { color: #ffffff !important; opacity: 0.8 !important; }
 
@@ -34,7 +35,7 @@
     font-size: 0.85rem;
     font-weight: 800;
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transition, all 0.3s ease);
 }
 
 .toggle-password-text:hover {
@@ -42,8 +43,8 @@
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
 
-/* تخصيص زر إنشاء الحساب الفخم */
-.register-wrapper .btn-primary {
+/* تخصيص زر إنشاء الحساب الفخم (Elite Style) */
+.btn-primary {
     margin-top: 15px;
     height: 58px;
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
@@ -51,9 +52,21 @@
     font-weight: 800;
 }
 
+/* تنسيق منطقة الموافقة على الشروط */
+.register-agreement {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.register-agreement .text-dim {
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
 /* تنسيق الفوتر (لديك حساب بالفعل؟) */
 .register-footer {
-    margin-top: 30px;
+    margin-top: 25px;
     padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1); 
     text-align: center;
@@ -62,6 +75,7 @@
 .register-footer p {
     color: #ffffff !important;
     font-size: 0.95rem;
+    margin: 0;
 }
 
 /* تنسيق رابط "سجل دخولك" */
@@ -78,9 +92,23 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
+/* تنسيق إطار التنويه الأمني السفلي المعتمد */
+.security-notice {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+    margin-top: 25px;
+}
+
 /* تحسين استجابة الحقول عند التركيز */
 .auth-input:focus {
     background: rgba(15, 23, 42, 0.8) !important;
     border-color: var(--primary) !important;
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+/* حالة الخطأ البرمجية */
+.input-error .auth-input {
+    border-color: var(--danger, #ef4444) !important;
+    background: rgba(239, 68, 68, 0.05) !important;
 }
