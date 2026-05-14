@@ -1,9 +1,9 @@
 /* =================================================================
-   تنسيقات صفحة إعادة تعيين كلمة المرور (Premium Reset Theme - Tera)
+   تنسيقات صفحة إعادة تعيين كلمة المرور (Premium Reset Theme - TERA)
    النسخة المحدثة: دعم مؤشر القوة، الشروط الأمنية، والتنويه الأمني
 ================================================================= */
 
-/* ملاحظة: التنسيقات الأساسية للحقول والبطاقة موروثة من auth-layout.css */
+/* التنسيقات الأساسية للحقول والبطاقة موروثة من auth-layout.css */
 
 .reset-card {
     position: relative;
@@ -37,7 +37,7 @@
 .meter-bar {
     height: 100%;
     width: 0%;
-    background: var(--danger, #ef4444);
+    background-color: var(--danger, #ef4444);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
     border-radius: 3px;
 }
@@ -106,9 +106,32 @@
 .reset-card .btn-primary {
     margin-top: 10px;
     height: 58px;
+    width: 100%;
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
     font-weight: 800;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius, 8px);
+    background-color: var(--primary, #38bdf8);
+    color: #0a2540;
+    transition: var(--transition, all 0.3s ease);
+}
+
+.reset-card .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+/* حالة الزر المعطل برمجياً قبل استيفاء الشروط */
+.reset-card .btn-primary:disabled {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* تنسيق زر "عرض كلمة المرور" العلوي */
@@ -117,7 +140,7 @@
     font-size: 0.85rem;
     font-weight: 800;
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transition, all 0.3s ease);
 }
 
 .toggle-password-text:hover {
@@ -131,6 +154,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 15px;
     margin-top: 25px;
+    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
 }
 
 /* تنبيه عدم تطابق كلمتي المرور */
