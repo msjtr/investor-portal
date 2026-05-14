@@ -2,6 +2,7 @@
  * =================================================================
  * محرك صفحة التسجيل (Enterprise Registration Engine) - منصة تيرا
  * يدمج: بصمة الجهاز، التحقق الصارم، حماية التخمين، والتوجيه الذكي
+ * الميزة المضافة: التقاط الـ IP والموقع الجغرافي لتعزيز الأمان والتدقيق
  * =================================================================
  */
 
@@ -20,7 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. تنظيف الجلسات المؤقتة لبدء عملية تسجيل جديدة ونظيفة
-    Storage.remove('temp_user');
+    if (typeof Storage !== 'undefined') {
+        Storage.remove('temp_user');
+    }
 
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -77,27 +80,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 5. توليد بصمة الجهاز المشفرة لطبقة منع الاحتيال (Fraud Prevention Layer)
-            let deviceMeta = { fingerprint: "unknown", browser: "unknown", os: "unknown" };
-            if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
-                deviceMeta = Helpers.generateDeviceFingerprint();
-            }
-
-            // 6. تأمين الواجهة وتفعيل حالة "جاري المعالجة" (Micro-interaction)
+            // 5. تأمين الواجهة وتفعيل حالة "جاري المعالجة" (Micro-interaction)
             registerBtn.disabled = true;
             registerBtn.classList.add('animate-pulse');
             registerBtn.innerHTML = `
                 <span class="flex-center gap-10">
                     <div class="spinner-small" style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotation 0.8s linear infinite;"></div>
-                    <span>جاري إنشاء وتأمين الحساب...</span>
+                    <span>جاري فحص الأمان وتأمين الحساب...</span>
                 </span>
             `;
 
             // تجميد الحقول لمنع التعديل أثناء الإرسال
             [fullNameElem, emailElem, phoneElem, passwordElem, agreeCheckbox].forEach(el => el.disabled = true);
 
+            // 6. توليد بصمة الجهاز والتقاط الـ IP والموقع الجغرافي (Security Layer)
+            let deviceMeta = { fingerprint: "unknown", browser: "unknown", os: "unknown" };
+            let securityData = { ip: "غير متوفر", location: "غير متوفر" };
+
+            if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
+                deviceMeta = Helpers.generateDeviceFingerprint();
+            }
+
             try {
-                // 7. إرسال البيانات للـ Webhook المركزي (Make.com)
+                // جلب الـ IP والموقع الجغرافي من العميل مباشرة
+                const geoResponse = await fetch('https://ipapi.co/json/');
+                const geoData = await geoResponse.json();
+                securityData.ip = geoData.ip || "غير متوفر";
+                securityData.location = `${geoData.city || ''}, ${geoData.country_name || ''}`.replace(/^, | , $/g, '') || "غير متوفر";
+            } catch (geoErr) {
+                console.warn("[Security Engine] Geo-location mapping fallback:", geoErr);
+            }
+
+            try {
+                // 7. إرسال البيانات للـ Webhook المركزي (Make.com) مع حزمة الأمان المكتملة
                 const response = await API.post(API_CONFIG.BASE_URL, {
                     action: 'register',
                     payload: payloadData,
@@ -108,13 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         resolution: deviceMeta.resolution,
                         platform: typeof APP_INFO !== 'undefined' ? APP_INFO.NAME : 'Tera Investor Portal',
                         version: typeof APP_INFO !== 'undefined' ? APP_INFO.VERSION : '1.0.0',
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        // البيانات المضافة لتغذية الإيميل 👇
+                        ip: securityData.ip,
+                        location: securityData.location
                     }
                 });
 
                 // 8. معالجة الرد الذكي
                 if (response && response.success) {
-                    // حفظ بيانات الاتصال مؤقتاً لصفحة الـ OTP
                     Storage.set('temp_user', { 
                         email: payloadData.email, 
                         phone: payloadData.phone,
@@ -123,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         timestamp: Date.now()
                     });
 
-                    Notify.success("تم إنشاء الحساب بنجاح! جاري التوجيه لرمز التحقق...");
+                    Notify.success("تم إعداد الحساب بنجاح! جاري التوجيه لرمز التحقق...");
                     
                     setTimeout(() => {
                         window.location.replace(ROUTES.VERIFY || '../verify-otp/verify.html');
@@ -144,9 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * تمييز الحقل الخاطئ بصرياً
-     */
     function highlightError(element) {
         const group = element.closest('.input-group');
         if (group) {
@@ -155,9 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * معالجة المحاولات الفاشلة وتطبيق الحظر
-     */
     function handleRegisterFailure(msg) {
         const remainingLeft = maxRegisterAttempts - attemptCount;
         
@@ -176,16 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * إعادة تفعيل النموذج
-     */
     function resetRegisterForm(elementsArray, btn) {
         elementsArray.forEach(el => el.disabled = false);
         
         if (attemptCount < maxRegisterAttempts) {
             btn.disabled = false;
             btn.classList.remove('animate-pulse');
-            btn.innerHTML = `<span>إنشاء الحساب</span>`;
+            btn.innerHTML = `<span>إنشاء الحساب الاستثماري</span>`;
         }
     }
 });
