@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المستثمرين | جاري التحقق...</title>
+    <title>بوابة المستثمر | منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمرين | Investor Portal">
-    <meta property="og:description" content="منصة متطورة لمتابعة محفظتك الاستثمارية بأمان وسهولة.">
+    <meta property="og:title" content="بوابة المستثمر | منصة تيرا">
+    <meta property="og:description" content="منصة مالية متطورة لمتابعة محفظتك الاستثمارية بأمان تام وسهولة.">
     <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
     <meta property="og:url" content="https://msjtr.github.io/investor-portal/index.html">
     <meta property="og:type" content="website">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="./shared/styles/variables.css">
     <script src="./shared/scripts/storage.js"></script>
     <script src="./shared/scripts/constants.js"></script>
+    <script src="./shared/scripts/helpers.js"></script>
 
     <style>
         body {
-            background-color: #0f172a; 
+            background-color: #0b0f19; 
             height: 100vh;
             margin: 0;
             display: flex;
@@ -30,14 +31,34 @@
             font-family: 'Cairo', sans-serif;
             color: white;
             overflow: hidden;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            background: radial-gradient(circle at center, #1e293b 0%, #0b0f19 100%);
         }
 
-        .loading-container {
-            text-align: center;
-            animation: fadeIn 0.8s ease-in-out;
+        /* حاوية التحميل والتوجيه الفاخرة */
+        .loading-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.8s ease-out;
+            padding: 30px;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md, 16px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
+        .logo-box {
+            margin-bottom: 25px;
+        }
+
+        .logo-box img {
+            height: 45px;
+            width: auto;
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.2));
+        }
+
+        /* الـ Loader الدائري السماوي */
         .loader {
             width: 50px;
             height: 50px;
@@ -69,55 +90,83 @@
         }
         
         @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
+            from { opacity: 0; transform: scale(0.95); } 
+            to { opacity: 1; transform: scale(1); } 
         }
 
         .status-text {
-            margin-top: 25px;
-            font-size: 0.95rem;
+            margin-top: 20px;
+            font-size: 0.9rem;
             color: #94a3b8;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.5px;
+        }
+
+        .brand-text {
+            color: var(--primary, #38bdf8);
+            font-size: 0.75rem;
+            font-weight: 900;
+            margin-top: 5px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <div class="loading-container">
+    <div class="loading-wrapper">
+        <div class="logo-box">
+            <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا">
+        </div>
         <div class="loader"></div>
-        <div class="status-text">جاري تأمين الاتصال بالمحفظة...</div>
+        <div class="status-text" id="statusText">جاري تأمين الاتصال والمصادقة...</div>
+        <div class="brand-text">TERA SERVICES</div>
     </div>
 
     <script>
         /**
-         * محرك التوجيه الذكي (Smart Redirect Engine)
+         * محرك التوجيه الأمني والمصادقة (Secure Routing Engine)
+         * يحلل الجلسة المشفرة ويوجه المستثمر حسب حالة التوثيق والأجهزة
          */
         window.addEventListener('load', () => {
-            // تأخير بسيط (1.2 ثانية) لمنح تجربة مستخدم سلسة واحترافية
+            const statusElem = document.getElementById('statusText');
+
+            // تسجيل بصمة الجهاز استباقياً لضمان جاهزيتها في المتصفح
+            if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
+                Helpers.generateDeviceFingerprint();
+            }
+
+            // تأخير متزن لمنح إحساس بالفحص الأمني العميق وتجنب الوميض المزعج
             setTimeout(() => {
                 try {
-                    const user = Storage.get('user_session');
+                    // قراءة الجلسة المعتمدة باستخدام محرك التخزين المشفر
+                    const userSession = Storage.get('user_session');
+                    const tempUser = Storage.get('temp_user');
 
-                    if (!user) {
-                        // 1. إذا لم يكن هناك جلسة نشطة، التوجيه لصفحة الدخول
-                        window.location.replace(ROUTES.LOGIN);
-                    } else {
-                        // 2. التحقق من حالة التوثيق (OTP)
-                        if (user.status === 'pending_otp' || user.needVerify) {
-                            window.location.replace(ROUTES.VERIFY);
+                    if (userSession && userSession.token) {
+                        // 1. المستخدم يمتلك جلسة مشفرة صالحة
+                        if (userSession.needVerify || userSession.status === 'pending_otp') {
+                            statusElem.innerText = "مطلوب مصادقة أمنية...";
+                            window.location.replace(ROUTES.VERIFY || './auth/verify-otp/verify.html');
                         } else {
-                            // 3. المستخدم موثق وجاهز ➔ التوجيه للوحة التحكم
-                            // إذا لم يكن مسار الداشبورد جاهزاً، سيوجه برمجياً للمسار الافتراضي
-                            window.location.replace(ROUTES.DASHBOARD || './dashboard/index.html'); 
+                            statusElem.innerText = "تم الاتصال بنجاح. جاري فتح المحفظة...";
+                            window.location.replace(ROUTES.DASHBOARD || './dashboard/index.html');
                         }
+                    } else if (tempUser && tempUser.email) {
+                        // 2. المستخدم في منتصف رحلة تسجيل أو دخول ولم يكمل الـ OTP
+                        statusElem.innerText = "جاري استكمال التحقق...";
+                        window.location.replace(ROUTES.VERIFY || './auth/verify-otp/verify.html');
+                    } else {
+                        // 3. زائر جديد أو جلسة منتهية ➔ التوجيه لبوابة الدخول
+                        statusElem.innerText = "جاري التوجيه لبوابة الدخول...";
+                        window.location.replace(ROUTES.LOGIN || './auth/login/login.html');
                     }
                 } catch (error) {
-                    console.error("Redirect System Error:", error);
-                    // مسار طوارئ آمن في حال حدوث أي خطأ
+                    console.error("[Routing Security Error]:", error);
+                    // مسار الطوارئ الفوري في حال التلاعب أو تلف الذاكرة
+                    Storage.clearAll();
                     window.location.replace("./auth/login/login.html");
                 }
-            }, 1200); 
+            }, 1400); 
         });
     </script>
 </body>
