@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب | بوابة المستثمر</title>
+    <title>إنشاء حساب استثماري | بوابة المستثمر في منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمر | إنشاء حساب">
-    <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء عبر منصة تيرا.">
+    <meta property="og:title" content="بوابة المستثمر في منصة تيرا | إنشاء حساب">
+    <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء وأمان سيبراني متقدم عبر منصة تيرا — عالمك بلا حدود.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
@@ -33,7 +33,7 @@
                 </div>
                 <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
                 <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
-                <p class="text-white opacity-80 mt-10 text-xs">أنشئ حسابك الاستثماري الجديد بخطوات بسيطة</p>
+                <p class="text-white opacity-80 mt-10 text-xs">أنشئ حسابك الاستثماري الجديد بخطوات آمنة</p>
             </div>
 
             <form id="registerForm" class="flex-column mt-25">
@@ -42,7 +42,7 @@
                     <label for="fullName">الاسم الكامل</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="user"></span>
-                        <input type="text" id="fullName" class="auth-input" placeholder="مثال: محمد بن صالح" required autofocus>
+                        <input type="text" id="fullName" class="auth-input" placeholder="مثال: محمد بن صالح الشمري" required autofocus autocomplete="name">
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@
                     <label for="email">البريد الإلكتروني</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="email"></span>
-                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required>
+                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required autocomplete="email">
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@
                     <label for="phone">رقم الجوال</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="phone"></span>
-                        <input type="tel" id="phone" class="auth-input" placeholder="05xxxxxxxx" required>
+                        <input type="tel" id="phone" class="auth-input" placeholder="05xxxxxxxx" required autocomplete="tel">
                     </div>
                 </div>
 
@@ -68,7 +68,7 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
-                        <input type="password" id="password" class="auth-input" placeholder="عرض كلمة المرور" required>
+                        <input type="password" id="password" class="auth-input" placeholder="أدخل كلمة مرور قوية" required autocomplete="new-password">
                     </div>
                 </div>
 
@@ -80,21 +80,21 @@
                 </div>
 
                 <button type="submit" id="registerBtn" class="btn-primary mt-10">
-                    <span>إنشاء الحساب</span>
+                    <span>إنشاء الحساب الاستثماري</span>
                 </button>
             </form>
 
             <div class="register-footer text-center mt-20 pt-15 border-top">
-                <p class="text-white text-xs m-0">لديك حساب بالفعل؟ <a href="../login/login.html" class="register-link text-primary font-bold">سجل دخولك</a></p>
+                <p class="text-white text-xs m-0">لديك حساب بالفعل؟ <a href="../login/login.html" class="register-link text-primary font-bold">سجل دخولك الآن</a></p>
             </div>
 
             <div class="security-notice mt-25 text-right">
                 <div class="flex-center gap-5 mb-5 text-primary">
                     <span data-icon="shield"></span>
-                    <span class="font-bold text-xs">حماية الهوية الرقمية</span>
+                    <span class="font-bold text-xs">أمان الهوية والتدقيق (Zero Trust)</span>
                 </div>
                 <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
-                    يقر المستخدم بأن جميع البيانات المدخلة صحيحة وتعود له شخصياً. المنصة تطبق معايير التشفير المتقدمة لحماية بياناتك.
+                    يقر المستخدم بأن جميع البيانات المدخلة صحيحة وتعود له شخصياً. تطبق منصة تيرا معايير التشفير والتدقيق المتقدمة لحماية بياناتك وأصولك الرقمية.
                 </p>
             </div>
 
