@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المستثمر | منصة تيرا</title>
+    <title>بوابة المستثمر | منصة تيرا — عالمك بلا حدود</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
     <meta property="og:title" content="بوابة المستثمر | منصة تيرا">
-    <meta property="og:description" content="منصة مالية متطورة لمتابعة محفظتك الاستثمارية بأمان تام وسهولة.">
+    <meta property="og:description" content="بوابة استثمارية متطورة تتيح لك متابعة وإدارة محفظتك المالية بأمان سيبراني متكامل وفق بنية Zero Trust.">
     <meta property="og:image" content="https://msjtr.github.io/investor-portal/assets/images/share-thumb.png">
     <meta property="og:url" content="https://msjtr.github.io/investor-portal/index.html">
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="./shared/styles/variables.css">
+    
     <script src="./shared/scripts/storage.js"></script>
     <script src="./shared/scripts/constants.js"></script>
     <script src="./shared/scripts/helpers.js"></script>
 
     <style>
         body {
-            background-color: #0b0f19; 
+            background-color: #0a2540; /* لون الخلفية الرسمي لهوية TERA */
             height: 100vh;
             margin: 0;
             display: flex;
@@ -29,9 +29,9 @@
             justify-content: center;
             align-items: center;
             font-family: 'Cairo', sans-serif;
-            color: white;
+            color: #ffffff;
             overflow: hidden;
-            background: radial-gradient(circle at center, #1e293b 0%, #0b0f19 100%);
+            background: radial-gradient(circle at center, #0f355c 0%, #0a2540 100%);
         }
 
         /* حاوية التحميل والتوجيه الفاخرة */
@@ -40,12 +40,13 @@
             flex-direction: column;
             align-items: center;
             animation: fadeIn 0.8s ease-out;
-            padding: 30px;
-            background: rgba(15, 23, 42, 0.4);
+            padding: 35px 45px;
+            background-color: rgba(15, 23, 42, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: var(--radius-md, 16px);
             backdrop-filter: blur(10px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
         }
 
         .logo-box {
@@ -53,12 +54,12 @@
         }
 
         .logo-box img {
-            height: 45px;
+            height: 50px;
             width: auto;
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.2));
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.3));
         }
 
-        /* الـ Loader الدائري السماوي */
+        /* الـ Loader الدائري السماوي المتوافق مع الهوية */
         .loader {
             width: 50px;
             height: 50px;
@@ -95,9 +96,9 @@
         }
 
         .status-text {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #94a3b8;
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: #e2e8f0;
             font-weight: 700;
             letter-spacing: 0.5px;
         }
@@ -106,8 +107,8 @@
             color: var(--primary, #38bdf8);
             font-size: 0.75rem;
             font-weight: 900;
-            margin-top: 5px;
-            letter-spacing: 1px;
+            margin-top: 8px;
+            letter-spacing: 2px;
         }
     </style>
 </head>
@@ -115,17 +116,17 @@
 
     <div class="loading-wrapper">
         <div class="logo-box">
-            <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا">
+            <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا">
         </div>
         <div class="loader"></div>
-        <div class="status-text" id="statusText">جاري تأمين الاتصال والمصادقة...</div>
-        <div class="brand-text">TERA SERVICES</div>
+        <div class="status-text" id="statusText">جاري تأمين الاتصال والتحقق من الهوية...</div>
+        <div class="brand-text">TERA — عالمك بلا حدود</div>
     </div>
 
     <script>
         /**
          * محرك التوجيه الأمني والمصادقة (Secure Routing Engine)
-         * يحلل الجلسة المشفرة ويوجه المستثمر حسب حالة التوثيق والأجهزة
+         * يحلل الجلسة المشفرة ويوجه المستثمر حسب حالة التوثيق وصلاحية الأجهزة
          */
         window.addEventListener('load', () => {
             const statusElem = document.getElementById('statusText');
@@ -135,35 +136,35 @@
                 Helpers.generateDeviceFingerprint();
             }
 
-            // تأخير متزن لمنح إحساس بالفحص الأمني العميق وتجنب الوميض المزعج
+            // تأخير متزن لمنح إحساس بالفحص الأمني العميق وتجنب الوميض المزعج للعين
             setTimeout(() => {
                 try {
                     // قراءة الجلسة المعتمدة باستخدام محرك التخزين المشفر
-                    const userSession = Storage.get('user_session');
-                    const tempUser = Storage.get('temp_user');
+                    const userSession = typeof Storage !== 'undefined' ? Storage.get('user_session') : null;
+                    const tempUser = typeof Storage !== 'undefined' ? Storage.get('temp_user') : null;
 
                     if (userSession && userSession.token) {
                         // 1. المستخدم يمتلك جلسة مشفرة صالحة
                         if (userSession.needVerify || userSession.status === 'pending_otp') {
-                            statusElem.innerText = "مطلوب مصادقة أمنية...";
-                            window.location.replace(ROUTES.VERIFY || './auth/verify-otp/verify.html');
+                            if (statusElem) statusElem.innerText = "مطلوب مصادقة أمنية إضافية...";
+                            window.location.replace(typeof ROUTES !== 'undefined' && ROUTES.VERIFY ? ROUTES.VERIFY : './auth/verify-otp/verify.html');
                         } else {
-                            statusElem.innerText = "تم الاتصال بنجاح. جاري فتح المحفظة...";
-                            window.location.replace(ROUTES.DASHBOARD || './dashboard/index.html');
+                            if (statusElem) statusElem.innerText = "تم الاتصال بنجاح. جاري فتح المحفظة...";
+                            window.location.replace(typeof ROUTES !== 'undefined' && ROUTES.DASHBOARD ? ROUTES.DASHBOARD : './dashboard/index.html');
                         }
                     } else if (tempUser && tempUser.email) {
-                        // 2. المستخدم في منتصف رحلة تسجيل أو دخول ولم يكمل الـ OTP
-                        statusElem.innerText = "جاري استكمال التحقق...";
-                        window.location.replace(ROUTES.VERIFY || './auth/verify-otp/verify.html');
+                        // 2. المستخدم في منتصف رحلة تسجيل أو دخول ولم يكمل إدخال الـ OTP
+                        if (statusElem) statusElem.innerText = "جاري استكمال التحقق الأمني...";
+                        window.location.replace(typeof ROUTES !== 'undefined' && ROUTES.VERIFY ? ROUTES.VERIFY : './auth/verify-otp/verify.html');
                     } else {
-                        // 3. زائر جديد أو جلسة منتهية ➔ التوجيه لبوابة الدخول
-                        statusElem.innerText = "جاري التوجيه لبوابة الدخول...";
-                        window.location.replace(ROUTES.LOGIN || './auth/login/login.html');
+                        // 3. زائر جديد أو جلسة منتهية ➔ التوجيه الفوري لبوابة الدخول
+                        if (statusElem) statusElem.innerText = "جاري التوجيه لبوابة الدخول الآمن...";
+                        window.location.replace(typeof ROUTES !== 'undefined' && ROUTES.LOGIN ? ROUTES.LOGIN : './auth/login/login.html');
                     }
                 } catch (error) {
                     console.error("[Routing Security Error]:", error);
                     // مسار الطوارئ الفوري في حال التلاعب أو تلف الذاكرة
-                    Storage.clearAll();
+                    if (typeof Storage !== 'undefined') Storage.clearAll();
                     window.location.replace("./auth/login/login.html");
                 }
             }, 1400); 
