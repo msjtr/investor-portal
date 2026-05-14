@@ -1,9 +1,9 @@
 /* =================================================================
-   تنسيقات صفحة التحقق من الرمز (Premium Verify Theme - Tera)
+   تنسيقات صفحة التحقق من الرمز (Premium Verify Theme - TERA)
    متوافقة مع معايير الأمان المتقدمة وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات العامة للبطاقة موروثة من auth-layout.css */
+/* التنسيقات العامة للبطاقة موروثة من auth-layout.css */
 
 .verify-card {
     position: relative;
@@ -15,7 +15,7 @@
     position: absolute;
     top: 25px;
     right: 25px; /* محاذاة لليمين للنسق العربي */
-    background: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.05);
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
     width: 42px;
@@ -30,9 +30,9 @@
 }
 
 .btn-back-circle:hover {
-    background: var(--primary, #38bdf8);
-    border-color: var(--primary);
-    color: #0f172a;
+    background-color: var(--primary, #38bdf8);
+    border-color: var(--primary, #38bdf8);
+    color: #0a2540;
     transform: scale(1.1) rotate(5deg);
 }
 
@@ -40,22 +40,22 @@
 .otp-inputs-container {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin: 25px 0 15px 0; /* تعديل التباعد لاستيعاب عداد المحاولات أدناه */
+    gap: 8px; /* تباعد مدروس ليتوافق مع شاشات الجوال الضيقة */
+    margin: 25px 0 15px 0;
     direction: ltr; /* الأرقام دائماً من اليسار لليمين */
 }
 
 /* تصميم خانة الرقم الزجاجية الاحترافية */
 .otp-input {
-    width: 48px;
-    height: 60px;
+    width: 46px;
+    height: 58px;
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 800;
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.05) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
     border: 2px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 14px;
+    border-radius: var(--radius-sm, 10px);
     outline: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'Cairo', sans-serif;
@@ -64,14 +64,14 @@
 
 .otp-input:focus {
     border-color: var(--primary, #38bdf8) !important;
-    background: rgba(56, 189, 248, 0.1) !important;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-    transform: translateY(-4px);
+    background-color: rgba(56, 189, 248, 0.1) !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+    transform: translateY(-3px);
 }
 
 /* تمييز الخانة النشطة عند إدخال قيمة */
 .otp-input:not(:placeholder-shown) {
-    border-color: var(--primary);
+    border-color: var(--primary, #38bdf8);
 }
 
 /* =================================================================
@@ -88,7 +88,7 @@
 /* تطبيق الخطأ على الحاوية والخانات */
 .otp-error .otp-input {
     border-color: var(--danger, #ef4444) !important;
-    background: rgba(239, 68, 68, 0.15) !important;
+    background-color: rgba(239, 68, 68, 0.12) !important;
     animation: shakeError 0.4s ease-in-out;
     color: var(--danger, #ef4444);
 }
@@ -115,41 +115,64 @@
 #timerCount {
     font-size: 1.1rem;
     letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+}
+
+/* زر التأكيد الأساسي */
+.verify-card .btn-primary {
+    height: 58px;
+    width: 100%;
+    box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius, 8px);
+    background-color: var(--primary, #38bdf8);
+    color: #0a2540;
+    transition: var(--transition, all 0.3s ease);
+}
+
+.verify-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
+    background-color: #0284c7;
+    color: #ffffff;
 }
 
 /* زر إعادة الإرسال المطور */
 .btn-outline {
-    background: transparent;
+    background-color: transparent;
     border: 1.5px solid var(--primary, #38bdf8);
     color: var(--primary, #38bdf8);
     padding: 12px;
-    border-radius: var(--radius-md, 14px);
+    border-radius: var(--radius, 8px);
     font-weight: 700;
     font-family: 'Cairo', sans-serif;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition, all 0.3s ease);
 }
 
 .btn-outline:hover {
-    background: var(--primary);
-    color: #0f172a;
-    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
+    background-color: var(--primary, #38bdf8);
+    color: #0a2540;
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
 }
 
 /* تأثير التنبيه للبريد الإلكتروني المعروض */
 #userEmailDisplay {
     display: inline-block;
     padding: 4px 12px;
-    background: rgba(56, 189, 248, 0.1);
-    border-radius: 8px;
+    background-color: rgba(56, 189, 248, 0.1);
+    border-radius: var(--radius-sm, 6px);
     font-size: 0.95rem;
 }
 
 /* تنسيق التنويه الأمني المعتمد أسفل البطاقة */
 .security-notice {
-    background: rgba(255, 255, 255, 0.02);
+    background-color: rgba(255, 255, 255, 0.02);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 15px;
     margin-top: 25px;
+    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
 }
