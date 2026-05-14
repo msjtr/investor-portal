@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعيين كلمة مرور جديدة | بوابة المستثمر</title>
+    <title>تعيين كلمة مرور جديدة | بوابة المستثمر في منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمر | تعيين كلمة مرور جديدة">
-    <meta property="og:description" content="قم بإنشاء كلمة مرور قوية وجديدة لحماية حسابك الاستثماري عبر منصة تيرا.">
+    <meta property="og:title" content="بوابة المستثمر في منصة تيرا | تعيين كلمة مرور جديدة">
+    <meta property="og:description" content="قم بإنشاء كلمة مرور قوية وجديدة لحماية حسابك الاستثماري وأصولك الرقمية عبر منصة تيرا — عالمك بلا حدود.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
@@ -28,11 +28,11 @@
             
             <div class="auth-header text-center">
                 <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
                 </div>
                 <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
                 <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
-                <p class="text-white opacity-80 mt-10 text-xs">تعيين كلمة مرور جديدة ومطابقتها للشروط الأمنية.</p>
+                <p class="text-white opacity-80 mt-10 text-xs">تعيين كلمة مرور جديدة ومطابقتها للسياسات الأمنية المعتمدة</p>
             </div>
 
             <form id="resetForm" class="flex-column mt-25">
@@ -44,7 +44,7 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
-                        <input type="password" id="newPassword" class="auth-input" placeholder="••••••••••••" required autofocus>
+                        <input type="password" id="newPassword" class="auth-input" placeholder="أدخل كلمة المرور الجديدة" required autofocus autocomplete="new-password">
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="password-rules-box mt-10 text-right">
-                    <span class="text-white font-bold text-xs block mb-10 opacity-90">الشروط المطلوبة:</span>
+                    <span class="text-white font-bold text-xs block mb-10 opacity-90">الشروط الأمنية المطلوبة:</span>
                     <ul class="rules-list text-xs" id="rulesList">
                         <li id="rule-length" class="rule-item invalid">8 أحرف على الأقل</li>
                         <li id="rule-upper" class="rule-item invalid">حرف كبير (A-Z)</li>
@@ -76,23 +76,23 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock-check"></span>
-                        <input type="password" id="confirmPassword" class="auth-input" placeholder="••••••••••••" required>
+                        <input type="password" id="confirmPassword" class="auth-input" placeholder="أعد إدخال كلمة المرور للمطابقة" required autocomplete="new-password">
                     </div>
                     <span id="matchError" class="text-danger text-xs font-bold mt-5 hidden block text-right">كلمتا المرور غير متطابقتين</span>
                 </div>
 
                 <button type="submit" id="resetBtn" class="btn-primary mt-25" disabled>
-                    <span>حفظ كلمة المرور والدخول</span>
+                    <span>تحديث كلمة المرور والدخول</span>
                 </button>
             </form>
 
             <div class="security-notice mt-25 text-right">
                 <div class="flex-center gap-5 mb-5 text-primary">
                     <span data-icon="shield"></span>
-                    <span class="font-bold text-xs">حماية وتأمين البيانات</span>
+                    <span class="font-bold text-xs">أمان الحساب والتدقيق (Zero Trust)</span>
                 </div>
                 <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
-                    عند تحديث كلمة المرور، سيتم إنهاء كافة الجلسات النشطة الأخرى لضمان أمان حسابك. يرجى عدم مشاركة بيانات الدخول مع أي طرف ثالث.
+                    عند تحديث كلمة المرور، سيتم إنهاء وتدمير كافة الجلسات النشطة (Sessions) على الأجهزة الأخرى تلقائياً لضمان أمان حسابك. يرجى عدم مشاركة بيانات الدخول مع أي جهة.
                 </p>
             </div>
 
