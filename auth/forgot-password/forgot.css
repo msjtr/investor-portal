@@ -1,9 +1,9 @@
 /* =================================================================
-   تنسيقات صفحة استعادة كلمة المرور (Premium Forgot Theme - Tera)
+   تنسيقات صفحة استعادة كلمة المرور (Premium Forgot Theme - TERA)
    متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات العامة للبطاقة والحقول موروثة من auth-layout.css */
+/* التنسيقات العامة للبطاقة والحقول موروثة من auth-layout.css */
 
 .forgot-card {
     position: relative;
@@ -25,7 +25,7 @@
     position: absolute;
     top: 25px;
     right: 25px; /* محاذاة لليمين متوافقة مع النسق العربي */
-    background: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.05);
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
     width: 42px;
@@ -40,9 +40,9 @@
 }
 
 .btn-back-circle:hover {
-    background: var(--primary, #38bdf8);
-    border-color: var(--primary);
-    color: #0f172a;
+    background-color: var(--primary, #38bdf8);
+    border-color: var(--primary, #38bdf8);
+    color: #0a2540; /* تباين قوي لسهولة القراءة */
     transform: scale(1.1) rotate(5deg);
 }
 
@@ -55,10 +55,10 @@
     margin-bottom: 20px !important;
 }
 
-/* توحيد التنسيق الحصري للنص التوضيحي (أبيض ناصع الوضوح) */
+/* التنسيق الحصري للنص التوضيحي (استخدام درجة رمادي فاتحة ومريحة) */
 .auth-input::placeholder {
-    color: #ffffff !important; 
-    opacity: 0.8 !important; /* وضوح عالي جداً فوق الخلفية الداكنة */
+    color: #e2e8f0 !important; 
+    opacity: 0.75 !important; 
     font-size: 0.95rem;
     font-weight: 500;
 }
@@ -68,8 +68,22 @@
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
     height: 58px; /* توحيد الارتفاع القياسي مع باقي النماذج */
+    width: 100%;
     font-weight: 800;
     margin-top: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius, 8px);
+    background-color: var(--primary, #38bdf8);
+    color: #0a2540;
+    transition: var(--transition, all 0.3s ease);
+}
+
+.forgot-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
+    background-color: #0284c7;
+    color: #ffffff;
 }
 
 /* =================================================================
@@ -106,15 +120,16 @@
 
 /* إطار التنويه الأمني السفلي المعتمد */
 .security-notice {
-    background: rgba(255, 255, 255, 0.02);
+    background-color: rgba(255, 255, 255, 0.02);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 15px;
     margin-top: 25px;
+    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
 }
 
 /* صندوق تعليمات زجاجي اختياري (يظهر برمجياً عند الحاجة) */
 .forgot-alert-box {
-    background: rgba(56, 189, 248, 0.05);
+    background-color: rgba(56, 189, 248, 0.05);
     border: 1px solid rgba(56, 189, 248, 0.15);
     border-radius: var(--radius-md, 14px);
     padding: 15px;
@@ -129,5 +144,5 @@
 /* حالة الخطأ البرمجية */
 .input-error .auth-input {
     border-color: var(--danger, #ef4444) !important;
-    background: rgba(239, 68, 68, 0.05) !important;
+    background-color: rgba(239, 68, 68, 0.05) !important;
 }
