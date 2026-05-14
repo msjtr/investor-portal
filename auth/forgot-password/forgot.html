@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استعادة كلمة المرور | بوابة المستثمرين</title>
+    <title>استعادة كلمة المرور | بوابة المستثمر</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمرين | استعادة كلمة المرور">
-    <meta property="og:description" content="أدخل بريدك الإلكتروني لاستعادة الوصول إلى حسابك الاستثماري عبر منصة تيرا.">
+    <meta property="og:title" content="بوابة المستثمر | استعادة كلمة المرور">
+    <meta property="og:description" content="أدخل بريدك الإلكتروني لاستعادة الوصول إلى حسابك الاستثماري بأمان عبر منصة تيرا.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
@@ -20,41 +20,54 @@
     <script src="../../shared/scripts/constants.js"></script>
     <script src="../../shared/scripts/auth-guard.js"></script>
     <script src="../../shared/scripts/icons.js"></script>
+    <script src="../../shared/scripts/helpers.js"></script>
 </head>
 <body class="animate-fade-in">
 
     <div class="auth-wrapper">
-        <div class="auth-card animate-slide-up">
+        <div class="auth-card forgot-card animate-slide-up">
             
-            <button onclick="window.location.href='../login/login.html'" class="btn-back-circle" title="رجوع">
+            <button onclick="window.location.replace('../login/login.html')" class="btn-back-circle" title="العودة لتسجيل الدخول">
                 <span class="flex-center" data-icon="back"></span>
             </button>
 
             <div class="auth-header text-center">
                 <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
                 </div>
-                <h2 class="text-white font-black mt-20">استعادة الوصول</h2>
-                <p class="text-white opacity-80 mt-5">أدخل البريد الإلكتروني المسجل وسنرسل لك رمز التحقق</p>
+                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
+                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
+                <p class="text-white opacity-80 mt-10 text-xs">أدخل البريد الإلكتروني المسجل لإرسال رمز التحقق (OTP)</p>
             </div>
 
-            <form id="forgotForm" class="flex-column mt-30">
-                <div class="input-group">
+            <form id="forgotForm" class="flex-column mt-25">
+                <div class="input-group mb-15">
                     <label for="email">البريد الإلكتروني</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="email"></span>
-                        <input type="email" id="email" class="auth-input" placeholder="msjt301@gmail.com" required autofocus>
+                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required autofocus>
                     </div>
                 </div>
 
-                <button type="submit" id="forgotBtn" class="btn-primary mt-20">
+                <button type="submit" id="forgotBtn" class="btn-primary mt-15">
                     <span>إرسال رمز الاستعادة</span>
                 </button>
             </form>
 
-            <div class="forgot-footer mt-30 text-center">
-                <p class="text-white">تذكرت كلمة المرور؟ <a href="../login/login.html" class="register-link font-bold">سجل دخولك</a></p>
+            <div class="forgot-footer text-center mt-25 pt-15 border-top">
+                <p class="text-white text-xs m-0">تذكرت كلمة المرور؟ <a href="../login/login.html" class="register-link text-primary font-bold">سجل دخولك</a></p>
             </div>
+
+            <div class="security-notice mt-25 text-right">
+                <div class="flex-center gap-5 mb-5 text-primary">
+                    <span data-icon="shield"></span>
+                    <span class="font-bold text-xs">حماية الحسابات</span>
+                </div>
+                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
+                    سيتم إرسال كود التحقق المشفر إلى وسيلة الاتصال المعتمدة. لن يتم الكشف عن حالة وجود الحساب لأسباب أمنية.
+                </p>
+            </div>
+
         </div>
     </div>
 
