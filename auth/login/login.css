@@ -1,9 +1,9 @@
 /* =================================================================
-   تنسيقات صفحة تسجيل الدخول (Premium Login Theme - Tera)
+   تنسيقات صفحة تسجيل الدخول (Premium Login Theme - TERA)
    متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات المشتركة للبطاقة والحقول تُسحب من auth-layout.css */
+/* التنسيقات المشتركة للبطاقة والحقول تُسحب من auth-layout.css */
 
 .login-wrapper {
     width: 100%;
@@ -23,10 +23,10 @@
 }
 
 /* 2. التنسيق الحصري للنص التوضيحي (Placeholder) */
-/* سطوع أبيض ناصع جداً لضمان أعلى درجات الوضوح فوق الخلفية الداكنة */
+/* استخدام لون محايد فاتح ومريح للعين يضمن تباين ممتاز دون تشتيت (AA Accessibility) */
 .auth-input::placeholder {
-    color: #ffffff !important; 
-    opacity: 0.8 !important; 
+    color: #e2e8f0 !important; 
+    opacity: 0.75 !important; 
     font-size: 0.95rem;
     font-weight: 500;
 }
@@ -44,7 +44,7 @@
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
-/* 4. تنسيق الفوتر التوجيهي (ليس لديك حساب؟) */
+/* 4. تنسيق الفوتر التوجيهي (إنشاء حساب جديد) */
 .login-footer {
     margin-top: 25px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -79,6 +79,20 @@
     height: 58px; /* توحيد الارتفاع مع حقول الإدخال */
     font-weight: 800;
     margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius, 8px);
+    background-color: var(--primary, #38bdf8);
+    color: #0a2540; /* تباين قوي لسهولة القراءة */
+    transition: var(--transition, all 0.3s ease);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
+    background-color: #0284c7;
+    color: #ffffff;
 }
 
 /* 6. تنسيق خيار تذكرني (أبيض ناصع متناسق) */
@@ -108,6 +122,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 15px;
     margin-top: 25px;
+    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
 }
 
 /* حدود الخطأ في حال رفض المصادقة */
