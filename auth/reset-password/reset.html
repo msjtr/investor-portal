@@ -7,7 +7,7 @@
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
     <meta property="og:title" content="بوابة المستثمر | تعيين كلمة مرور جديدة">
-    <meta property="og:description" content="قم بإنشاء كلمة مرور قوية وجديدة لحماية حسابك الاستثماري.">
+    <meta property="og:description" content="قم بإنشاء كلمة مرور قوية وجديدة لحماية حسابك الاستثماري عبر منصة تيرا.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
@@ -31,14 +31,14 @@
                     <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تيرا" class="auth-logo">
                 </div>
                 <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
-                <p class="text-primary font-bold text-sm">عالمك بلا حدود</p>
+                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
                 <p class="text-white opacity-80 mt-10 text-xs">تعيين كلمة مرور جديدة ومطابقتها للشروط الأمنية.</p>
             </div>
 
             <form id="resetForm" class="flex-column mt-25">
                 
                 <div class="input-group">
-                    <div class="flex-between w-full mb-5">
+                    <div class="input-header flex-between mb-5">
                         <label for="newPassword">كلمة المرور الجديدة</label>
                         <span id="toggleNewPass" class="toggle-password-text">عرض كلمة المرور</span>
                     </div>
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="input-group mt-15">
-                    <div class="flex-between w-full mb-5">
+                    <div class="input-header flex-between mb-5">
                         <label for="confirmPassword">تأكيد كلمة المرور</label>
                         <span id="toggleConfirmPass" class="toggle-password-text">عرض كلمة المرور</span>
                     </div>
@@ -85,6 +85,16 @@
                     <span>حفظ كلمة المرور والدخول</span>
                 </button>
             </form>
+
+            <div class="security-notice mt-25 text-right">
+                <div class="flex-center gap-5 mb-5 text-primary">
+                    <span data-icon="shield"></span>
+                    <span class="font-bold text-xs">حماية وتأمين البيانات</span>
+                </div>
+                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
+                    عند تحديث كلمة المرور، سيتم إنهاء كافة الجلسات النشطة الأخرى لضمان أمان حسابك. يرجى عدم مشاركة بيانات الدخول مع أي طرف ثالث.
+                </p>
+            </div>
 
         </div>
     </div>
