@@ -1,8 +1,14 @@
 /* =================================================================
    تنسيقات صفحة استعادة كلمة المرور (Premium Forgot Theme - Tera)
+   متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
 ================================================================= */
 
-/* ملاحظة: التنسيقات الأساسية موروثة من shared/styles/auth-layout.css */
+/* ملاحظة: التنسيقات العامة للبطاقة والحقول موروثة من auth-layout.css */
+
+.forgot-card {
+    position: relative;
+    padding-top: 60px; /* مساحة علوية إضافية لاستيعاب زر الرجوع الدائري */
+}
 
 .forgot-wrapper {
     width: 100%;
@@ -10,11 +16,15 @@
     flex-direction: column;
 }
 
+/* =================================================================
+   عناصر التحكم والتنقل
+================================================================= */
+
 /* زر الرجوع الدائري العلوي (Glass Style) */
 .btn-back-circle {
     position: absolute;
     top: 25px;
-    right: 25px; /* محاذاة يمين للنسق العربي */
+    right: 25px; /* محاذاة لليمين متوافقة مع النسق العربي */
     background: rgba(255, 255, 255, 0.05);
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
@@ -36,28 +46,40 @@
     transform: scale(1.1) rotate(5deg);
 }
 
-/* زيادة التباعد للتركيز على حقل البريد الوحيد */
+/* =================================================================
+   الحقول والأزرار
+================================================================= */
+
+/* زيادة التباعد للتركيز على حقل البريد الوحيد في الصفحة */
 .input-group {
-    margin-bottom: 25px !important;
+    margin-bottom: 20px !important;
 }
 
-/* تنسيق النصوص التوضيحية داخل المربع */
+/* توحيد التنسيق الحصري للنص التوضيحي (أبيض ناصع الوضوح) */
 .auth-input::placeholder {
-    color: rgba(255, 255, 255, 0.45) !important;
-    font-size: 0.9rem;
+    color: #ffffff !important; 
+    opacity: 0.8 !important; /* وضوح عالي جداً فوق الخلفية الداكنة */
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
-/* تخصيص زر الاستعادة الفخم */
-.btn-primary {
+/* تخصيص زر الاستعادة الفخم (Elite Style) */
+.forgot-card .btn-primary {
     box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
     font-size: 1.1rem;
-    height: 55px; /* توحيد الارتفاع مع الهوية الجديدة */
+    height: 58px; /* توحيد الارتفاع القياسي مع باقي النماذج */
+    font-weight: 800;
+    margin-top: 5px;
 }
 
-/* تنسيق الفوتر (العودة لتسجيل الدخول) */
+/* =================================================================
+   التذييل والتنبيهات
+================================================================= */
+
+/* تنسيق الفوتر التوجيهي (تذكرت كلمة المرور؟) */
 .forgot-footer {
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 25px;
+    padding-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
 }
@@ -65,30 +87,47 @@
 .forgot-footer p {
     color: #ffffff !important;
     font-size: 0.95rem;
+    margin: 0;
 }
 
 .register-link {
     color: var(--primary, #38bdf8) !important;
     text-decoration: none;
     font-weight: 800;
-    transition: var(--transition);
+    transition: var(--transition, all 0.3s ease);
+    margin-right: 5px;
 }
 
 .register-link:hover {
     color: #ffffff !important;
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    text-decoration: underline;
 }
 
-/* صندوق التنبيه الزجاجي (في حال أردت إضافة تعليمات) */
+/* إطار التنويه الأمني السفلي المعتمد */
+.security-notice {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+    margin-top: 25px;
+}
+
+/* صندوق تعليمات زجاجي اختياري (يظهر برمجياً عند الحاجة) */
 .forgot-alert-box {
     background: rgba(56, 189, 248, 0.05);
     border: 1px solid rgba(56, 189, 248, 0.15);
     border-radius: var(--radius-md, 14px);
     padding: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     text-align: right;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #ffffff;
     line-height: 1.6;
     backdrop-filter: blur(5px);
+}
+
+/* حالة الخطأ البرمجية */
+.input-error .auth-input {
+    border-color: var(--danger, #ef4444) !important;
+    background: rgba(239, 68, 68, 0.05) !important;
 }
