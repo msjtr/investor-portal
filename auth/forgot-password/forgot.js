@@ -1,78 +1,136 @@
 /**
- * محرك صفحة استعادة كلمة المرور (Forgot Password Engine) - منصة تيرا
- * النسخة المحدثة: فحص استباقي، إشعارات زجاجية، وتكامل مع Webhook الاستعادة
+ * =================================================================
+ * محرك صفحة استعادة كلمة المرور (Enterprise Forgot Engine) - منصة تيرا
+ * يدمج: تأمين الهوية، الفحص الاستباقي، وإدارة الجلسات المؤقتة
+ * =================================================================
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     const forgotForm = document.getElementById('forgotForm');
+    const forgotBtn = document.getElementById('forgotBtn');
+    const emailInput = document.getElementById('email');
 
-    forgotForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const forgotBtn = document.getElementById('forgotBtn');
-        const emailInput = document.getElementById('email');
-        const email = emailInput.value.trim();
+    // تتبع المحاولات المحلية (Rate Limiter)
+    let resetAttempts = 0;
+    const maxAttempts = 3;
 
-        // 1. التحقق الأولي من صحة البريد قبل إزعاج الخادم
-        if (!Validation.isEmail(email)) {
-            Notify.error("يرجى إدخال بريد إلكتروني صحيح");
-            return;
-        }
+    // تنظيف أي جلسات استعادة سابقة عند فتح الصفحة
+    Storage.remove('temp_user');
 
-        // 2. تأمين الواجهة وتفعيل حالة "جاري الإرسال"
-        forgotBtn.disabled = true;
-        forgotBtn.classList.add('animate-pulse');
-        forgotBtn.innerHTML = `
-            <span style="display:flex; align-items:center; gap:10px;">
-                <div class="spinner-small"></div> جاري إرسال الرمز...
-            </span>
-        `;
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        try {
-            // 3. إرسال الطلب لـ Make.com (Action: forgot_password)
-            const response = await API.post(API_CONFIG.BASE_URL, {
-                action: 'forgot_password',
-                payload: { email },
-                metadata: {
-                    timestamp: new Date().toISOString(),
-                    platform: APP_INFO.NAME
-                }
-            });
-
-            // 4. معالجة الرد الذكي من الخادم
-            if (response && response.success) {
-                // حفظ البريد مؤقتاً لصفحة الـ OTP (في حال أردت تفعيل التحقق قبل التغيير)
-                Storage.set('temp_user', { 
-                    email: email,
-                    type: 'reset_password'
-                });
-                
-                Notify.success("تم إرسال رمز الاستعادة بنجاح، يرجى فحص بريدك.");
-                
-                // التوجيه لصفحة التحقق بعد ثانية ونصف
-                setTimeout(() => {
-                    window.location.href = ROUTES.VERIFY;
-                }, 1500);
-
-            } else {
-                // عرض رسالة الخطأ (مثل: البريد غير مسجل)
-                Notify.error(response?.message || "عذراً، البريد الإلكتروني غير موجود لدينا.");
-                this.resetBtn(forgotBtn);
+            if (resetAttempts >= maxAttempts) {
+                Notify.error("تجاوزت الحد المسموح للمحاولات. يرجى المحاولة بعد قليل.");
+                return;
             }
 
-        } catch (error) {
-            console.error("[Forgot Engine] Error:", error);
-            Notify.error("حدث خطأ في الاتصال، يرجى المحاولة لاحقاً.");
-            this.resetBtn(forgotBtn);
-        }
-    });
+            const email = emailInput.value.trim();
+
+            // 1. التحقق الاستباقي قبل إجهاد الخادم
+            if (typeof Validation !== 'undefined' && !Validation.isEmail(email)) {
+                Notify.error("يرجى إدخال بريد إلكتروني صحيح");
+                highlightError(emailInput);
+                return;
+            }
+
+            // 2. تفعيل وضع "جاري المعالجة" وتأمين النموذج
+            setLoadingState(forgotBtn, true);
+            emailInput.disabled = true;
+
+            try {
+                // 3. جلب بصمة الجهاز لتعزيز الأمان في الـ Webhook
+                let deviceMeta = { fingerprint: "unknown" };
+                if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
+                    deviceMeta = Helpers.generateDeviceFingerprint();
+                }
+
+                // 4. إرسال الطلب لـ Make.com (Action: forgot_password)
+                const response = await API.post(API_CONFIG.BASE_URL, {
+                    action: 'forgot_password',
+                    payload: { email },
+                    metadata: {
+                        device_id: deviceMeta.fingerprint,
+                        timestamp: new Date().toISOString(),
+                        platform: typeof APP_INFO !== 'undefined' ? APP_INFO.NAME : 'Tera Investor Portal',
+                        context: 'password_recovery'
+                    }
+                });
+
+                // 5. معالجة الرد الذكي
+                if (response && response.success) {
+                    // تخزين بيانات الجلسة المؤقتة لصفحة الـ OTP
+                    Storage.set('temp_user', { 
+                        email: email, 
+                        type: 'reset_password',
+                        timestamp: Date.now()
+                    });
+
+                    Notify.success("تم إرسال رمز التحقق (OTP) إلى بريدك بنجاح.");
+                    
+                    setTimeout(() => {
+                        window.location.replace(ROUTES.VERIFY || '../verify-otp/verify.html');
+                    }, 1500);
+
+                } else {
+                    resetAttempts++;
+                    handleFailure(response?.message || "عذراً، هذا البريد غير مسجل في نظامنا.");
+                }
+
+            } catch (error) {
+                console.error("[Forgot Engine] Communication Error:", error);
+                Notify.error("عذراً، حدث خطأ أثناء الاتصال بالخادم.");
+                handleFailure();
+            }
+        });
+    }
 
     /**
-     * إعادة الزر لحالته الطبيعية
+     * تفعيل/تعطيل حالة التحميل للزر
      */
-    function resetBtn(btn) {
-        btn.disabled = false;
-        btn.classList.remove('animate-pulse');
-        btn.innerHTML = `<span>إرسال رمز الاستعادة</span>`;
+    function setLoadingState(btn, isLoading) {
+        if (isLoading) {
+            btn.disabled = true;
+            btn.classList.add('animate-pulse');
+            btn.innerHTML = `
+                <span class="flex-center gap-10">
+                    <div class="spinner-small" style="width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotation 0.8s linear infinite;"></div>
+                    <span>جاري إرسال الرمز...</span>
+                </span>
+            `;
+        } else {
+            btn.disabled = false;
+            btn.classList.remove('animate-pulse');
+            btn.innerHTML = `<span>إرسال رمز الاستعادة</span>`;
+            emailInput.disabled = false;
+        }
+    }
+
+    /**
+     * معالجة حالات الفشل (اهتزاز البطاقة وتنبيه الخطأ)
+     */
+    function handleFailure(message) {
+        if (message) Notify.error(message);
+        
+        const card = document.querySelector('.auth-card');
+        if (card) {
+            card.classList.add('animate-shake');
+            setTimeout(() => card.classList.remove('animate-shake'), 500);
+        }
+        
+        setLoadingState(forgotBtn, false);
+        highlightError(emailInput);
+    }
+
+    /**
+     * تمييز الحقل بصرياً عند وجود خطأ
+     */
+    function highlightError(element) {
+        const group = element.closest('.input-group');
+        if (group) {
+            group.classList.add('input-error');
+            setTimeout(() => group.classList.remove('input-error'), 3000);
+        }
     }
 });
