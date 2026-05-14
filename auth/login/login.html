@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | بوابة المستثمرين</title>
+    <title>تسجيل الدخول | بوابة المستثمر</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمرين | تسجيل الدخول">
+    <meta property="og:title" content="بوابة المستثمر | تسجيل الدخول">
     <meta property="og:description" content="سجل دخولك لمتابعة محفظتك الاستثمارية بأمان وسهولة عبر منصة تيرا.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -29,38 +29,39 @@
             
             <div class="auth-header text-center">
                 <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="بوابة المستثمرين" class="auth-logo">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
                 </div>
-                <h2 class="text-white font-black mt-20">مرحباً بك مجدداً</h2>
-                <p class="text-white opacity-80 mt-5">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
+                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
+                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
+                <p class="text-white opacity-80 mt-10 text-xs">سجل دخولك لمتابعة محفظتك الاستثمارية</p>
             </div>
 
-            <form id="loginForm" class="flex-column mt-30">
+            <form id="loginForm" class="flex-column mt-25">
                 
-                <div class="input-group">
+                <div class="input-group mb-15">
                     <label for="email">البريد الإلكتروني</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="email"></span>
-                        <input type="email" id="email" class="auth-input" placeholder="msjt301@gmail.com" required>
+                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required autofocus>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <div class="input-header">
+                <div class="input-group mb-15">
+                    <div class="input-header flex-between mb-5">
                         <label for="password">كلمة المرور</label>
-                        </div>
+                    </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
                         <input type="password" id="password" class="auth-input" placeholder="عرض كلمة المرور" required>
                     </div>
                 </div>
 
-                <div class="login-options flex-between w-full mt-20">
-                    <label class="custom-checkbox">
+                <div class="login-options flex-between w-full mt-10 mb-15 text-xs">
+                    <label class="custom-checkbox flex-center gap-5 cursor-pointer">
                         <input type="checkbox" id="rememberMe">
-                        <span class="text-white font-bold">تذكرني</span>
+                        <span class="text-white font-bold">تذكر هذا الجهاز</span>
                     </label>
-                    <a href="../forgot-password/forgot.html" class="forgot-password-link">نسيت كلمة المرور؟</a>
+                    <a href="../forgot-password/forgot.html" class="forgot-password-link text-primary font-bold">نسيت كلمة المرور؟</a>
                 </div>
 
                 <button type="submit" id="loginBtn" class="btn-primary mt-10">
@@ -68,9 +69,20 @@
                 </button>
             </form>
 
-            <div class="login-footer">
-                <p class="text-white">ليس لديك حساب؟ <a href="../register/register.html" class="register-link font-bold">سجل الآن</a></p>
+            <div class="login-footer text-center mt-20 pt-15 border-top">
+                <p class="text-white text-xs m-0">ليس لديك حساب؟ <a href="../register/register.html" class="register-link text-primary font-bold">سجل الآن</a></p>
             </div>
+
+            <div class="security-notice mt-25 text-right">
+                <div class="flex-center gap-5 mb-5 text-primary">
+                    <span data-icon="shield"></span>
+                    <span class="font-bold text-xs">حماية الهوية الرقمية</span>
+                </div>
+                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
+                    يقر المستخدم بأن بيانات الدخول خاصة به. المنصة لا تطلب كلمة المرور أو رمز التحقق عبر الاتصال مطلقاً.
+                </p>
+            </div>
+
         </div>
     </div>
 
