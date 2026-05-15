@@ -40,49 +40,9 @@
                 </div>
                 <h2 class="text-white font-black mt-20">التحقق الأمني</h2>
                 <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
-                <p class="text-white opacity-80 mt-10 text-xs">أدخل رمز التحقق (OTP) المرسل إليك</p>
+                <p class="text-white opacity-80 mt-10 text-xs">أدخل رمز التحقق (OTP) المرسل إليك لإتمام العملية</p>
             </div>
 
             <div class="flex-column mt-25">
                 <div class="otp-inputs-container" id="otp-inputs">
                     <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" autocomplete="one-time-code" autofocus>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-                    <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-                </div>
-
-                <div class="timer-container text-center mb-15">
-                    <p class="text-white text-xs">صلاحية الكود: <span id="timer" class="text-danger font-bold">03:00</span></p>
-                </div>
-
-                <button type="button" id="verifyBtn" class="btn-primary mt-10" disabled>
-                    <span>تأكيد الرمز والدخول</span>
-                </button>
-
-                <div class="resend-container text-center mt-20">
-                    <button id="resendBtn" class="btn-outline disabled" disabled>إعادة إرسال الكود</button>
-                </div>
-            </div>
-
-            <div class="security-notice mt-25 text-right border-top pt-15">
-                <div class="flex-center gap-5 mb-5 text-primary">
-                    <span data-icon="shield"></span>
-                    <span class="font-bold text-xs">نظام حماية الأصول (Security Guard)</span>
-                </div>
-                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
-                    حفاظاً على أمان استثماراتك، لا تشارك رمز التحقق مطلقاً. موظفي منصة تيرا لن يطلبوا هذا الرمز في أي حال من الأحوال.
-                </p>
-            </div>
-
-        </div>
-    </div>
-
-    <script src="../../shared/scripts/api.js"></script>
-    <script src="../../shared/scripts/validation.js"></script>
-    <script src="../../shared/scripts/notifications.js"></script>
-    <script src="verify.js"></script>
-
-</body>
-</html>
