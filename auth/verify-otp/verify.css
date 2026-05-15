@@ -3,21 +3,38 @@
    Path: investor-portal/auth/verify-otp/verify.css
    ========================================================================== */
 
+/* زر الرجوع العائم */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6); /* لون رمادي فاتح مريح للعين */
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 0;
+    z-index: 10;
+}
+.back-btn:hover {
+    color: var(--primary-color, #38bdf8);
+}
+
 /* حاوية خانات الـ OTP */
 .otp-container {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 10px; /* تم تقليل المسافة لتناسب الحجم الجديد */
     /* نجبر الحاوية على اتجاه LTR حتى يكون تسلسل الأرقام المنسوخة والمكتوبة صحيحاً 100% */
     direction: ltr; 
     margin-bottom: 1.5rem;
 }
 
-/* تصميم خانة الإدخال الواحدة */
+/* تصميم خانة الإدخال الواحدة - تم تصغيرها لتكون أكثر أناقة */
 .otp-input {
-    width: 50px;
-    height: 55px;
-    font-size: 1.5rem;
+    width: 44px;  /* تم التصغير من 50px */
+    height: 48px; /* تم التصغير من 55px */
+    font-size: 1.25rem; /* تم تصغير الخط ليتناسب مع الخانة */
     font-weight: 700;
     text-align: center;
     border-radius: 8px;
@@ -56,7 +73,7 @@
 }
 
 /* ==========================================================================
-   Timer & Resend Button
+   Timer & Resend Button - تحسين الألوان
    ========================================================================== */
 
 /* كلاس اللون الأحمر عند انتهاء العداد التنازلي */
@@ -64,9 +81,19 @@
     color: var(--error-color, #ef4444) !important;
 }
 
-/* تأثير حركي لزر إعادة الإرسال عند التفعيل */
-#resendBtn {
-    transition: color 0.3s ease, opacity 0.3s ease;
+/* حالة الزر وهو معطل (العداد يعمل) */
+#resendBtn:disabled {
+    color: rgba(255, 255, 255, 0.4) !important; /* رمادي فاتح واضح على الخلفية الغامقة بدلاً من الأسود */
+    cursor: not-allowed;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* حالة الزر وهو مفعل (انتهى العداد) */
+#resendBtn:not(:disabled) {
+    color: var(--primary-color, #38bdf8) !important; /* أزرق تيرا الفاقع */
+    cursor: pointer;
+    transition: opacity 0.3s ease, color 0.3s ease;
     padding: 0 5px;
 }
 
@@ -85,9 +112,9 @@
     }
     
     .otp-input {
-        width: 42px;
-        height: 48px;
-        font-size: 1.25rem;
+        width: 38px;
+        height: 44px;
+        font-size: 1.1rem;
     }
 }
 
@@ -97,8 +124,8 @@
     }
     
     .otp-input {
-        width: 38px;
-        height: 44px;
-        font-size: 1.1rem;
+        width: 34px;
+        height: 40px;
+        font-size: 1rem;
     }
 }
