@@ -1,0 +1,81 @@
+.
+├── README.md
+├── account
+│   └── security
+│       ├── sessions.css
+│       ├── sessions.html
+│       └── sessions.js
+├── assets
+│   ├── icons
+│   │   ├── status
+│   │   │   ├── error.svg
+│   │   │   ├── success.svg
+│   │   │   └── warning.svg
+│   │   └── ui
+│   │       ├── eye.svg
+│   │       ├── lock.svg
+│   │       ├── phone.svg
+│   │       └── user.svg
+│   └── images
+│       ├── auth-bg.webp
+│       ├── favicon.svg
+│       ├── logo.svg
+│       └── share-thumb.png
+├── auth
+│   ├── forgot-password
+│   │   ├── forgot.css
+│   │   ├── forgot.html
+│   │   └── forgot.js
+│   ├── login
+│   │   ├── login.css
+│   │   ├── login.html
+│   │   └── login.js
+│   ├── register
+│   │   ├── register.css
+│   │   ├── register.html
+│   │   └── register.js
+│   ├── reset-password
+│   │   ├── reset.css
+│   │   ├── reset.html
+│   │   └── reset.js
+│   └── verify-otp
+│       ├── verify.css
+│       ├── verify.html
+│       └── verify.js
+├── config
+│   ├── environment.js
+│   └── routes.js
+├── index.html
+├── js
+│   ├── core.js
+│   └── database.js
+├── project_structure.txt
+├── shared
+│   ├── components
+│   │   ├── modal-component.html
+│   │   ├── page-loader.html
+│   │   └── toast-component.html
+│   ├── scripts
+│   │   ├── api.js
+│   │   ├── auth-guard.js
+│   │   ├── constants.js
+│   │   ├── countdown.js
+│   │   ├── helpers.js
+│   │   ├── icons.js
+│   │   ├── notifications.js
+│   │   ├── otp-engine.js
+│   │   ├── storage.js
+│   │   └── validation.js
+│   └── styles
+│       ├── animations.css
+│       ├── auth-layout.css
+│       ├── forms.css
+│       ├── responsive.css
+│       ├── utilities.css
+│       └── variables.css
+└── templates
+    └── emails
+        ├── master-template.html
+        └── plain-text.txt
+
+22 directories, 57 files
