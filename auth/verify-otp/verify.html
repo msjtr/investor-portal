@@ -11,176 +11,15 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <style>
-        /* التنسيقات العامة والهوية البصرية */
-        :root {
-            --primary-dark: #0A2540;
-            --primary-light: #38bdf8;
-            --bg-color: #f4f7f6;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --error-color: #ef4444;
-            --success-color: #10b981;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-image: radial-gradient(circle at top right, #e0f2fe 0%, transparent 40%),
-                              radial-gradient(circle at bottom left, #e0f2fe 0%, transparent 40%);
-        }
-
-        /* حاوية Glassmorphism */
-        .auth-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(10, 37, 64, 0.08);
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        /* الشعار */
-        .logo-container {
-            margin-bottom: 30px;
-        }
-        .logo-text {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin: 0;
-            letter-spacing: 2px;
-        }
-        .logo-slogan {
-            font-size: 14px;
-            color: var(--primary-light);
-            font-weight: 600;
-            margin: 5px 0 0;
-        }
-
-        /* النصوص التوضيحية */
-        h2 {
-            color: var(--primary-dark);
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-        p.instruction {
-            color: var(--text-muted);
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        /* صناديق الـ OTP */
-        .otp-wrapper {
-            display: flex;
-            justify-content: space-between;
-            direction: ltr; /* لضمان كتابة الأرقام من اليسار لليمين */
-            margin-bottom: 25px;
-            gap: 8px;
-        }
-        .otp-input {
-            width: 100%;
-            height: 60px;
-            font-size: 24px;
-            font-weight: 700;
-            text-align: center;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background-color: #ffffff;
-            color: var(--primary-dark);
-            transition: all 0.3s ease;
-            outline: none;
-            /* إخفاء أسهم الأرقام في المتصفحات */
-            -moz-appearance: textfield;
-        }
-        .otp-input::-webkit-outer-spin-button,
-        .otp-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .otp-input:focus {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
-        }
-        .otp-input.filled {
-            border-color: var(--primary-dark);
-        }
-
-        /* العداد التنازلي */
-        .timer-container {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-        .timer-text {
-            color: var(--error-color);
-            font-weight: 700;
-            letter-spacing: 1px;
-            display: inline-block;
-            min-width: 45px;
-        }
-
-        /* زر التأكيد */
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--primary-dark);
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-        }
-        .btn-submit:hover {
-            background-color: #071a2d;
-            box-shadow: 0 4px 12px rgba(10, 37, 64, 0.2);
-        }
-        .btn-submit:disabled {
-            background-color: #cbd5e1;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        /* إعادة الإرسال */
-        .resend-container {
-            margin-top: 25px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        .resend-link {
-            color: var(--primary-light);
-            text-decoration: none;
-            font-weight: 700;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .resend-link:hover {
-            color: #0284c7;
-        }
-        .resend-link.disabled {
-            color: #94a3b8;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="auth-container">
+    <div class="verify-card">
+        <div class="btn-back-circle" title="رجوع" onclick="history.back()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </div>
+
         <div class="logo-container">
             <h1 class="logo-text">TERA</h1>
             <p class="logo-slogan">عالمك بلا حدود</p>
@@ -189,7 +28,7 @@
         <h2>التحقق الأمني</h2>
         <p class="instruction">أدخل رمز التحقق المكون من 6 أرقام المرسل إلى وسيلة الاتصال المسجلة لإتمام العملية.</p>
 
-        <div class="otp-wrapper" id="otp-inputs">
+        <div class="otp-inputs-container" id="otp-inputs">
             <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
             <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
             <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
@@ -202,122 +41,13 @@
             صلاحية الكود: <span class="timer-text" id="timer">03:00</span>
         </div>
 
-        <button class="btn-submit" id="verifyBtn">تأكيد الرمز</button>
+        <button class="btn-primary" id="verifyBtn">تأكيد الرمز والدخول</button>
 
         <div class="resend-container">
-            لم يصلك الكود؟ <a class="resend-link disabled" id="resendBtn">إعادة الإرسال</a>
+            <button class="btn-outline disabled" id="resendBtn">إعادة الإرسال</button>
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const inputs = document.querySelectorAll(".otp-input");
-            const verifyBtn = document.getElementById("verifyBtn");
-            const timerDisplay = document.getElementById("timer");
-            const resendBtn = document.getElementById("resendBtn");
-            
-            let timeLeft = 180; // 3 دقائق = 180 ثانية
-            let timerInterval;
-
-            // --- 1. إدارة صناديق إدخال الـ OTP ---
-            inputs.forEach((input, index) => {
-                input.addEventListener("input", (e) => {
-                    // السماح برقم واحد فقط
-                    if (input.value.length > 1) {
-                        input.value = input.value.slice(0, 1);
-                    }
-                    
-                    if (input.value) {
-                        input.classList.add("filled");
-                        // الانتقال للمربع التالي
-                        if (index < inputs.length - 1) {
-                            inputs[index + 1].removeAttribute("disabled");
-                            inputs[index + 1].focus();
-                        }
-                    } else {
-                        input.classList.remove("filled");
-                    }
-                });
-
-                // التعامل مع زر الحذف (Backspace)
-                input.addEventListener("keydown", (e) => {
-                    if (e.key === "Backspace" && !input.value && index > 0) {
-                        inputs[index - 1].focus();
-                        inputs[index - 1].value = "";
-                        inputs[index - 1].classList.remove("filled");
-                        inputs[index].setAttribute("disabled", true);
-                    }
-                });
-
-                // دعم اللصق المباشر لكود من 6 أرقام
-                input.addEventListener("paste", (e) => {
-                    e.preventDefault();
-                    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                    if (pastedData) {
-                        [...pastedData].forEach((char, i) => {
-                            if (inputs[i]) {
-                                inputs[i].removeAttribute("disabled");
-                                inputs[i].value = char;
-                                inputs[i].classList.add("filled");
-                            }
-                        });
-                        // وضع التركيز على المربع الأخير أو المربع التالي الفارغ
-                        const nextIndex = Math.min(pastedData.length, inputs.length - 1);
-                        inputs[nextIndex].focus();
-                    }
-                });
-            });
-
-            // --- 2. العداد التنازلي ---
-            function startTimer() {
-                clearInterval(timerInterval);
-                timeLeft = 180;
-                resendBtn.classList.add("disabled");
-                timerDisplay.style.color = "var(--error-color)";
-                
-                timerInterval = setInterval(() => {
-                    timeLeft--;
-                    let minutes = Math.floor(timeLeft / 60);
-                    let seconds = timeLeft % 60;
-                    
-                    timerDisplay.textContent = `0${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval);
-                        timerDisplay.textContent = "00:00";
-                        timerDisplay.style.color = "var(--text-muted)";
-                        resendBtn.classList.remove("disabled"); // تفعيل زر إعادة الإرسال
-                    }
-                }, 1000);
-            }
-
-            // تشغيل العداد فور تحميل الصفحة
-            startTimer();
-
-            // --- 3. الأزرار والأحداث ---
-            resendBtn.addEventListener("click", () => {
-                if (!resendBtn.classList.contains("disabled")) {
-                    console.log("تم طلب إعادة إرسال الكود...");
-                    
-                    // مسح الخانات وإعادة تشغيل العداد
-                    inputs.forEach((input, index) => {
-                        input.value = "";
-                        input.classList.remove("filled");
-                        if (index > 0) input.setAttribute("disabled", true);
-                    });
-                    inputs[0].focus();
-                    startTimer();
-                    alert("تم إرسال كود جديد للتحقق.");
-                }
-            });
-
-            verifyBtn.addEventListener("click", () => {
-                let otpCode = "";
-                inputs.forEach(input => otpCode += input.value);
-                
-                if (otpCode.length === 6) {
-                    console.log("جاري التحقق من الكود:", otpCode);
-                    verifyBtn.textContent = "جاري التحقق...";
-                    verifyBtn.disabled = true;
-                    
-                    //
+    <script src="script.js"></script>
+</body>
+</html>
