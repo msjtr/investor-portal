@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const verifyForm = document.getElementById('verifyForm');
     const countdownElement = document.getElementById('countdown');
     const resendBtn = document.getElementById('resendBtn');
-    const backBtn = document.getElementById('backBtn'); // تم إضافة تعريف زر الرجوع هنا
+    const backBtn = document.getElementById('backBtn'); // تعريف زر الرجوع
 
     let timerInterval;
     const TIME_LIMIT = 180; // 3 دقائق بالثواني
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
                 countdownElement.textContent = "00:00";
-                countdownElement.classList.replace('text-primary', 'text-error'); // تغيير اللون للأحمر (يجب توفر كلاس text-error)
+                countdownElement.classList.replace('text-primary', 'text-error'); // تغيير اللون للأحمر
                 
                 // تفعيل زر إعادة الإرسال
                 resendBtn.disabled = false;
@@ -91,18 +91,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // 5. معالجة زر "إعادة إرسال"
-    resendBtn.addEventListener('click', (e) => {
+    // 5. معالجة زر "إعادة إرسال" (تم التحديث ليرسل للمنصة فعلياً)
+    resendBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         if (!resendBtn.disabled) {
-            // هنا يمكنك استدعاء دالة الـ API لإرسال كود جديد
-            console.log("جاري طلب كود جديد...");
             
-            // إعادة ضبط العداد وتفريغ الخانات
-            countdownElement.classList.replace('text-error', 'text-primary');
-            otpInputs.forEach(input => input.value = '');
-            otpInputs[0].focus();
-            startTimer();
+            // تغيير النص لتفاعل بصري
+            const originalText = resendBtn.textContent;
+            resendBtn.textContent = 'جاري الإرسال...';
+            
+            try {
+                // جلب بيانات العميل (لو ما لقى اسم بيحط عميلنا العزيز)
+                const storedEmail = localStorage.getItem('userEmail') || '';
+                const storedName = localStorage.getItem('userFullName') || 'عميلنا العزيز';
+                
+                // ⚠️ مهم جداً: ضع رابط الـ Webhook حقك مكان هذا الرابط ⚠️
+                const webhookUrl = 'رابط_الـ_Webhook_الخاص_بك_هنا';
+                
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'verify_otp', // تأكد أن هذا يطابق الفلتر في Make
+                        payload: {
+                            email: storedEmail,
+                            fullName: storedName
+                        },
+                        metadata: {
+                            os: navigator.platform,
+                            browser: navigator.userAgent
+                        }
+                    })
+                });
+                
+                console.log("تم طلب كود جديد بنجاح!");
+                
+                // إعادة ضبط العداد وتفريغ الخانات
+                countdownElement.classList.replace('text-error', 'text-primary');
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+                startTimer();
+
+            } catch (error) {
+                console.error("حدث خطأ أثناء طلب كود جديد:", error);
+                alert("تعذر إرسال الكود، يرجى المحاولة لاحقاً.");
+            } finally {
+                resendBtn.textContent = originalText;
+            }
         }
     });
 
@@ -119,9 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // التحقق من اكتمال الكود
         if (otpCode.length === 6) {
             console.log("الكود المدخل:", otpCode);
-            // هنا يتم استدعاء دالة API من ملف api.js للتحقق من الكود المدخل مع الباك اند
-            // مثال افتراضي: 
-            // api.verifyOTP(otpCode).then(...);
             
             // لتجربة الواجهة فقط، تغيير نص الزر
             const btnSpan = document.querySelector('#verifyBtn span');
@@ -135,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
 
         } else {
-            // تنبيه المستخدم إذا كان الكود ناقصاً (يمكن ربطه بملف notifications.js)
             console.warn("الرجاء إدخال الكود المكون من 6 أرقام بشكل كامل.");
             // التركيز على أول خانة فارغة
             const firstEmptyInput = Array.from(otpInputs).find(input => input.value === '');
