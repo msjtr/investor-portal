@@ -72,28 +72,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.preventDefault();
                 }
             });
-        });
 
-        // ميزة اللصق الذكية (Paste Detection)
-        inputs[0].addEventListener('paste', (e) => {
-            e.preventDefault();
-            const clipboardData = e.clipboardData || window.clipboardData;
-            if (!clipboardData) return;
-            
-            const pastedData = clipboardData.getData('text').trim();
-            
-            if (/^\d{6}$/.test(pastedData)) {
-                inputs.forEach((input, idx) => {
-                    input.value = pastedData[idx];
-                });
-                // نقل التركيز لزر التأكيد مباشرة لتسريع العملية
-                const verifyBtn = document.getElementById('verifyBtn');
-                if (verifyBtn) verifyBtn.focus();
-            } else {
-                if (typeof Notify !== 'undefined') {
-                    Notify.error("يرجى التأكد من نسخ رمز التحقق المكون من 6 أرقام فقط.");
+            // ميزة اللصق الذكية (Paste Detection) - تعمل على أي مربع
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const clipboardData = e.clipboardData || window.clipboardData;
+                if (!clipboardData) return;
+                
+                const pastedData = clipboardData.getData('text').trim();
+                
+                if (/^\d{6}$/.test(pastedData)) {
+                    inputs.forEach((inp, idx) => {
+                        inp.value = pastedData[idx];
+                    });
+                    // نقل التركيز لزر التأكيد مباشرة لتسريع العملية
+                    const verifyBtn = document.getElementById('verifyBtn');
+                    if (verifyBtn) verifyBtn.focus();
+                } else {
+                    if (typeof Notify !== 'undefined') {
+                        Notify.error("يرجى التأكد من نسخ رمز التحقق المكون من 6 أرقام فقط.");
+                    }
                 }
-            }
+            });
         });
     }
 
