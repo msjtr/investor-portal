@@ -3,21 +3,37 @@
    Path: investor-portal/auth/verify-otp/verify.css
    ========================================================================== */
 
-/* زر الرجوع العائم */
-.back-btn {
+/* زر الرجوع الدائري (حسب التصميم المرفق) */
+.back-btn-circular {
     position: absolute;
     top: 20px;
-    right: 20px;
-    background: none;
+    right: 20px; /* لجعله في الزاوية اليمنى */
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--primary-color, #38bdf8); /* اللون السماوي الخاص بمنصة تيرا */
+    color: #0A2540; /* لون السهم داكن ليتناسق مع التصميم */
     border: none;
-    color: rgba(255, 255, 255, 0.6); /* لون رمادي فاتح مريح للعين */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.3s ease;
-    padding: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3); /* توهج خفيف للزر */
     z-index: 10;
 }
-.back-btn:hover {
-    color: var(--primary-color, #38bdf8);
+
+/* تأثير حركي عند مرور الماوس */
+.back-btn-circular:hover {
+    transform: scale(1.1); /* يكبر قليلاً */
+    background-color: #0284c7; /* يصبح أغمق قليلاً */
+    color: #ffffff; /* يتحول السهم للأبيض */
+    box-shadow: 0 6px 15px rgba(56, 189, 248, 0.5);
+}
+
+/* تأثير عند الضغط عليه */
+.back-btn-circular:active {
+    transform: scale(0.95);
 }
 
 /* حاوية خانات الـ OTP */
