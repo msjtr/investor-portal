@@ -6,6 +6,7 @@
     <title>التحقق الأمني | بوابة المستثمر - منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
+    
     <meta property="og:title" content="بوابة المستثمر في منصة تيرا | التحقق من الرمز">
     <meta property="og:description" content="أدخل رمز التحقق (OTP) المرسل لإتمام عملية الوصول الآمن وحماية أصولك الرقمية.">
     
@@ -17,7 +18,10 @@
 
     <div class="verify-card">
         <div class="btn-back-circle" title="رجوع" onclick="history.back()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
         </div>
 
         <div class="logo-container">
@@ -29,23 +33,27 @@
         <p class="instruction">أدخل رمز التحقق المكون من 6 أرقام المرسل إلى وسيلة الاتصال المسجلة لإتمام العملية.</p>
 
         <div class="otp-inputs-container" id="otp-inputs">
-            <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
-            <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-            <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-            <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-            <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
-            <input type="number" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" disabled>
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" autocomplete="one-time-code">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]*" inputmode="numeric">
         </div>
 
         <div class="timer-container">
             صلاحية الكود: <span class="timer-text" id="timer">03:00</span>
         </div>
 
-        <button class="btn-primary" id="verifyBtn">تأكيد الرمز والدخول</button>
+        <button class="btn-primary" id="verifyBtn" disabled>تأكيد الرمز والدخول</button>
 
         <div class="resend-container">
-            <button class="btn-outline disabled" id="resendBtn">إعادة الإرسال</button>
+            <button class="btn-outline disabled" id="resendBtn" disabled>إعادة الإرسال</button>
         </div>
+
+        <p style="font-size: 11px; color: #888; margin-top: 25px; line-height: 1.6;">
+            حفاظاً على أمانك، لا تشارك رمز التحقق مع أي شخص مهما كانت صفته.
+        </p>
     </div>
 
     <script src="script.js"></script>
