@@ -1,41 +1,41 @@
 /**
  * =================================================================
  * محرك صفحة التسجيل (Enterprise Registration Engine) - منصة تيرا
- * يدمج: بصمة الجهاز، التحقق الصارم، حماية التخمين، والتوجيه الذكي
- * الميزة المضافة: التقاط الـ IP والموقع الجغرافي لتعزيز الأمان والتدقيق
+ * يدمج: بصمة الجهاز، النواة المركزية، توثيق الـ IP والموقع الجغرافي
+ * Path: investor-portal/auth/register/register.js
  * =================================================================
  */
+
+// استيراد النواة والوظائف المساعدة حسب هيكل المشروع
+import { db } from '../../js/database.js';
+import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.js';
+import { showNotification } from '../../shared/scripts/notifications.js';
+import { validateEmail, validateSaudiPhone, validateName } from '../../shared/scripts/validation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const registerBtn = document.getElementById('registerBtn');
     const agreeCheckbox = document.getElementById('agreeTerms');
 
-    // تتبع المحاولات المحلية لمنع الإغراق (Rate Limiter Defense)
+    // تتبع المحاولات المحلية لمنع الإغراق
     let attemptCount = 0;
     const maxRegisterAttempts = 4;
 
-    // 1. تفعيل ميزة "عرض كلمة المرور" بالنص الصريح عبر المساعد المركزي
-    if (typeof Helpers !== 'undefined' && typeof Helpers.setupPasswordVisibility === 'function') {
-        Helpers.setupPasswordVisibility();
-    }
-
-    // 2. تنظيف الجلسات المؤقتة لبدء عملية تسجيل جديدة ونظيفة
-    if (typeof Storage !== 'undefined') {
-        Storage.remove('temp_user');
-    }
+    // 1. تنظيف الجلسات المؤقتة لبدء عملية تسجيل جديدة
+    removeFromStorage('temp_user');
+    removeFromStorage('pending_email');
 
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // حظر الحساب محلياً إذا تجاوز الحد الأقصى للمحاولات الخاطئة
             if (attemptCount >= maxRegisterAttempts) {
-                Notify.error("تم تعليق التسجيل مؤقتاً لتجاوز عدد المحاولات المسموحة.");
+                showNotification("تم تعليق التسجيل مؤقتاً لتجاوز عدد المحاولات.", "error");
                 return;
             }
 
-            // 3. جلب المدخلات وتنظيفها
+            // 2. جلب المدخلات
             const fullNameElem = document.getElementById('fullName');
             const emailElem = document.getElementById('email');
             const phoneElem = document.getElementById('phone');
@@ -43,157 +43,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const payloadData = {
                 fullName: fullNameElem.value.trim(),
-                email: emailElem.value.trim(),
+                email: emailElem.value.trim().toLowerCase(),
                 phone: phoneElem.value.trim(),
                 password: passwordElem.value
             };
 
-            // 4. فحص أمني وتدقيق منطقي محلي
+            // 3. فحص أمني وتدقيق منطقي
             if (!agreeCheckbox || !agreeCheckbox.checked) {
-                Notify.error("يجب الموافقة على الشروط والأحكام وسياسة الخصوصية للاستمرار.");
+                showNotification("يجب الموافقة على الشروط والأحكام للاستمرار.", "warning");
                 return;
             }
 
-            if (typeof Validation !== 'undefined') {
-                if (!Validation.isValidName(payloadData.fullName)) {
-                    Notify.error("يرجى إدخال الاسم الكامل (الاسم الأول والأخير).");
-                    highlightError(fullNameElem);
-                    return;
-                }
-
-                if (!Validation.isEmail(payloadData.email)) {
-                    Notify.error("صيغة البريد الإلكتروني غير صحيحة.");
-                    highlightError(emailElem);
-                    return;
-                }
-
-                if (!Validation.isSaudiPhone(payloadData.phone)) {
-                    Notify.error("يرجى إدخال رقم جوال سعودي صحيح (يبدأ بـ 05).");
-                    highlightError(phoneElem);
-                    return;
-                }
-
-                if (!Validation.isStrongPassword(payloadData.password)) {
-                    Notify.error("كلمة المرور المدخلة ضعيفة. يجب أن تتكون من 8 أحرف وأرقام على الأقل.");
-                    highlightError(passwordElem);
-                    return;
-                }
+            // استخدام نظام الـ Validation المشترك في شجرة ملفاتك
+            if (!validateName(payloadData.fullName)) {
+                showNotification("يرجى إدخال الاسم الكامل بشكل صحيح.", "warning");
+                return;
             }
 
-            // 5. تأمين الواجهة وتفعيل حالة "جاري المعالجة" (Micro-interaction)
+            if (!validateEmail(payloadData.email)) {
+                showNotification("صيغة البريد الإلكتروني غير صحيحة.", "warning");
+                return;
+            }
+
+            if (!validateSaudiPhone(payloadData.phone)) {
+                showNotification("يرجى إدخال رقم جوال سعودي صحيح (05).", "warning");
+                return;
+            }
+
+            // 4. تفعيل حالة "جاري المعالجة"
             registerBtn.disabled = true;
             registerBtn.classList.add('animate-pulse');
-            registerBtn.innerHTML = `
-                <span class="flex-center gap-10">
-                    <div class="spinner-small" style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotation 0.8s linear infinite;"></div>
-                    <span>جاري فحص الأمان وتأمين الحساب...</span>
-                </span>
-            `;
+            registerBtn.innerHTML = `<span>جاري تأمين الحساب...</span>`;
 
-            // تجميد الحقول لمنع التعديل أثناء الإرسال
-            [fullNameElem, emailElem, phoneElem, passwordElem, agreeCheckbox].forEach(el => el.disabled = true);
-
-            // 6. توليد بصمة الجهاز والتقاط الـ IP والموقع الجغرافي (Security Layer)
-            let deviceMeta = { fingerprint: "unknown", browser: "unknown", os: "unknown" };
-            let securityData = { ip: "غير متوفر", location: "غير متوفر" };
-
-            if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
-                deviceMeta = Helpers.generateDeviceFingerprint();
-            }
-
+            // 5. التقاط الـ IP والموقع الجغرافي (Security Layer)
+            let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
             try {
-                // جلب الـ IP والموقع الجغرافي من العميل مباشرة
                 const geoResponse = await fetch('https://ipapi.co/json/');
                 const geoData = await geoResponse.json();
-                securityData.ip = geoData.ip || "غير متوفر";
-                securityData.location = `${geoData.city || ''}, ${geoData.country_name || ''}`.replace(/^, | , $/g, '') || "غير متوفر";
-            } catch (geoErr) {
-                console.warn("[Security Engine] Geo-location mapping fallback:", geoErr);
-            }
+                securityData.ip = geoData.ip;
+                securityData.location = `${geoData.city}, ${geoData.country_name}`;
+            } catch (err) { console.warn("Geo-fetch failed"); }
 
             try {
-                // 7. إرسال البيانات للـ Webhook المركزي (Make.com) مع حزمة الأمان المكتملة
-                const response = await API.post(API_CONFIG.BASE_URL, {
-                    action: 'register',
-                    payload: payloadData,
-                    metadata: {
-                        device_id: deviceMeta.fingerprint,
-                        browser: deviceMeta.browser,
-                        os: deviceMeta.os,
-                        resolution: deviceMeta.resolution,
-                        platform: typeof APP_INFO !== 'undefined' ? APP_INFO.NAME : 'Tera Investor Portal',
-                        version: typeof APP_INFO !== 'undefined' ? APP_INFO.VERSION : '1.0.0',
-                        timestamp: new Date().toISOString(),
-                        // البيانات المضافة لتغذية الإيميل 👇
-                        ip: securityData.ip,
-                        location: securityData.location
-                    }
+                // 6. التحقق من Firebase: هل الإيميل موجود مسبقاً؟
+                const q = query(collection(db, "users"), where("email", "==", payloadData.email));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    showNotification("هذا الحساب مسجل لدينا بالفعل، جرب تسجيل الدخول.", "warning");
+                    resetButton(registerBtn);
+                    return;
+                }
+
+                // 7. حفظ البيانات في Firebase (النواة)
+                await addDoc(collection(db, "users"), {
+                    fullName: payloadData.fullName,
+                    email: payloadData.email,
+                    phone: payloadData.phone,
+                    role: "client",
+                    ip: securityData.ip,
+                    location: securityData.location,
+                    createdAt: new Date().toISOString()
                 });
 
-                // 8. معالجة الرد الذكي
-                if (response && response.success) {
-                    Storage.set('temp_user', { 
-                        email: payloadData.email, 
-                        phone: payloadData.phone,
-                        fullName: payloadData.fullName,
-                        type: 'registration',
-                        timestamp: Date.now()
-                    });
+                // 8. إرسال إشعار لـ Make (اختياري للترحيب أو الأتمتة)
+                const webhookUrl = 'YOUR_MAKE_WEBHOOK_URL';
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'new_registration',
+                        payload: {
+                            email: payloadData.email,
+                            fullName: payloadData.fullName,
+                            location: securityData.location
+                        }
+                    })
+                });
 
-                    Notify.success("تم إعداد الحساب بنجاح! جاري التوجيه لرمز التحقق...");
-                    
-                    setTimeout(() => {
-                        window.location.replace(ROUTES.VERIFY || '../verify-otp/verify.html');
-                    }, 1200);
-
-                } else {
-                    attemptCount++;
-                    handleRegisterFailure(response?.message || "تعذر إكمال التسجيل، يرجى المحاولة لاحقاً.");
-                    resetRegisterForm([fullNameElem, emailElem, phoneElem, passwordElem, agreeCheckbox], registerBtn);
-                }
+                // 9. النجاح والتوجيه
+                saveToStorage('pending_email', payloadData.email);
+                showNotification("أهلاً بك في تيرا! تم إنشاء حسابك بنجاح ✅", "success");
+                
+                setTimeout(() => {
+                    window.location.replace('../login/login.html');
+                }, 1500);
 
             } catch (error) {
                 console.error("[Registration Engine] Error:", error);
                 attemptCount++;
-                Notify.error("عذراً، حدث خطأ فني أثناء الاتصال بالخادم.");
-                resetRegisterForm([fullNameElem, emailElem, phoneElem, passwordElem, agreeCheckbox], registerBtn);
+                showNotification("حدث خطأ فني، يرجى المحاولة لاحقاً.", "error");
+                resetButton(registerBtn);
             }
         });
     }
 
-    function highlightError(element) {
-        const group = element.closest('.input-group');
-        if (group) {
-            group.classList.add('input-error');
-            setTimeout(() => group.classList.remove('input-error'), 3000);
-        }
-    }
-
-    function handleRegisterFailure(msg) {
-        const remainingLeft = maxRegisterAttempts - attemptCount;
-        
-        if (remainingLeft > 0) {
-            Notify.error(msg);
-            const card = document.querySelector('.auth-card');
-            if (card) {
-                card.classList.add('animate-shake');
-                setTimeout(() => card.classList.remove('animate-shake'), 500);
-            }
-        } else {
-            Notify.error("تجاوزت الحد الأقصى لمحاولات التسجيل. تم تعليق النموذج مؤقتاً.");
-            registerBtn.disabled = true;
-            registerBtn.innerHTML = `<span>تم تعليق التسجيل مؤقتاً</span>`;
-            setTimeout(() => window.location.reload(), 60000);
-        }
-    }
-
-    function resetRegisterForm(elementsArray, btn) {
-        elementsArray.forEach(el => el.disabled = false);
-        
-        if (attemptCount < maxRegisterAttempts) {
-            btn.disabled = false;
-            btn.classList.remove('animate-pulse');
-            btn.innerHTML = `<span>إنشاء الحساب الاستثماري</span>`;
-        }
+    function resetButton(btn) {
+        btn.disabled = false;
+        btn.classList.remove('animate-pulse');
+        btn.innerHTML = `<span>إنشاء الحساب الاستثماري</span>`;
     }
 });
