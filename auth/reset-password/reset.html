@@ -32,7 +32,7 @@
                 </div>
                 <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
                 <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
-                <p class="text-white opacity-80 mt-10 text-xs">تعيين كلمة مرور جديدة ومطابقتها للسياسات الأمنية المعتمدة</p>
+                <p class="text-white opacity-80 mt-10 text-xs" id="welcomeMsg">تعيين كلمة مرور جديدة ومطابقتها للسياسات الأمنية المعتمدة</p>
             </div>
 
             <form id="resetForm" class="flex-column mt-25">
@@ -40,7 +40,7 @@
                 <div class="input-group">
                     <div class="input-header flex-between mb-5">
                         <label for="newPassword">كلمة المرور الجديدة</label>
-                        <span id="toggleNewPass" class="toggle-password-text">عرض كلمة المرور</span>
+                        <span id="toggleNewPass" class="toggle-password-text" style="cursor: pointer;">عرض</span>
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock"></span>
@@ -72,7 +72,7 @@
                 <div class="input-group mt-15">
                     <div class="input-header flex-between mb-5">
                         <label for="confirmPassword">تأكيد كلمة المرور</label>
-                        <span id="toggleConfirmPass" class="toggle-password-text">عرض كلمة المرور</span>
+                        <span id="toggleConfirmPass" class="toggle-password-text" style="cursor: pointer;">عرض</span>
                     </div>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="lock-check"></span>
@@ -92,7 +92,7 @@
                     <span class="font-bold text-xs">أمان الحساب والتدقيق (Zero Trust)</span>
                 </div>
                 <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
-                    عند تحديث كلمة المرور، سيتم إنهاء وتدمير كافة الجلسات النشطة (Sessions) على الأجهزة الأخرى تلقائياً لضمان أمان حسابك. يرجى عدم مشاركة بيانات الدخول مع أي جهة.
+                    عند تحديث كلمة المرور، سيتم إنهاء وتدمير كافة الجلسات النشطة (Sessions) على الأجهزة الأخرى تلقائياً لضمان أمان حسابك.
                 </p>
             </div>
 
@@ -102,6 +102,21 @@
     <script src="../../shared/scripts/api.js"></script>
     <script src="../../shared/scripts/notifications.js"></script>
     <script src="../../shared/scripts/helpers.js"></script>
+    
+    <script type="module">
+        import { getCustomerName } from '../../js/core.js';
+        import { getFromStorage } from '../../shared/scripts/storage.js';
+
+        async function initResetPage() {
+            const email = getFromStorage('pending_email') || new URLSearchParams(window.location.search).get('email');
+            if (email) {
+                const name = await getCustomerName(email);
+                document.getElementById('welcomeMsg').innerText = `يا هلا يا ${name}، قم بتعيين كلمة مرور قوية لحماية استثماراتك.`;
+            }
+        }
+        initResetPage();
+    </script>
+
     <script src="reset.js"></script>
 
 </body>
