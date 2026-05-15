@@ -4,7 +4,6 @@
 ================================================================= */
 
 /* التنسيقات العامة للبطاقة موروثة من auth-layout.css */
-
 .verify-card {
     position: relative;
     padding-top: 60px; /* مساحة لزر الرجوع العلوي */
@@ -151,6 +150,7 @@
     font-family: 'Cairo', sans-serif;
     cursor: pointer;
     transition: var(--transition, all 0.3s ease);
+    width: 100%;
 }
 
 .btn-outline:hover {
