@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استعادة كلمة المرور | بوابة المستثمر في منصة تيرا</title>
+    <title>استعادة كلمة المرور | بوابة المستثمر في منصة تِيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمر في منصة تيرا | استعادة كلمة المرور">
-    <meta property="og:description" content="أدخل بريدك الإلكتروني لاستعادة الوصول إلى حسابك الاستثماري بأمان وموثوقية عبر منصة تيرا — عالمك بلا حدود.">
+    <meta property="og:title" content="بوابة المستثمر في منصة تِيرا | استعادة كلمة المرور">
+    <meta property="og:description" content="أدخل بريدك الإلكتروني لاستعادة الوصول إلى حسابك الاستثماري بأمان وموثوقية عبر منصة تِيرا — عالمك بلا حدود.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../shared/styles/variables.css">
@@ -33,7 +33,7 @@
 
             <div class="auth-header text-center">
                 <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تِيرا" class="auth-logo">
                 </div>
                 <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
                 <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
@@ -67,14 +67,57 @@
                     سيتم إرسال كود التحقق المشفر إلى وسيلة الاتصال المعتمدة. لن يتم الكشف عن حالة وجود الحساب صراحةً لأسباب أمنية (Zero Trust).
                 </p>
             </div>
-
         </div>
     </div>
 
     <script src="../../shared/scripts/api.js"></script>
     <script src="../../shared/scripts/validation.js"></script>
     <script src="../../shared/scripts/notifications.js"></script>
-    <script src="forgot.js"></script>
+    
+    <script type="module">
+        import { sendLoginRequest } from '../../js/core.js';
+        import { showNotification } from '../../shared/scripts/notifications.js';
+        import { saveToStorage } from '../../shared/scripts/storage.js';
+
+        const forgotForm = document.getElementById('forgotForm');
+        const forgotBtn = document.getElementById('forgotBtn');
+
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            
+            // تفعيل حالة التحميل
+            forgotBtn.disabled = true;
+            forgotBtn.innerHTML = '<span>جاري التحقق من الحساب...</span>';
+
+            try {
+                // استخدام دالة النواة لإرسال كود التحقق (تعمل للاستعادة أيضاً)
+                const success = await sendLoginRequest(email);
+
+                if (success) {
+                    // حفظ نوع العملية كـ "استعادة" لتوجيه العميل لصفحة تغيير الباسوورد لاحقاً
+                    saveToStorage('auth_mode', 'reset_password');
+                    saveToStorage('pending_email', email);
+                    
+                    showNotification("تم إرسال كود التحقق بنجاح", "success");
+                    
+                    setTimeout(() => {
+                        window.location.href = `../verify-otp/verify.html?email=${encodeURIComponent(email)}&mode=reset`;
+                    }, 1500);
+                } else {
+                    showNotification("يرجى التأكد من البريد الإلكتروني المدخل", "error");
+                    forgotBtn.disabled = false;
+                    forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
+                }
+            } catch (error) {
+                console.error("Forgot Password Error:", error);
+                showNotification("حدث خطأ، يرجى المحاولة لاحقاً", "error");
+                forgotBtn.disabled = false;
+                forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
+            }
+        });
+    </script>
 
 </body>
 </html>
