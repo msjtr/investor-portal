@@ -29,7 +29,7 @@
     <div class="auth-wrapper">
         <div class="auth-card animate-slide-up position-relative">
             
-            <button type="button" id="backBtn" class="back-btn-circular" title="العودة للصفحة السابقة" aria-label="رجوع">
+            <button type="button" id="backBtn" class="back-btn-circular" title="العودة للصفحة السابقة" aria-label="رجوع" onclick="window.history.back()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
@@ -67,7 +67,7 @@
 
             <div class="resend-container text-center mt-20 pt-15 border-top">
                 <p class="text-white text-xs m-0">لم يصلك الرمز؟ 
-                    <button id="resendBtn" class="register-link text-dim font-bold" style="background: none; border: none; cursor: not-allowed;" disabled>إعادة إرسال</button>
+                    <button id="resendBtn" class="register-link text-dim font-bold" style="background: none; border: none; cursor: pointer;">إعادة إرسال</button>
                 </p>
             </div>
 
@@ -88,6 +88,34 @@
     <script src="../../shared/scripts/validation.js"></script>
     <script src="../../shared/scripts/notifications.js"></script>
     
+    <script type="module">
+        import { sendLoginRequest, getCustomerName } from '../../js/core.js';
+        import { getFromStorage } from '../../shared/scripts/storage.js';
+
+        // 1. تخصيص رسالة الترحيب باسم العميل
+        async function personalizeGreeting() {
+            const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
+            if (email) {
+                const name = await getCustomerName(email);
+                document.getElementById('verifyMessage').innerText = `مرحباً بك يا ${name}، الرجاء إدخال الرمز المرسل لإيميلك.`;
+            }
+        }
+
+        // 2. تفعيل زر إعادة الإرسال عبر النواة
+        document.getElementById('resendBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
+            if (email) {
+                const success = await sendLoginRequest(email);
+                if (success) {
+                    console.log("تم إعادة الإرسال بنجاح");
+                }
+            }
+        });
+
+        personalizeGreeting();
+    </script>
+
     <script src="verify.js"></script>
 
 </body>
