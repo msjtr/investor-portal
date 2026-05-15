@@ -1,18 +1,12 @@
 /* =================================================================
    تنسيقات صفحة إعادة تعيين كلمة المرور (Premium Reset Theme - TERA)
-   النسخة المحدثة: دعم مؤشر القوة، الشروط الأمنية، والتنويه الأمني
+   النسخة المحدثة: دعم Glassmorphism الكامل والتفاعل النيوني
+   Path: investor-portal/auth/reset-password/reset.css
 ================================================================= */
-
-/* التنسيقات الأساسية للحقول والبطاقة موروثة من auth-layout.css */
 
 .reset-card {
     position: relative;
-    padding-top: 40px;
-}
-
-/* ضبط المسافات بين الحقول */
-.input-group {
-    margin-bottom: 15px;
+    padding-top: 20px;
 }
 
 /* =================================================================
@@ -21,42 +15,47 @@
 
 .strength-meter-container {
     background: rgba(15, 23, 42, 0.4);
-    padding: 12px 15px;
-    border-radius: var(--radius-sm, 10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(5px);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .meter-bar-bg {
-    height: 6px;
+    height: 8px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    border-radius: 10px;
     overflow: hidden;
+    margin-top: 8px;
 }
 
 .meter-bar {
     height: 100%;
     width: 0%;
-    background-color: var(--danger, #ef4444);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
-    border-radius: 3px;
+    background: var(--danger, #ef4444);
+    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                background-color 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* التدرج اللوني لنصوص قوة كلمة المرور */
-.strength-weak { color: var(--danger, #ef4444); }
-.strength-medium { color: #f59e0b; }
-.strength-strong { color: var(--primary, #38bdf8); }
-.strength-excellent { color: var(--success, #22c55e); }
+/* التدرج اللوني لقوة كلمة المرور */
+.strength-weak { color: #ef4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.3); }
+.strength-medium { color: #f59e0b; text-shadow: 0 0 5px rgba(245, 158, 11, 0.3); }
+.strength-strong { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
+.strength-excellent { color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
 
 /* =================================================================
-   صندوق قائمة الشروط الأمنية المباشرة
+   صندوق قائمة الشروط الأمنية (Interactive Rules)
 ================================================================= */
 
 .password-rules-box {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.03);
     padding: 15px;
-    border-radius: var(--radius-sm, 10px);
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
 }
 
 .rules-list {
@@ -64,100 +63,89 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* توزيع الشروط على عمودين لتوفير المساحة */
-    gap: 10px 5px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 8px;
 }
 
 .rule-item {
     display: flex;
     align-items: center;
-    transition: all 0.2s ease;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
 }
 
 /* حالة الشرط (غير محقق) */
 .rule-item.invalid {
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.5);
 }
 .rule-item.invalid::before {
-    content: "✖";
-    color: var(--danger, #ef4444);
+    content: "\2716";
+    color: #ef4444;
     margin-left: 8px;
-    font-weight: bold;
+    font-size: 0.7rem;
+    opacity: 0.7;
 }
 
-/* حالة الشرط (محقق) */
+/* حالة الشرط (محقق) - تأثير الإضاءة */
 .rule-item.valid {
     color: #ffffff;
     font-weight: 700;
+    transform: translateX(-3px);
 }
 .rule-item.valid::before {
-    content: "✔";
-    color: var(--success, #22c55e);
+    content: "\2714";
+    color: #22c55e;
     margin-left: 8px;
-    font-weight: bold;
+    font-weight: 900;
+    text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
 }
 
 /* =================================================================
-   الأزرار والتذييل الأمني
+   الأزرار والتفاعل
 ================================================================= */
 
-/* تخصيص زر الحفظ النهائي */
-.reset-card .btn-primary {
-    margin-top: 10px;
-    height: 58px;
-    width: 100%;
-    box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
-    font-size: 1.1rem;
-    font-weight: 800;
-    cursor: pointer;
-    border: none;
-    border-radius: var(--radius, 8px);
-    background-color: var(--primary, #38bdf8);
-    color: #0a2540;
-    transition: var(--transition, all 0.3s ease);
+#resetBtn {
+    height: 55px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
 }
 
-.reset-card .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
-    background-color: #0284c7;
-    color: #ffffff;
+#resetBtn:not(:disabled) {
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
 }
 
-/* حالة الزر المعطل برمجياً قبل استيفاء الشروط */
-.reset-card .btn-primary:disabled {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.4);
-    box-shadow: none;
-    cursor: not-allowed;
-    transform: none;
+#resetBtn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(56, 189, 248, 0.4);
+    filter: brightness(1.1);
 }
 
-/* تنسيق زر "عرض كلمة المرور" العلوي */
 .toggle-password-text {
-    color: var(--primary, #38bdf8) !important;
-    font-size: 0.85rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: var(--transition, all 0.3s ease);
+    background: rgba(56, 189, 248, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem !important;
 }
 
-.toggle-password-text:hover {
-    color: #ffffff !important;
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+/* تنبيه الخطأ اللحظي */
+#matchError {
+    background: rgba(239, 68, 68, 0.1);
+    padding: 8px;
+    border-radius: 6px;
+    border-right: 3px solid #ef4444;
+    animation: shake 0.4s ease-in-out;
 }
 
-/* إطار التنويه الأمني السفلي الموحد */
-.security-notice {
-    background: rgba(255, 255, 255, 0.02);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 15px;
-    margin-top: 25px;
-    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
 }
 
-/* تنبيه عدم تطابق كلمتي المرور */
-.text-danger {
-    color: var(--danger, #ef4444);
+/* تجاوب الجوال */
+@media (max-width: 400px) {
+    .rules-list {
+        grid-template-columns: 1fr;
+    }
 }
