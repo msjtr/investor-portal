@@ -284,3 +284,40 @@
 
                     if (timeLeft <= 0) {
                         clearInterval(timerInterval);
+                        timerDisplay.textContent = "00:00";
+                        timerDisplay.style.color = "var(--text-muted)";
+                        resendBtn.classList.remove("disabled"); // تفعيل زر إعادة الإرسال
+                    }
+                }, 1000);
+            }
+
+            // تشغيل العداد فور تحميل الصفحة
+            startTimer();
+
+            // --- 3. الأزرار والأحداث ---
+            resendBtn.addEventListener("click", () => {
+                if (!resendBtn.classList.contains("disabled")) {
+                    console.log("تم طلب إعادة إرسال الكود...");
+                    
+                    // مسح الخانات وإعادة تشغيل العداد
+                    inputs.forEach((input, index) => {
+                        input.value = "";
+                        input.classList.remove("filled");
+                        if (index > 0) input.setAttribute("disabled", true);
+                    });
+                    inputs[0].focus();
+                    startTimer();
+                    alert("تم إرسال كود جديد للتحقق.");
+                }
+            });
+
+            verifyBtn.addEventListener("click", () => {
+                let otpCode = "";
+                inputs.forEach(input => otpCode += input.value);
+                
+                if (otpCode.length === 6) {
+                    console.log("جاري التحقق من الكود:", otpCode);
+                    verifyBtn.textContent = "جاري التحقق...";
+                    verifyBtn.disabled = true;
+                    
+                    //
