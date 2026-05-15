@@ -39,6 +39,9 @@
     border-radius: 10px !important;
     padding: 0 45px 0 15px !important; /* مساحة للأيقونة */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* تأثير التوهج عند التركيز */
@@ -48,6 +51,7 @@
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), 
                 inset 0 0 5px rgba(56, 189, 248, 0.1) !important;
     transform: translateY(-1px);
+    outline: none;
 }
 
 /* منطقة الموافقة على الشروط - أسلوب زجاجي ناعم */
@@ -68,6 +72,7 @@
 /* تخصيص زر إنشاء الحساب الفخم (Elite Blue) */
 .btn-primary {
     height: 54px;
+    width: 100%;
     background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
     box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
     border: none;
@@ -75,7 +80,11 @@
     color: #0a192f;
     font-weight: 800;
     font-size: 1rem;
+    cursor: pointer;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -83,6 +92,15 @@
     box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4);
     filter: brightness(1.1);
     color: #ffffff;
+}
+
+/* تفعيل نمط التحميل والنبض المربوط برمجياً في السكربت */
+.btn-primary:disabled {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: none !important;
+    cursor: wait;
+    transform: none !important;
 }
 
 /* فوتر الصفحة والروابط */
@@ -96,6 +114,7 @@
     color: var(--primary, #38bdf8) !important;
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .register-link:hover {
@@ -103,7 +122,7 @@
     text-shadow: 0 0 15px var(--primary);
 }
 
-/* تنبيهات الخطأ اللحظية */
+/* تنبيهات الخطأ اللحظية المحقونة عبر السكربت */
 .input-error .auth-input {
     border-color: #ef4444 !important;
     background: rgba(239, 68, 68, 0.05) !important;
@@ -122,7 +141,7 @@
     opacity: 0.8;
 }
 
-/* تجاوب الجوال للهياكل الطويلة */
+/* تجاوب الجوال للهياكل الطويلة والضيقة */
 @media (max-height: 800px) {
     .auth-card {
         padding: 20px !important;
@@ -130,5 +149,16 @@
     .auth-header h2 {
         font-size: 1.2rem;
         margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-input {
+        padding: 0 40px 0 12px !important;
+        font-size: 0.9rem;
+    }
+    .btn-primary {
+        height: 50px;
+        font-size: 0.95rem;
     }
 }
