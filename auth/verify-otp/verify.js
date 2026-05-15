@@ -1,157 +1,140 @@
-/**
- * محرك صفحة التحقق من الرمز (Enterprise OTP Engine) - منصة تيرا
- * الموقع: investor-portal/auth/verify-otp/verify.js
- */
-
-document.addEventListener("DOMContentLoaded", () => {
-    // --- 1. تعريف العناصر من الهوية البصرية ---
-    const otpContainer = document.getElementById("otp-inputs");
-    const inputs = document.querySelectorAll(".otp-input");
-    const verifyBtn = document.getElementById("verifyBtn");
-    const timerDisplay = document.getElementById("timer");
-    const resendBtn = document.getElementById("resendBtn");
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. تعريف العناصر من واجهة المستخدم
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const verifyForm = document.getElementById('verifyForm');
+    const countdownElement = document.getElementById('countdown');
+    const resendBtn = document.getElementById('resendBtn');
     
-    let timeLeft = 180; // 3 دقائق حسب الوثيقة
     let timerInterval;
+    const TIME_LIMIT = 180; // 3 دقائق بالثواني
 
-    // --- 2. إدارة العداد التنازلي (Timer Engine) ---
-    const startTimer = () => {
-        clearInterval(timerInterval);
-        timeLeft = 180;
-        resendBtn.classList.add("disabled");
-        resendBtn.disabled = true;
-        
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            const min = Math.floor(timeLeft / 60);
-            const sec = timeLeft % 60;
+    // 2. هندسة التنقل الذكي بين خانات الـ OTP
+    otpInputs.forEach((input, index) => {
+        // عند كتابة رقم
+        input.addEventListener('input', (e) => {
+            // السماح بالأرقام فقط
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
             
-            timerDisplay.textContent = `${min < 10 ? '0' + min : min}:${sec < 10 ? '0' + sec : sec}`;
-
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                timerDisplay.textContent = "00:00";
-                resendBtn.classList.remove("disabled");
-                resendBtn.disabled = false;
-                // استخدام نظام التنبيهات المركزي إذا كان متاحاً
-                if (window.Notifications) Notifications.error("انتهت صلاحية الرمز، يرجى إعادة الإرسال.");
-            }
-        }, 1000);
-    };
-
-    // --- 3. منطق إدخال الرمز والتحكم في الحقول ---
-    inputs.forEach((input, index) => {
-        input.addEventListener("input", (e) => {
-            // تنظيف المدخلات (أرقام فقط)
-            e.target.value = e.target.value.replace(/[^0-9]/g, "");
-
-            if (e.target.value) {
-                input.classList.add("filled");
-                // الانتقال التلقائي للخانة التالية
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].removeAttribute("disabled");
-                    inputs[index + 1].focus();
-                }
-            } else {
-                input.classList.remove("filled");
-            }
-            updateVerifyButtonState();
-        });
-
-        // دعم الحذف المتراجع (Backspace)
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Backspace" && !input.value && index > 0) {
-                inputs[index - 1].focus();
-                inputs[index - 1].value = "";
-                inputs[index - 1].classList.remove("filled");
-                updateVerifyButtonState();
+            // الانتقال للخانة التالية إذا تم إدخال رقم ولم نكن في الخانة الأخيرة
+            if (e.target.value !== '' && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
             }
         });
 
-        // دعم اللصق الذكي (Smart Paste)
-        input.addEventListener("paste", (e) => {
+        // عند الضغط على أزرار الكيبورد (خاصة زر المسح Backspace)
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                // الرجوع للخانة السابقة إذا كانت الحالية فارغة
+                otpInputs[index - 1].focus();
+            }
+        });
+
+        // 3. ميزة (اللصق - Paste) الذكية
+        input.addEventListener('paste', (e) => {
             e.preventDefault();
-            const pastedData = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0, 6);
+            const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6); // أخذ أول 6 أرقام فقط
+            
             if (pastedData.length > 0) {
-                [...pastedData].forEach((char, i) => {
-                    if (inputs[i]) {
-                        inputs[i].removeAttribute("disabled");
-                        inputs[i].value = char;
-                        inputs[i].classList.add("filled");
+                const digits = pastedData.split('');
+                otpInputs.forEach((inp, i) => {
+                    if (digits[i]) {
+                        inp.value = digits[i];
                     }
                 });
-                if (pastedData.length === 6) verifyBtn.focus();
-                updateVerifyButtonState();
+                
+                // نقل المؤشر للخانة المناسبة بعد اللصق
+                const focusIndex = Math.min(digits.length, 5);
+                otpInputs[focusIndex].focus();
             }
         });
     });
 
-    const updateVerifyButtonState = () => {
-        const code = Array.from(inputs).map(i => i.value).join("");
-        verifyBtn.disabled = code.length !== 6;
-    };
-
-    // --- 4. معالجة التحقق النهائي والربط مع API ---
-    verifyBtn.addEventListener("click", async () => {
-        const otpCode = Array.from(inputs).map(i => i.value).join("");
+    // 4. نظام العداد التنازلي (3 دقائق)
+    function startTimer() {
+        let timeRemaining = TIME_LIMIT;
         
-        // تفعيل حالة التحميل في الزر
-        verifyBtn.disabled = true;
-        const originalText = verifyBtn.innerHTML;
-        verifyBtn.innerHTML = `<span>جاري التحقق الأمني...</span>`;
+        // تعطيل زر إعادة الإرسال برمجياً وشكلياً
+        resendBtn.disabled = true;
+        resendBtn.classList.replace('text-primary', 'text-dim');
+        resendBtn.style.cursor = 'not-allowed';
 
-        try {
-            // هنا يتم استدعاء ملف api.js المركزي الخاص بك
-            // المثال: const response = await API.auth.verifyOTP(otpCode);
+        timerInterval = setInterval(() => {
+            timeRemaining--;
             
-            console.log("التحقق من الرمز في منصة TERA:", otpCode);
-
-            // محاكاة استجابة الخادم للنجاح
-            setTimeout(() => {
-                if (otpCode === "123456") { // كود تجريبي
-                    if (window.Notifications) Notifications.success("تم التحقق بنجاح، مرحباً بك.");
-                    // استخدام Helpers للتوجيه إذا كان متاحاً
-                    window.location.href = "../../dashboard/index.html"; 
-                } else {
-                    handleError();
-                }
-            }, 1500);
-
-        } catch (error) {
-            handleError();
-        }
-    });
-
-    const handleError = () => {
-        otpContainer.classList.add("otp-error"); // تفعيل اهتزاز الخطأ من CSS
-        verifyBtn.innerHTML = `<span>الرمز غير صحيح</span>`;
-        verifyBtn.style.backgroundColor = "var(--danger)";
-
-        setTimeout(() => {
-            otpContainer.classList.remove("otp-error");
-            verifyBtn.innerHTML = `<span>تأكيد الرمز والدخول</span>`;
-            verifyBtn.style.backgroundColor = ""; // يعود للون المركزي
-            verifyBtn.disabled = false;
+            // حساب الدقائق والثواني
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
             
-            // إعادة ضبط الحقول
-            inputs.forEach((input, i) => {
-                input.value = "";
-                input.classList.remove("filled");
-                if (i > 0) input.disabled = true;
-            });
-            inputs[0].focus();
-        }, 2000);
-    };
+            // تحديث العرض بصيغة MM:SS
+            countdownElement.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-    // --- 5. إعادة الإرسال ---
-    resendBtn.addEventListener("click", () => {
+            // عند انتهاء الوقت
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                countdownElement.textContent = "00:00";
+                countdownElement.classList.replace('text-primary', 'text-error'); // تغيير اللون للأحمر (يجب توفر كلاس text-error)
+                
+                // تفعيل زر إعادة الإرسال
+                resendBtn.disabled = false;
+                resendBtn.classList.replace('text-dim', 'text-primary');
+                resendBtn.style.cursor = 'pointer';
+            }
+        }, 1000);
+    }
+
+    // 5. معالجة زر "إعادة إرسال"
+    resendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         if (!resendBtn.disabled) {
+            // هنا يمكنك استدعاء دالة الـ API لإرسال كود جديد
+            console.log("جاري طلب كود جديد...");
+            
+            // إعادة ضبط العداد وتفريغ الخانات
+            countdownElement.classList.replace('text-error', 'text-primary');
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
             startTimer();
-            if (window.Notifications) Notifications.info("تم إرسال رمز جديد إلى وسيلة الاتصال المسجلة.");
-            // استدعاء دالة الإرسال من API.js هنا
         }
     });
 
-    // بدء تشغيل العداد فور التحميل
+    // 6. إرسال النموذج (التأكيد)
+    verifyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // تجميع الكود من الخانات الستة
+        let otpCode = '';
+        otpInputs.forEach(input => {
+            otpCode += input.value;
+        });
+
+        // التحقق من اكتمال الكود
+        if (otpCode.length === 6) {
+            console.log("الكود المدخل:", otpCode);
+            // هنا يتم استدعاء دالة API من ملف api.js للتحقق من الكود المدخل مع الباك اند
+            // مثال افتراضي: 
+            // api.verifyOTP(otpCode).then(...);
+            
+            // لتجربة الواجهة فقط، تغيير نص الزر
+            const btnSpan = document.querySelector('#verifyBtn span');
+            const originalText = btnSpan.textContent;
+            btnSpan.textContent = 'جاري التحقق...';
+            document.getElementById('verifyBtn').disabled = true;
+            
+            setTimeout(() => {
+                btnSpan.textContent = originalText;
+                document.getElementById('verifyBtn').disabled = false;
+            }, 2000);
+
+        } else {
+            // تنبيه المستخدم إذا كان الكود ناقصاً (يمكن ربطه بملف notifications.js)
+            console.warn("الرجاء إدخال الكود المكون من 6 أرقام بشكل كامل.");
+            // التركيز على أول خانة فارغة
+            const firstEmptyInput = Array.from(otpInputs).find(input => input.value === '');
+            if (firstEmptyInput) firstEmptyInput.focus();
+        }
+    });
+
+    // 7. تشغيل العداد فور تحميل الصفحة
     startTimer();
 });
