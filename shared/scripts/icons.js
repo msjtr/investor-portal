@@ -1,12 +1,12 @@
 /**
  * =================================================================
  * المخزن المركزي وأول محرك لحقن الأيقونات (Terra Icons Library & Engine)
- * تم التحديث ليدعم واجهات المصادقة، لوحة التحكم، ونظام الوحدات الشامل
+ * نسخة الإنتاج الهجينة: تدعم الـ ES Modules والـ Script التقليدي معاً
  * Path: investor-portal/shared/scripts/icons.js
  * =================================================================
  */
 
-export const Icons = {
+const IconsLibrary = {
     // --- أيقونات النماذج والمصادقة (Auth & Forms) ---
     email: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
     lock: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
@@ -32,15 +32,17 @@ export const Icons = {
 };
 
 /**
- * المحرك المركزي لحقن الأيقونات (The Injector Engine)
+ * المحرك المركزي الداخلي لحقن الأيقونات في عناصر الـ DOM
  */
-export const initIcons = () => {
+const runInjector = () => {
     const iconElements = document.querySelectorAll('[data-icon]:not([data-icon-rendered])');
     
     iconElements.forEach(el => {
         const iconName = el.getAttribute('data-icon');
-        if (Icons[iconName]) {
-            el.innerHTML = Icons[iconName];
+        // جلب الأيقونة سواء من الكائن المحلي أو العام
+        const lib = window.TerraIcons || IconsLibrary;
+        if (lib[iconName]) {
+            el.innerHTML = lib[iconName];
             el.setAttribute('data-icon-rendered', 'true');
         } else {
             console.warn(`[Terra Icons] الأيقونة "${iconName}" غير متوفرة في المكتبة.`);
@@ -48,8 +50,17 @@ export const initIcons = () => {
     });
 };
 
-// تفعيل المحرك تلقائياً عند تحميل واجهة الصفحة
-document.addEventListener('DOMContentLoaded', initIcons);
+// 1. تسجيل المحرك على النطاق العام (Window Scope) فوراً لحل تعارض الملفات التقليدية
+window.TerraIcons = IconsLibrary;
+window.refreshIcons = runInjector;
 
-// إتاحة وظيفة التحديث الفوري للنافذة العامة لدعم حالات الحقن الديناميكي (AJAX/DOM Dynamic Injection)
-window.refreshIcons = initIcons;
+// تشغيل الفحص والحقن التلقائي عند استقرار عناصر الصفحة
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInjector);
+} else {
+    runInjector();
+}
+
+// 2. توفير الصادرات الموديلية الآمنة (Named Exports) للمحركات الحديثة والنواة
+export { IconsLibrary as Icons };
+export { runInjector as initIcons };
