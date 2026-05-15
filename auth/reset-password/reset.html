@@ -15,11 +15,6 @@
     <link rel="stylesheet" href="../../shared/styles/animations.css">
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     <link rel="stylesheet" href="reset.css">
-    
-    <script src="../../shared/scripts/storage.js"></script>
-    <script src="../../shared/scripts/constants.js"></script>
-    <script src="../../shared/scripts/auth-guard.js"></script>
-    <script src="../../shared/scripts/icons.js"></script>
 </head>
 <body class="animate-fade-in">
 
@@ -99,25 +94,29 @@
         </div>
     </div>
 
-    <script src="../../shared/scripts/api.js"></script>
-    <script src="../../shared/scripts/notifications.js"></script>
-    <script src="../../shared/scripts/helpers.js"></script>
-    
     <script type="module">
         import { getCustomerName } from '../../js/core.js';
         import { getFromStorage } from '../../shared/scripts/storage.js';
 
         async function initResetPage() {
-            const email = getFromStorage('pending_email') || new URLSearchParams(window.location.search).get('email');
-            if (email) {
-                const name = await getCustomerName(email);
-                document.getElementById('welcomeMsg').innerText = `يا هلا يا ${name}، قم بتعيين كلمة مرور قوية لحماية استثماراتك.`;
+            try {
+                const email = getFromStorage('pending_email') || new URLSearchParams(window.location.search).get('email');
+                if (email) {
+                    const name = await getCustomerName(email);
+                    const welcomeElem = document.getElementById('welcomeMsg');
+                    if (welcomeElem) {
+                        welcomeElem.innerText = `يا هلا يا ${name}، قم بتعيين كلمة مرور قوية لحماية استثماراتك.`;
+                    }
+                }
+            } catch (error) {
+                console.warn("[Reset View Init] Storage or core connection pending:", error);
             }
         }
-        initResetPage();
+        
+        document.addEventListener('DOMContentLoaded', initResetPage);
     </script>
 
-    <script src="reset.js"></script>
+    <script type="module" src="reset.js"></script>
 
 </body>
 </html>
