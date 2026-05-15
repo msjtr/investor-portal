@@ -1,131 +1,134 @@
 /* =================================================================
    تنسيقات صفحة إنشاء الحساب (Premium Register Theme - TERA)
-   متوافقة مع معايير الأمان وتجربة المستخدم (Enterprise Grade)
+   النسخة المحدثة: دعم التصميم الزجاجي المكثف والتجاوب العالي
+   Path: investor-portal/auth/register/register.css
 ================================================================= */
 
-/* التنسيقات الأساسية للحقول والبطاقة تُسحب من auth-layout.css */
-
+/* حاوية التسجيل لضمان التمركز */
 .register-wrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-/* توزيع الحقول بشكل متناسق لضمان عدم الطول الزائد للبطاقة */
+/* توزيع الحقول بشكل مكثف لتوفير المساحة الرأسية */
 .input-group {
-    margin-bottom: 15px !important; /* تقليل المسافة قليلاً لتناسب عدد الحقول الأكبر */
+    margin-bottom: 12px !important;
     text-align: right;
 }
 
-/* التنسيق الحصري للنص التوضيحي (Placeholder) */
-/* استخدام لون محايد فاتح يضمن تباين ممتاز لسهولة القراءة دون إزعاج بصري */
-.auth-input::placeholder {
-    color: #e2e8f0 !important; 
-    opacity: 0.75 !important; 
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-/* دعم المتصفحات المختلفة لضمان استقرار اللون */
-.auth-input::-webkit-input-placeholder { color: #e2e8f0 !important; opacity: 0.75 !important; }
-.auth-input::-moz-placeholder { color: #e2e8f0 !important; opacity: 0.75 !important; }
-
-/* تنسيق جملة (عرض كلمة المرور) السماوية التي يحقنها الهيلبر */
-.toggle-password-text {
-    color: var(--primary, #38bdf8) !important;
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
     font-size: 0.85rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: var(--transition, all 0.3s ease);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.toggle-password-text:hover {
-    color: #ffffff !important;
-    text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+/* التنسيق الحصري للنص التوضيحي (Placeholder) - تباين معزز */
+.auth-input::placeholder {
+    color: rgba(226, 232, 240, 0.5) !important;
+    font-size: 0.85rem;
 }
 
-/* تخصيص زر إنشاء الحساب الفخم (Elite Style) */
-.btn-primary {
-    margin-top: 15px;
-    height: 58px;
-    width: 100%;
-    box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.3);
-    font-size: 1.1rem;
-    font-weight: 800;
-    cursor: pointer;
-    border: none;
-    border-radius: var(--radius, 8px);
-    background-color: var(--primary, #38bdf8);
-    color: #0a2540; /* تباين قوي لسهولة القراءة */
-    transition: var(--transition, all 0.3s ease);
+/* تصميم حقل الإدخال بنمط الزجاج المصقول */
+.auth-input {
+    height: 48px; /* تقليل الارتفاع قليلاً للملاءمة */
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    padding: 0 45px 0 15px !important; /* مساحة للأيقونة */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.4);
-    background-color: #0284c7;
-    color: #ffffff;
+/* تأثير التوهج عند التركيز */
+.auth-input:focus {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border-color: var(--primary, #38bdf8) !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), 
+                inset 0 0 5px rgba(56, 189, 248, 0.1) !important;
+    transform: translateY(-1px);
 }
 
-/* تنسيق منطقة الموافقة على الشروط */
+/* منطقة الموافقة على الشروط - أسلوب زجاجي ناعم */
 .register-agreement {
-    background: rgba(255, 255, 255, 0.02);
-    padding: 10px;
-    border-radius: var(--radius, 8px);
+    background: rgba(56, 189, 248, 0.03);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(56, 189, 248, 0.1);
+    margin: 15px 0;
 }
 
 .register-agreement .text-dim {
     color: #94a3b8;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-size: 0.75rem;
 }
 
-/* تنسيق الفوتر (لديك حساب بالفعل؟) */
+/* تخصيص زر إنشاء الحساب الفخم (Elite Blue) */
+.btn-primary {
+    height: 54px;
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+    border: none;
+    border-radius: 10px;
+    color: #0a192f;
+    font-weight: 800;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4);
+    filter: brightness(1.1);
+    color: #ffffff;
+}
+
+/* فوتر الصفحة والروابط */
 .register-footer {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); 
-    text-align: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.register-footer p {
-    color: #ffffff !important;
-    font-size: 0.95rem;
-    margin: 0;
-}
-
-/* تنسيق رابط "سجل دخولك" */
 .register-link {
     color: var(--primary, #38bdf8) !important;
-    text-decoration: none;
-    font-weight: 800;
-    margin-right: 5px;
-    transition: var(--transition, all 0.3s ease);
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    transition: all 0.3s ease;
 }
 
 .register-link:hover {
     color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    text-shadow: 0 0 15px var(--primary);
 }
 
-/* تنسيق إطار التنويه الأمني السفلي المعتمد */
-.security-notice {
-    background: rgba(255, 255, 255, 0.02);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 15px;
-    margin-top: 25px;
-    border-radius: 0 0 var(--radius, 8px) var(--radius, 8px);
-}
-
-/* تحسين استجابة الحقول عند التركيز */
-.auth-input:focus {
-    background: rgba(15, 23, 42, 0.8) !important;
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    outline: none;
-}
-
-/* حالة الخطأ البرمجية */
+/* تنبيهات الخطأ اللحظية */
 .input-error .auth-input {
-    border-color: var(--danger, #ef4444) !important;
+    border-color: #ef4444 !important;
     background: rgba(239, 68, 68, 0.05) !important;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+}
+
+/* التنويه الأمني السفلي */
+.security-notice {
+    margin-top: 20px;
+    opacity: 0.8;
+}
+
+/* تجاوب الجوال للهياكل الطويلة */
+@media (max-height: 800px) {
+    .auth-card {
+        padding: 20px !important;
+    }
+    .auth-header h2 {
+        font-size: 1.2rem;
+        margin-top: 10px;
+    }
 }
