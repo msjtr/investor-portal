@@ -1,41 +1,45 @@
 /**
  * =================================================================
- * محرك صفحة استعادة كلمة المرور (Enterprise Forgot Engine) - منصة تيرا
- * يدمج: تأمين الهوية، الفحص الاستباقي، وإدارة الجلسات المؤقتة
- * الميزة المضافة: التقاط الـ IP والموقع الجغرافي لتوثيق الإشعار الأمني
+ * محرك صفحة استعادة كلمة المرور (Enterprise Forgot Engine) - منصة تِيرا
+ * يدمج: تأمين الهوية عبر النواة، الفحص الاستباقي، وتوثيق الموقع الجغرافي
+ * Path: investor-portal/auth/forgot-password/forgot.js
  * =================================================================
  */
+
+// استيراد النواة والوظائف المساعدة حسب هيكل المشروع
+import { sendLoginRequest } from '../../js/core.js';
+import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.js';
+import { showNotification } from '../../shared/scripts/notifications.js';
+import { validateEmail } from '../../shared/scripts/validation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const forgotForm = document.getElementById('forgotForm');
     const forgotBtn = document.getElementById('forgotBtn');
     const emailInput = document.getElementById('email');
 
-    // تتبع المحاولات المحلية كطبقة حماية أولية (Rate Limiter)
+    // تتبع المحاولات المحلية كطبقة حماية أولية
     let resetAttempts = 0;
     const maxAttempts = 3;
 
-    // تنظيف أي جلسات استعادة سابقة عند فتح الصفحة لضمان أمان الجلسة
-    if (typeof Storage !== 'undefined') {
-        Storage.remove('temp_user');
-    }
+    // تنظيف أي جلسات سابقة لضمان أمان العملية الجديدة
+    removeFromStorage('temp_user');
+    removeFromStorage('pending_email');
+    removeFromStorage('auth_mode');
 
     if (forgotForm) {
         forgotForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             if (resetAttempts >= maxAttempts) {
-                if (typeof Notify !== 'undefined') {
-                    Notify.error("تجاوزت الحد المسموح للمحاولات. يرجى المحاولة بعد قليل.");
-                }
+                showNotification("تجاوزت الحد المسموح للمحاولات. يرجى المحاولة لاحقاً.", "error");
                 return;
             }
 
-            const email = emailInput ? emailInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
 
-            // 1. التحقق الاستباقي الصارم قبل إجهاد الخادم
-            if (typeof Validation !== 'undefined' && !Validation.isEmail(email)) {
-                if (typeof Notify !== 'undefined') Notify.error("يرجى إدخال بريد إلكتروني صحيح ومسجل.");
+            // 1. التحقق الاستباقي الصارم
+            if (!validateEmail(email)) {
+                showNotification("يرجى إدخال بريد إلكتروني صحيح ومسجل.", "warning");
                 highlightError(emailInput);
                 return;
             }
@@ -44,79 +48,45 @@ document.addEventListener('DOMContentLoaded', () => {
             setLoadingState(forgotBtn, true);
             if (emailInput) emailInput.disabled = true;
 
-            // 3. التقاط بصمة الجهاز والبيانات الجغرافية (Security Layer)
-            let deviceMeta = { fingerprint: "unknown", browser: "unknown", os: "unknown" };
-            let securityData = { ip: "غير متوفر", location: "غير متوفر" };
-
-            if (typeof Helpers !== 'undefined' && typeof Helpers.generateDeviceFingerprint === 'function') {
-                deviceMeta = Helpers.generateDeviceFingerprint();
-            }
-
+            // 3. التقاط الـ IP والموقع الجغرافي لتوثيق الإشعار الأمني (Security Layer)
+            let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
             try {
-                // جلب الـ IP والموقع الجغرافي لحظياً لتغذية إشعار الأمان
                 const geoResponse = await fetch('https://ipapi.co/json/');
                 const geoData = await geoResponse.json();
-                securityData.ip = geoData.ip || "غير متوفر";
-                securityData.location = `${geoData.city || ''}, ${geoData.country_name || ''}`.replace(/^, | , $/g, '') || "غير متوفر";
+                securityData.ip = geoData.ip;
+                securityData.location = `${geoData.city}, ${geoData.country_name}`;
             } catch (geoErr) {
-                console.warn("[Security Engine] Geo-location fetch failed for Forgot:", geoErr);
+                console.warn("[Security Engine] Geo-fetch failed for Forgot:", geoErr);
             }
 
             try {
-                // 4. إرسال الطلب لـ Make.com مع الأكشن المعتمد والبيانات الأمنية المكتملة
-                const response = await API.post(API_CONFIG.BASE_URL, {
-                    action: 'reset', // تم ضبطه ليتطابق مع الـ Switch في Make
-                    payload: { 
-                        email: email,
-                        fullName: email.split('@')[0] // إرسال اسم تقريبي لتغذية الإيميل حتى إكمال التحقق
-                    },
-                    metadata: {
-                        device_id: deviceMeta.fingerprint,
-                        browser: deviceMeta.browser,
-                        os: deviceMeta.os,
-                        timestamp: new Date().toISOString(),
-                        platform: typeof APP_INFO !== 'undefined' ? APP_INFO.NAME : 'Tera Investor Portal',
-                        context: 'password_recovery',
-                        // البيانات المضافة لتغذية الإيميل 👇
-                        ip: securityData.ip,
-                        location: securityData.location
-                    }
-                });
+                // 4. استدعاء النواة المركزية (تم دمج الأكشن بداخلها ليتناسب مع Make)
+                const success = await sendLoginRequest(email);
 
-                // 5. معالجة الرد الذكي
-                if (response && response.success) {
+                if (success) {
                     // تخزين بيانات الجلسة المؤقتة لصفحة الـ OTP
-                    if (typeof Storage !== 'undefined') {
-                        Storage.set('temp_user', { 
-                            email: email, 
-                            type: 'reset_password',
-                            action: 'reset',
-                            timestamp: Date.now()
-                        });
-                    }
+                    saveToStorage('pending_email', email);
+                    saveToStorage('auth_mode', 'reset_password'); // تحديد نوع العملية للتحويل لاحقاً لصفحة Reset
 
-                    if (typeof Notify !== 'undefined') {
-                        Notify.success("تم إرسال كود التحقق (OTP) المشفر إلى وسيلة الاتصال المعتمدة.");
-                    }
+                    showNotification("تم إرسال كود التحقق (OTP) إلى بريدك المسجل ✅", "success");
                     
-                    // التوجيه السلس لصفحة التحقق
+                    // التوجيه لصفحة التحقق
                     setTimeout(() => {
-                        if (typeof ROUTES !== 'undefined' && ROUTES.VERIFY) {
-                            window.location.replace(ROUTES.VERIFY);
-                        } else {
-                            window.location.replace('../verify-otp/verify.html');
-                        }
+                        window.location.replace(`../verify-otp/verify.html?email=${encodeURIComponent(email)}&mode=reset`);
                     }, 1500);
 
                 } else {
                     resetAttempts++;
-                    handleFailure(response?.message || "عذراً، تعذر إرسال رمز التحقق. يرجى المحاولة لاحقاً.");
+                    showNotification("عذراً، لم نتمكن من العثور على الحساب أو إرسال الرمز.", "error");
+                    setLoadingState(forgotBtn, false);
+                    if (emailInput) emailInput.disabled = false;
                 }
 
             } catch (error) {
                 console.error("[Forgot Engine] Communication Error:", error);
-                if (typeof Notify !== 'undefined') Notify.error("عذراً، حدث خطأ فني أثناء الاتصال بالخادم.");
-                handleFailure();
+                showNotification("حدث خطأ فني أثناء الاتصال بالخادم.", "error");
+                setLoadingState(forgotBtn, false);
+                if (emailInput) emailInput.disabled = false;
             }
         });
     }
@@ -128,12 +98,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!btn) return;
         if (isLoading) {
             btn.disabled = true;
-            btn.classList.add('animate-pulse');
-            btn.innerHTML = `
-                <span class="flex-center gap-10">
-                    <div class="spinner-small" style="width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: rotation 0.8s linear infinite;"></div>
-                    <span>جاري فحص الأمان وإرسال الرمز...</span>
-                </span>
-            `;
+            btn.innerHTML = `<span>جاري فحص الأمان وإرسال الرمز...</span>`;
         } else {
-            btn.disabled =
+            btn.disabled = false;
+            btn.innerHTML = `<span>إرسال كود الاستعادة</span>`;
+        }
+    }
+
+    function highlightError(element) {
+        if (!element) return;
+        const group = element.closest('.input-group');
+        if (group) {
+            group.classList.add('input-error');
+            setTimeout(() => group.classList.remove('input-error'), 3000);
+        }
+    }
+});
