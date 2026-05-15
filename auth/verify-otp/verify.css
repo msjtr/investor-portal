@@ -1,129 +1,104 @@
-/* =================================================================
-   محرك تنسيق صفحة التحقق (OTP Styles) - منصة تيرا
-   الموقع: investor-portal/auth/verify-otp/verify.css
-================================================================= */
+/* ==========================================================================
+   OTP Verification Page Styles
+   Path: investor-portal/auth/verify-otp/verify.css
+   ========================================================================== */
 
-/* حاوية مربعات التحقق الستة */
-.otp-inputs-container {
+/* حاوية خانات الـ OTP */
+.otp-container {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin: 30px 0 20px 0;
-    direction: ltr; /* لضمان الترتيب البرمجي الصحيح من اليسار لليمين */
+    gap: 12px;
+    /* نجبر الحاوية على اتجاه LTR حتى يكون تسلسل الأرقام المنسوخة والمكتوبة صحيحاً 100% */
+    direction: ltr; 
+    margin-bottom: 1.5rem;
 }
 
-/* تصميم خانة الرقم المنفردة */
+/* تصميم خانة الإدخال الواحدة */
 .otp-input {
-    width: 48px;
-    height: 62px;
+    width: 50px;
+    height: 55px;
+    font-size: 1.5rem;
+    font-weight: 700;
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--white);
-    background-color: rgba(255, 255, 255, 0.05); /* زجاجي خفيف يتناسب مع auth-card */
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-sm);
-    outline: none;
-    transition: var(--transition);
-    font-family: 'Cairo', sans-serif;
+    border-radius: 8px;
+    /* نستخدم متغيرات الألوان الخاصة بك، مع وضع لون احتياطي (Fallback) */
+    background-color: var(--bg-input, rgba(255, 255, 255, 0.05));
+    border: 2px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    color: var(--text-main, #ffffff);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 0;
 }
 
-/* إخفاء أسهم الزيادة والنقصان */
+/* التفاعل عند الضغط (Focus) على الخانة */
+.otp-input:focus {
+    outline: none;
+    border-color: var(--primary-color, #38bdf8);
+    background-color: var(--bg-input-focus, rgba(56, 189, 248, 0.05));
+    /* تأثير توهج (Glow) خفيف يتماشى مع أسلوب Glassmorphism */
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+    transform: translateY(-2px);
+}
+
+/* التفاعل عندما تكون الخانة ممتلئة برقم (مفيدة بصرياً للعميل) */
+.otp-input:valid {
+    border-color: rgba(56, 189, 248, 0.5);
+}
+
+/* إخفاء أسهم الزيادة والنقصان الافتراضية في المتصفحات (لضمان نظافة التصميم) */
 .otp-input::-webkit-outer-spin-button,
 .otp-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-
-/* حالة التركيز (Focus) */
-.otp-input:focus {
-    border-color: var(--primary);
-    background-color: rgba(56, 189, 248, 0.1);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-    transform: translateY(-3px);
+.otp-input[type=number] {
+    -moz-appearance: textfield;
 }
 
-/* حالة الامتلاء */
-.otp-input.filled {
-    border-color: var(--primary);
-    background-color: rgba(255, 255, 255, 0.08);
+/* ==========================================================================
+   Timer & Resend Button
+   ========================================================================== */
+
+/* كلاس اللون الأحمر عند انتهاء العداد التنازلي */
+.text-error {
+    color: var(--error-color, #ef4444) !important;
 }
 
-/* حالة الخطأ (Shake Animation) */
-.otp-error .otp-input {
-    border-color: var(--danger) !important;
-    background-color: rgba(239, 68, 68, 0.1) !important;
-    color: var(--danger);
+/* تأثير حركي لزر إعادة الإرسال عند التفعيل */
+#resendBtn {
+    transition: color 0.3s ease, opacity 0.3s ease;
+    padding: 0 5px;
 }
 
-/* منطقة المؤقت التنازلي */
-.timer-container {
-    margin-bottom: 25px;
+#resendBtn:not(:disabled):hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    opacity: 0.8;
 }
 
-#timer {
-    font-variant-numeric: tabular-nums; /* لضمان ثبات الأرقام أثناء العد */
-    letter-spacing: 1px;
-}
-
-/* تنسيق زر إعادة الإرسال */
-.btn-outline {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--white);
-    padding: 10px 20px;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    width: 100%;
-}
-
-.btn-outline:hover:not(.disabled) {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.btn-outline.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    border-color: rgba(255, 255, 255, 0.05);
-}
-
-/* زر الرجوع الدائري */
-.btn-back-circle {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-    cursor: pointer;
-    transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.btn-back-circle:hover {
-    background: var(--primary);
-    color: var(--primary-dark);
-    transform: scale(1.1);
-}
-
-/* التجاوب مع شاشات الجوال الصغيرة */
-@media (max-width: 400px) {
-    .otp-input {
-        width: 40px;
-        height: 55px;
-        font-size: 1.5rem;
+/* ==========================================================================
+   Mobile Responsiveness (التجاوب مع شاشات الجوال)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .otp-container {
+        gap: 8px; /* تقليل المسافة بين الخانات في الشاشات الصغيرة */
     }
-    .otp-inputs-container {
-        gap: 6px;
+    
+    .otp-input {
+        width: 42px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .otp-container {
+        gap: 5px;
+    }
+    
+    .otp-input {
+        width: 38px;
+        height: 44px;
+        font-size: 1.1rem;
     }
 }
