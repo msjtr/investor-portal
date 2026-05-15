@@ -89,6 +89,44 @@
     <script src="../../shared/scripts/api.js"></script>
     <script src="../../shared/scripts/validation.js"></script>
     <script src="../../shared/scripts/notifications.js"></script>
+    
+    <script type="module">
+        import { sendLoginRequest } from '../../js/core.js';
+        import { showNotification } from '../../shared/scripts/notifications.js';
+
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const btn = document.getElementById('loginBtn');
+            
+            // تفعيل حالة الانتظار
+            btn.disabled = true;
+            btn.innerHTML = '<span>جاري التحقق من الهوية...</span>';
+
+            try {
+                // استدعاء النواة لجلب الاسم وإرسال الـ Webhook
+                const success = await sendLoginRequest(email);
+
+                if (success) {
+                    // التوجه لصفحة الـ OTP مع تمرير الإيميل
+                    window.location.href = `../verify-otp/verify.html?email=${encodeURIComponent(email)}`;
+                } else {
+                    showNotification("تعذر إرسال الرمز، يرجى المحاولة لاحقاً", "error");
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>تسجيل الدخول الآمن</span>';
+                }
+            } catch (error) {
+                console.error("Login Error:", error);
+                showNotification("حدث خطأ في النظام", "error");
+                btn.disabled = false;
+                btn.innerHTML = '<span>تسجيل الدخول الآمن</span>';
+            }
+        });
+    </script>
+
     <script src="login.js"></script>
 
 </body>
