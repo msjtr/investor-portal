@@ -3,92 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التحقق الأمني من الرمز | بوابة المستثمر في منصة تيرا</title>
+    <title>التحقق الأمني | بوابة المستثمر - منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
     <meta property="og:title" content="بوابة المستثمر في منصة تيرا | التحقق من الرمز">
     <meta property="og:description" content="أدخل رمز التحقق (OTP) المرسل لإتمام عملية الوصول الآمن وحماية أصولك الرقمية.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../shared/styles/variables.css">
-    <link rel="stylesheet" href="../../shared/styles/utilities.css">
-    <link rel="stylesheet" href="../../shared/styles/animations.css">
-    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
-    <link rel="stylesheet" href="verify.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="../../shared/scripts/storage.js"></script>
-    <script src="../../shared/scripts/constants.js"></script>
-    <script src="../../shared/scripts/auth-guard.js"></script>
-    <script src="../../shared/scripts/countdown.js"></script>
-    <script src="../../shared/scripts/icons.js"></script>
-</head>
-<body class="animate-fade-in">
+    <style>
+        /* التنسيقات العامة والهوية البصرية */
+        :root {
+            --primary-dark: #0A2540;
+            --primary-light: #38bdf8;
+            --bg-color: #f4f7f6;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+        }
 
-    <div class="auth-wrapper">
-        <div class="auth-card verify-card animate-slide-up">
-            
-            <button onclick="history.back()" class="btn-back-circle" title="رجوع للصفحة السابقة">
-                <span class="flex-center" data-icon="back"></span>
-            </button>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* خلفية أنيقة يمكن استبدالها بصورة مستقبلاً */
+            background-image: radial-gradient(circle at top right, #e0f2fe 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #e0f2fe 0%, transparent 40%);
+        }
 
-            <div class="auth-header text-center">
-                <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
-                </div>
-                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
-                <p class="text-primary font-bold text-sm">عالمك بلا حدود</p>
-                <p class="text-white opacity-80 mt-10">أدخل رمز التحقق (OTP) المرسل إلى:</p>
-                <div id="userEmailDisplay" class="text-primary font-bold mt-5 animate-pulse text-sm" dir="ltr"></div>
-            </div>
+        /* حاوية Glassmorphism */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(10, 37, 64, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-sizing: border-box;
+        }
 
-            <form id="otpForm" class="flex-column mt-30">
-                <div class="otp-inputs-container" dir="ltr">
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" autofocus required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
-                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
-                </div>
+        /* الشعار */
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        .logo-text {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .logo-slogan {
+            font-size: 14px;
+            color: var(--primary-light);
+            font-weight: 600;
+            margin: 5px 0 0;
+        }
 
-                <div id="attemptsContainer" class="text-center mt-10 hidden">
-                    <span class="text-danger font-bold text-xs">المحاولات المتبقية: <span id="attemptsCount">3</span></span>
-                </div>
+        /* النصوص التوضيحية */
+        h2 {
+            color: var(--primary-dark);
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        p.instruction {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
 
-                <button type="submit" id="verifyBtn" class="btn-primary mt-20">
-                    <span>تأكيد الرمز والدخول</span>
-                </button>
-            </form>
-
-            <div class="resend-container mt-25 text-center">
-                <p class="text-white opacity-70 text-xs">لم يصلك رمز التحقق؟</p>
-                <div class="timer-area mt-10">
-                    <div id="timerWrapper" class="flex-center gap-10 text-xs">
-                        <span class="text-white">إعادة الطلب متاحة خلال:</span>
-                        <b id="timerCount" class="text-primary font-bold">03:00</b>
-                    </div>
-                    <button id="resendBtn" class="btn-outline w-full mt-15 hidden text-xs font-bold">
-                        إعادة إرسال رمز التحقق
-                    </button>
-                </div>
-            </div>
-
-            <div class="security-notice mt-30 text-right">
-                <div class="flex-center gap-5 mb-5 text-primary">
-                    <span data-icon="shield"></span>
-                    <span class="font-bold text-xs">التنويه الأمني (Zero Trust)</span>
-                </div>
-                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
-                    يُستخدم هذا الرمز لمرة واحدة فقط ويتم إتلافه فوراً بعد الاستخدام. منصة تيرا لا تطلب رمز التحقق عبر الاتصال أو الرسائل مطلقاً. عدم مشاركته يضمن حماية حسابك.
-                </p>
-            </div>
-
-        </div>
-    </div>
-
-    <script src="../../shared/scripts/api.js"></script>
-    <script src="../../shared/scripts/notifications.js"></script>
-    <script src="verify.js"></script>
-
-</body>
-</html>
+        /* صناديق الـ OTP */
+        .otp-wrapper {
+            display: flex;
+            justify-content: space-between;
+            direction: ltr; /* لضمان كتابة الأرقام من اليسار لليمين */
+            margin-bottom: 25px;
+        }
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            border: 2px solid #e2e8f0;
