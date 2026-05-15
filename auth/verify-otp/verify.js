@@ -4,9 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const verifyForm = document.getElementById('verifyForm');
     const countdownElement = document.getElementById('countdown');
     const resendBtn = document.getElementById('resendBtn');
-    
+    const backBtn = document.getElementById('backBtn'); // تم إضافة تعريف زر الرجوع هنا
+
     let timerInterval;
     const TIME_LIMIT = 180; // 3 دقائق بالثواني
+
+    // تفعيل وظيفة زر الرجوع
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            window.history.back(); // يعيد المستخدم للصفحة السابقة تلقائياً
+        });
+    }
 
     // 2. هندسة التنقل الذكي بين خانات الـ OTP
     otpInputs.forEach((input, index) => {
