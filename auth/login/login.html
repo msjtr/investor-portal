@@ -81,54 +81,15 @@
     </div>
 
     <script type="module">
-        import { sendLoginRequest } from '../../js/core.js';
-        import { showNotification } from '../../shared/scripts/notifications.js';
-
-        // حقن الأيقونات بنظام موديولي نظيف لمنع تعليق معايير التصدير المشتركة
-        async function loadIconsEngine() {
+        import { initIcons } from '../../shared/scripts/icons.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
             try {
-                const iconsModule = await import('../../shared/scripts/icons.js');
-                if (iconsModule && typeof iconsModule.initIcons === 'function') {
-                    iconsModule.initIcons();
-                }
-            } catch (iconErr) {
-                console.warn("[Icons Engine] System loading or standard export pending:", iconErr);
+                initIcons();
+            } catch (err) {
+                console.warn("[Icons Engine] System loading pending:", err);
             }
-        }
-
-        const loginForm = document.getElementById('loginForm');
-
-        if (loginForm) {
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const btn = document.getElementById('loginBtn');
-                
-                btn.disabled = true;
-                btn.innerHTML = '<span>جاري التحقق من الهوية...</span>';
-
-                try {
-                    const success = await sendLoginRequest(email);
-
-                    if (success) {
-                        window.location.href = `../verify-otp/verify.html?email=${encodeURIComponent(email)}`;
-                    } else {
-                        showNotification("تعذر إرسال الرمز، يرجى المحاولة لاحقاً", "error");
-                        btn.disabled = false;
-                        btn.innerHTML = '<span>تسجيل الدخول الآمن</span>';
-                    }
-                } catch (error) {
-                    console.error("Login Error:", error);
-                    showNotification("حدث خطأ في النظام الفني للاتصال", "error");
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>تسجيل الدخول الآمن</span>';
-                }
-            });
-        }
-
-        // تشغيل نظام تهيئة الأيقونات عند استقرار الـ DOM
-        document.addEventListener('DOMContentLoaded', loadIconsEngine);
+        });
     </script>
 
     <script type="module" src="login.js"></script>
