@@ -1,7 +1,7 @@
 /**
  * =================================================================
  * محرك صفحة التسجيل (Enterprise Registration Engine) - منصة تيرا
- * يدمج: بصمة الجهاز، النواة المركزية، توثيق الـ IP والموقع الجغرافي
+ * يدمج: بصمة الجهاز، النواة المركزية، توثيق الـ IP والموقع الجغرافي والسجلات الأمنية
  * Path: investor-portal/auth/register/register.js
  * =================================================================
  */
@@ -12,6 +12,9 @@ import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.c
 import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.js';
 import { showNotification } from '../../shared/scripts/notifications.js';
 import { validateEmail, validateSaudiPhone, validateName } from '../../shared/scripts/validation.js';
+
+// استدعاء المسجل الأمني لتوثيق الحركات
+import { logSecurityEvent } from '../../shared/scripts/logger.js'; 
 
 // رابط الويب هوك الخاص بمنصة Make (المسار الموحد)
 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/czm13rtz2r49er30mxqtkwumncg8hn13';
@@ -109,6 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!querySnapshot.empty) {
                     showNotification("هذا البريد الإلكتروني مسجل لدينا بالفعل، يرجى تسجيل الدخول.", "warning");
+                    // توثيق المحاولة المكررة
+                    logSecurityEvent(payloadData.email, "registration_failed", "warning", securityData, "محاولة تسجيل ببريد إلكتروني مسجل مسبقاً");
                     resetButton(registerBtn);
                     return;
                 }
@@ -135,6 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (webhookErr) {
                     console.error("[Automation Engine] Webhook communication failed:", webhookErr);
                     showNotification("تعذر الاتصال بخادم إرسال الرموز، يرجى المحاولة لاحقاً.", "error");
+                    // توثيق فشل الاتصال بالويب هوك
+                    logSecurityEvent(payloadData.email, "webhook_failed", "error", securityData, "فشل إرسال كود الـ OTP عبر منصة Make");
                     resetButton(registerBtn);
                     return; // إيقاف العملية إذا فشل إرسال الكود
                 }
@@ -150,12 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     createdAt: new Date().toISOString()
                 });
 
+                // توثيق العملية الناجحة في السجلات الأمنية
+                logSecurityEvent(payloadData.email, "new_registration", "success", securityData, "تم إنشاء الحساب بنجاح وإرسال كود التفعيل");
+
                 // 9. تخزين الجلسة المؤقتة والتوجه لصفحة التحقق من الـ OTP
                 saveToStorage('pending_email', payloadData.email);
                 showNotification("تم إرسال كود التفعيل لبريدك بنجاح ✅", "success");
                 
                 setTimeout(() => {
-                    // تحويل المستثمر لصفحة التحقق (تأكد أن مسار الملف صحيح في مشروعك)
+                    // تحويل المستثمر لصفحة التحقق
                     window.location.replace('../verify-otp/verify.html');
                 }, 1500);
 
@@ -163,6 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("[Registration Engine] Critical Technical Error:", error);
                 attemptCount++;
                 showNotification("حدث خطأ فني أثناء معالجة الطلب، يرجى المحاولة لاحقاً.", "error");
+                // توثيق الخطأ الفني الحرج
+                logSecurityEvent(payloadData.email, "system_error", "failed", securityData, `خطأ فني: ${error.message}`);
                 resetButton(registerBtn);
             }
         });
