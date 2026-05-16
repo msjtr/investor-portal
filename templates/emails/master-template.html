@@ -6,7 +6,7 @@
     <title>إشعار من منصة تيرا</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* التنسيقات الأساسية لضمان التوافق مع كافة مزودي البريد */
+        /* التنسيقات الأساسية لضمان التوافق مع كافة مزودي البريد (Gmail, Outlook, Apple Mail) */
         body {
             font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0f172a;
@@ -42,6 +42,7 @@
             height: 50px;
             width: auto;
             margin-bottom: 10px;
+            display: inline-block;
         }
         .brand-title {
             color: #ffffff;
@@ -186,7 +187,7 @@
     <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td class="email-header">
-                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="شعار منصة تيرا">
+                <img src="https://msjtr.github.io/investor-portal/assets/images/logo.png" alt="شعار منصة تيرا" onerror="this.onerror=null; this.src='https://msjtr.github.io/investor-portal/assets/images/logo.svg'">
                 <h1 class="brand-title">بوابة المستثمر</h1>
                 <p class="brand-slogan">عالمك بلا حدود</p>
             </td>
@@ -264,19 +265,4 @@
                     </p>
                 </div>
 
-                <div class="divider"></div>
-
-                <div class="copyright">
-                    الدعم الفني: <a href="mailto:{{SUPPORT_EMAIL}}">{{SUPPORT_EMAIL}}</a><br>
-                    رابط المنصة: <a href="{{PLATFORM_LINK}}" target="_blank">{{PLATFORM_LINK}}</a>
-                    <p style="margin-top: 15px; font-size: 10px; color: #64748b;">
-                        هذه رسالة تلقائية مشفرة صادرة من منصة تيرا للخدمات المتكاملة، يرجى عدم الرد عليها.
-                    </p>
-                </div>
-            </td>
-        </tr>
-    </table>
-</div>
-
-</body>
-</html>
+                <div
