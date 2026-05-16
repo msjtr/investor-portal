@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             fullName: payloadData.fullName,
                             phone: payloadData.phone,
                             location: securityData.location,
-                            ip: securityData.ip
+                            ip: securityData.ip,
+                            userAgent: navigator.userAgent    // 👈 السطر الجديد لالتقاط بيانات الجهاز والمتصفح
                         })
                     });
 
@@ -166,27 +167,3 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 setTimeout(() => {
                     // تحويل المستثمر لصفحة التحقق
-                    window.location.replace('../verify-otp/verify.html');
-                }, 1500);
-
-            } catch (error) {
-                console.error("[Registration Engine] Critical Technical Error:", error);
-                attemptCount++;
-                showNotification("حدث خطأ فني أثناء معالجة الطلب، يرجى المحاولة لاحقاً.", "error");
-                // توثيق الخطأ الفني الحرج
-                logSecurityEvent(payloadData.email, "system_error", "failed", securityData, `خطأ فني: ${error.message}`);
-                resetButton(registerBtn);
-            }
-        });
-    }
-
-    /**
-     * إعادة تعيين حالة الزر عند حدوث خطأ أو تنبيه
-     */
-    function resetButton(btn) {
-        if (!btn) return;
-        btn.disabled = false;
-        btn.classList.remove('animate-pulse');
-        btn.innerHTML = `<span>إنشاء الحساب الاستثماري</span>`;
-    }
-});
