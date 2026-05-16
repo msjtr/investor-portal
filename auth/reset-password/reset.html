@@ -97,21 +97,18 @@
     <script type="module">
         import { getCustomerName } from '../../js/core.js';
         import { getFromStorage } from '../../shared/scripts/storage.js';
-
-        // استدعاء نظام الأيقونات التفاعلية المشترك لتغذية عناصر الأمان في الصفحة
-        async function loadIconsEngine() {
-            try {
-                const iconsModule = await import('../../shared/scripts/icons.js');
-                if (iconsModule && typeof iconsModule.initIcons === 'function') {
-                    iconsModule.initIcons();
-                }
-            } catch (iconErr) {
-                console.warn("[Icons Engine] System loading or standard export pending:", iconErr);
-            }
-        }
+        import { initIcons } from '../../shared/scripts/icons.js';
 
         async function initResetPage() {
             try {
+                // التأكد من أن المستخدم وصل لهذه الصفحة بطريقة شرعية
+                const authMode = getFromStorage('auth_mode');
+                if (authMode !== 'reset_password' && authMode !== 'otp_verified') {
+                    console.warn("[Security] وصول غير مصرح به. العودة لصفحة الدخول.");
+                    window.location.replace('../login/login.html');
+                    return;
+                }
+
                 const email = getFromStorage('pending_email') || new URLSearchParams(window.location.search).get('email');
                 if (email) {
                     const name = await getCustomerName(email);
@@ -121,10 +118,11 @@
                     }
                 }
             } catch (error) {
-                console.warn("[Reset View Init] Storage or core connection pending:", error);
+                console.warn("[Reset View Init] Data connection pending:", error);
             }
-            // تشغيل محرك الأيقونات فور بناء عناصر DOM الـ Auth
-            await loadIconsEngine();
+            
+            // حقن الأيقونات بعد بناء الواجهة
+            try { initIcons(); } catch (e) {}
         }
         
         document.addEventListener('DOMContentLoaded', initResetPage);
