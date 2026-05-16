@@ -17,13 +17,7 @@
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     
     <link rel="stylesheet" href="verify.css">
-    
-    <script src="../../shared/scripts/storage.js"></script>
-    <script src="../../shared/scripts/constants.js"></script>
-    <script src="../../shared/scripts/auth-guard.js"></script>
-    <script src="../../shared/scripts/icons.js"></script>
-    <script src="../../shared/scripts/helpers.js"></script>
-</head>
+    </head>
 <body class="animate-fade-in">
 
     <div class="auth-wrapper">
@@ -84,39 +78,71 @@
         </div>
     </div>
 
-    <script src="../../shared/scripts/api.js"></script>
-    <script src="../../shared/scripts/validation.js"></script>
-    <script src="../../shared/scripts/notifications.js"></script>
-    
     <script type="module">
         import { sendLoginRequest, getCustomerName } from '../../js/core.js';
         import { getFromStorage } from '../../shared/scripts/storage.js';
+        import { showNotification } from '../../shared/scripts/notifications.js';
 
         // 1. تخصيص رسالة الترحيب باسم العميل
         async function personalizeGreeting() {
-            const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
-            if (email) {
-                const name = await getCustomerName(email);
-                document.getElementById('verifyMessage').innerText = `مرحباً بك يا ${name}، الرجاء إدخال الرمز المرسل لإيميلك.`;
+            try {
+                const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
+                if (email) {
+                    const name = await getCustomerName(email);
+                    document.getElementById('verifyMessage').innerText = `مرحباً بك يا ${name}، الرجاء إدخال الرمز المرسل لإيميلك.`;
+                }
+            } catch (err) {
+                console.warn("[Verify Engine] Name fetch fallback triggered.");
             }
         }
 
-        // 2. تفعيل زر إعادة الإرسال عبر النواة
-        document.getElementById('resendBtn').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
-            if (email) {
-                const success = await sendLoginRequest(email);
-                if (success) {
-                    console.log("تم إعادة الإرسال بنجاح");
+        // 2. تفعيل زر إعادة الإرسال عبر النواة مع التأثير البصري
+        const resendBtn = document.getElementById('resendBtn');
+        if (resendBtn) {
+            resendBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
+                
+                if (email) {
+                    resendBtn.disabled = true;
+                    resendBtn.innerText = "جاري الإرسال...";
+                    
+                    const success = await sendLoginRequest(email);
+                    
+                    if (success) {
+                        showNotification("تم إعادة إرسال الرمز بنجاح", "success");
+                        resendBtn.innerText = "تم الإرسال";
+                        // منع إعادة الإرسال المزعج لمدة دقيقة
+                        setTimeout(() => {
+                            resendBtn.disabled = false;
+                            resendBtn.innerText = "إعادة إرسال";
+                        }, 60000);
+                    } else {
+                        showNotification("فشل الإرسال، يرجى الانتظار والمحاولة لاحقاً", "error");
+                        resendBtn.disabled = false;
+                        resendBtn.innerText = "إعادة إرسال";
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        personalizeGreeting();
+        // 3. حقن الأيقونات بعد رندرة الواجهة
+        async function loadIconsEngine() {
+            try {
+                const iconsModule = await import('../../shared/scripts/icons.js');
+                if (iconsModule && typeof iconsModule.initIcons === 'function') {
+                    iconsModule.initIcons();
+                }
+            } catch (iconErr) { console.warn("[Icons Engine] Pending...", iconErr); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            personalizeGreeting();
+            loadIconsEngine();
+        });
     </script>
 
-    <script src="verify.js"></script>
+    <script type="module" src="verify.js"></script>
 
 </body>
 </html>
