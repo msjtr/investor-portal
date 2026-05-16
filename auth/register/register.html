@@ -6,7 +6,7 @@
     <title>إنشاء حساب استثماري | بوابة المستثمر في منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <meta property="og:title" content="بوابة المستثمر في منصة تيرا | إنشاء حساب">
+    <meta property="og:title" content="BETA | بوابة المستثمر في منصة تيرا | إنشاء حساب">
     <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء وأمان سيبراني متقدم عبر منصة تيرا — عالمك بلا حدود.">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -94,6 +94,18 @@
 
         </div>
     </div>
+
+    <script type="module">
+        import { initIcons } from '../../shared/scripts/icons.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                initIcons();
+            } catch (err) {
+                console.warn("[Icons Engine] System loading pending or bypassed:", err);
+            }
+        });
+    </script>
 
     <script type="module" src="register.js"></script>
 
