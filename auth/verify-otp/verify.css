@@ -1,7 +1,7 @@
 /* ==========================================================================
    OTP Verification Page Styles
    Path: investor-portal/auth/verify-otp/verify.css
-   Style: Glassmorphism / Modern Identity
+   Style: Glassmorphism / Modern Identity - TERA
    ========================================================================== */
 
 /* زر الرجوع الدائري - تصميم عائم مع توهج (Neon Glow) */
@@ -12,10 +12,10 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: rgba(56, 189, 248, 0.1); /* خلفية زجاجية شفافة */
+    background: rgba(56, 189, 248, 0.1);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    color: var(--primary-color, #38bdf8);
+    color: var(--primary, #38bdf8);
     border: 1px solid rgba(56, 189, 248, 0.3);
     display: flex;
     align-items: center;
@@ -26,18 +26,18 @@
 }
 
 .back-btn-circular:hover {
-    background: var(--primary-color, #38bdf8);
-    color: #0A192F; /* لون داكن للتباين عند التحويم */
+    background: var(--primary, #38bdf8);
+    color: #0A192F;
     transform: rotate(-15deg) scale(1.15);
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
 }
 
-/* حاوية خانات الـ OTP - اتجاه ثابت لضمان سلاسة الإدخال */
+/* حاوية خانات الـ OTP */
 .otp-container {
     display: flex;
     justify-content: center;
     gap: 12px;
-    direction: ltr; /* إجباري لضمان ترتيب الأرقام */
+    direction: ltr;
     margin: 2rem 0;
 }
 
@@ -56,17 +56,15 @@
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* حالة التركيز (Focus) - استجابة بصرية مذهلة */
+/* حالة التركيز (Focus) */
 .otp-input:focus {
     outline: none;
-    border-color: var(--primary-color, #38bdf8);
+    border-color: var(--primary, #38bdf8);
     background: rgba(56, 189, 248, 0.08);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3), 
-                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
     transform: translateY(-4px);
 }
 
-/* تمييز الخانة المكتملة */
 .otp-input:not(:placeholder-shown) {
     border-color: rgba(56, 189, 248, 0.6);
     background: rgba(56, 189, 248, 0.05);
@@ -75,22 +73,20 @@
 /* تخصيص العداد التنازلي */
 #countdown {
     letter-spacing: 1px;
-    font-variant-numeric: tabular-nums; /* تمنع اهتزاز الأرقام أثناء العد */
+    font-variant-numeric: tabular-nums;
 }
 
-/* كلاس الخطأ عند انتهاء الوقت */
 .text-error {
-    color: #ff4d4d !important;
+    color: var(--error-color, #ef4444) !important;
     animation: pulse-red 1.5s infinite;
 }
 
 @keyframes pulse-red {
-    0% { opacity: 1; }
+    0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
-    100% { opacity: 1; }
 }
 
-/* زر إعادة الإرسال */
+/* زر إعادة الإرسال والتنبيهات */
 #resendBtn {
     background: none;
     border: none;
@@ -107,33 +103,17 @@
 
 #resendBtn:not(:disabled):hover {
     color: #ffffff !important;
-    text-shadow: 0 0 8px var(--primary-color);
+    text-shadow: 0 0 8px var(--primary, #38bdf8);
 }
 
-/* ==========================================================================
-   Responsive Design - التجاوب الذكي
-   ========================================================================== */
+/* التجاوب الذكي للشاشات */
 @media (max-width: 480px) {
     .otp-container { gap: 8px; }
-    .otp-input {
-        width: 40px;
-        height: 48px;
-        font-size: 1.25rem;
-        border-radius: 8px;
-    }
-    .back-btn-circular {
-        top: 15px;
-        right: 15px;
-        width: 38px;
-        height: 38px;
-    }
+    .otp-input { width: 40px; height: 48px; font-size: 1.25rem; border-radius: 8px; }
+    .back-btn-circular { top: 15px; right: 15px; width: 38px; height: 38px; }
 }
 
 @media (max-width: 350px) {
     .otp-container { gap: 5px; }
-    .otp-input {
-        width: 35px;
-        height: 42px;
-        font-size: 1.1rem;
-    }
+    .otp-input { width: 35px; height: 42px; font-size: 1.1rem; }
 }
