@@ -13,6 +13,9 @@ import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.j
 import { showNotification } from '../../shared/scripts/notifications.js';
 import { validateEmail, validateSaudiPhone, validateName } from '../../shared/scripts/validation.js';
 
+// رابط الويب هوك الخاص بمنصة Make (المسار الموحد)
+const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/czm13rtz2r49er30mxqtkwumncg8hn13';
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const registerBtn = document.getElementById('registerBtn');
@@ -110,7 +113,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 7. حفظ بيانات المستثمر الجديد في النواة المركزية بـ Firebase
+                // 7. إرسال الطلب لـ Make (نظام الـ 5 مسارات) قبل حفظ البيانات لضمان الإرسال
+                try {
+                    const makeResponse = await fetch(MAKE_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            flow_type: 'account_creation',    // يوجه الراوتر الأخضر
+                            process_type: 'new_account_otp',  // يحدد نوع القالب
+                            email: payloadData.email,
+                            fullName: payloadData.fullName,
+                            phone: payloadData.phone,
+                            location: securityData.location,
+                            ip: securityData.ip
+                        })
+                    });
+
+                    if (!makeResponse.ok) {
+                        throw new Error("Server rejected the request");
+                    }
+                } catch (webhookErr) {
+                    console.error("[Automation Engine] Webhook communication failed:", webhookErr);
+                    showNotification("تعذر الاتصال بخادم إرسال الرموز، يرجى المحاولة لاحقاً.", "error");
+                    resetButton(registerBtn);
+                    return; // إيقاف العملية إذا فشل إرسال الكود
+                }
+
+                // 8. حفظ بيانات المستثمر الجديد في النواة المركزية بـ Firebase (بعد نجاح Make)
                 await addDoc(collection(db, "users"), {
                     fullName: payloadData.fullName,
                     email: payloadData.email,
@@ -121,35 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     createdAt: new Date().toISOString()
                 });
 
-                // 8. إرسال إشعار الأتمتة لـ Make (في كتل منفصلة لضمان عدم حظر العملية عند تعطل الويب هوك)
-                const webhookUrl = 'YOUR_MAKE_WEBHOOK_URL'; 
-                if (webhookUrl && webhookUrl !== 'YOUR_MAKE_WEBHOOK_URL') {
-                    try {
-                        fetch(webhookUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                action: 'new_registration',
-                                payload: {
-                                    email: payloadData.email,
-                                    fullName: payloadData.fullName,
-                                    phone: payloadData.phone,
-                                    location: securityData.location,
-                                    ip: securityData.ip
-                                }
-                            })
-                        });
-                    } catch (webhookErr) {
-                        console.warn("[Automation Engine] Webhook communication failed:", webhookErr);
-                    }
-                }
-
-                // 9. تخزين الجلسة المؤقتة والتوجه لصفحة تسجيل الدخول بنجاح
+                // 9. تخزين الجلسة المؤقتة والتوجه لصفحة التحقق من الـ OTP
                 saveToStorage('pending_email', payloadData.email);
-                showNotification("أهلاً بك في منصة تيرا! تم إنشاء حسابك الاستثماري بنجاح ✅", "success");
+                showNotification("تم إرسال كود التفعيل لبريدك بنجاح ✅", "success");
                 
                 setTimeout(() => {
-                    window.location.replace('../login/login.html');
+                    // تحويل المستثمر لصفحة التحقق (تأكد أن مسار الملف صحيح في مشروعك)
+                    window.location.replace('../verify-otp/verify.html');
                 }, 1500);
 
             } catch (error) {
