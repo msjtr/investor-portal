@@ -56,17 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
             setLoadingState(forgotBtn, true);
             if (emailInput) emailInput.disabled = true;
 
-            // 3. التقاط الـ IP والموقع الجغرافي لتوثيق الإشعار الأمني (Security Layer)
+            // 3. التقاط الـ IP والموقع الجغرافي (تحديث ipwho.is لتفادي الـ CORS)
             let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
             try {
-                const geoResponse = await fetch('https://ipapi.co/json/');
+                const geoResponse = await fetch('https://ipwho.is/');
                 if (geoResponse.ok) {
                     const geoData = await geoResponse.json();
-                    securityData.ip = geoData.ip;
-                    securityData.location = geoData.city && geoData.country_name ? `${geoData.city}, ${geoData.country_name}` : securityData.location;
+                    if (geoData.success) {
+                        securityData.ip = geoData.ip || securityData.ip;
+                        securityData.location = geoData.city && geoData.country ? `${geoData.city}, ${geoData.country}` : securityData.location;
+                    }
                 }
             } catch (geoErr) {
-                console.warn("[Security Engine] Geo-fetch failed for Forgot:", geoErr);
+                console.warn("[Security Engine] Geo-fetch bypassed:", geoErr);
             }
 
             try {
@@ -98,7 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             email: email,
                             fullName: fullName,
                             location: securityData.location,
-                            ip: securityData.ip
+                            ip: securityData.ip,
+                            userAgent: navigator.userAgent  // 👈 جلب بيانات المتصفح للإيميل
                         })
                     });
 
