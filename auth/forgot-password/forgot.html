@@ -15,14 +15,13 @@
     <link rel="stylesheet" href="../../shared/styles/animations.css">
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     <link rel="stylesheet" href="forgot.css">
-    
-    </head>
+</head>
 <body class="animate-fade-in">
 
     <div class="auth-wrapper">
         <div class="auth-card forgot-card animate-slide-up">
             
-            <button onclick="window.location.replace('../login/login.html')" class="btn-back-circle" title="العودة لتسجيل الدخول">
+            <button type="button" onclick="window.location.replace('../login/login.html')" class="btn-back-circle" title="العودة لتسجيل الدخول">
                 <span class="flex-center" data-icon="back"></span>
             </button>
 
@@ -66,64 +65,18 @@
     </div>
 
     <script type="module">
-        import { sendLoginRequest } from '../../js/core.js';
-        import { showNotification } from '../../shared/scripts/notifications.js';
-        import { saveToStorage } from '../../shared/scripts/storage.js';
-
-        // محرك حقن الأيقونات الديناميكي الذكي
-        async function loadIcons() {
-            try {
-                const iconsModule = await import('../../shared/scripts/icons.js');
-                if (iconsModule && typeof iconsModule.initIcons === 'function') {
-                    iconsModule.initIcons();
-                }
-            } catch (err) { console.warn("[Icons Engine] System loading pending:", err); }
-        }
-
+        import { initIcons } from '../../shared/scripts/icons.js';
+        
         document.addEventListener('DOMContentLoaded', () => {
-            loadIcons();
-
-            const forgotForm = document.getElementById('forgotForm');
-            const forgotBtn = document.getElementById('forgotBtn');
-
-            if (forgotForm) {
-                forgotForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    const emailInput = document.getElementById('email');
-                    if (!emailInput) return;
-
-                    const email = emailInput.value.trim().toLowerCase();
-                    
-                    forgotBtn.disabled = true;
-                    forgotBtn.innerHTML = '<span>جاري التحقق من الحساب...</span>';
-
-                    try {
-                        const success = await sendLoginRequest(email);
-
-                        if (success) {
-                            saveToStorage('auth_mode', 'reset_password');
-                            saveToStorage('pending_email', email);
-                            
-                            showNotification("تم إرسال كود التحقق بنجاح", "success");
-                            
-                            setTimeout(() => {
-                                window.location.href = `../verify-otp/verify.html?email=${encodeURIComponent(email)}&mode=reset`;
-                            }, 1500);
-                        } else {
-                            showNotification("يرجى التأكد من البريد الإلكتروني المدخل", "error");
-                            forgotBtn.disabled = false;
-                            forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
-                        }
-                    } catch (error) {
-                        console.error("Forgot Password Error:", error);
-                        showNotification("حدث خطأ فني في الاتصال، يرجى المحاولة لاحقاً", "error");
-                        forgotBtn.disabled = false;
-                        forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
-                    }
-                });
+            try {
+                initIcons();
+            } catch (err) {
+                console.warn("[Icons Engine] System loading pending:", err);
             }
         });
     </script>
+
+    <script type="module" src="forgot.js"></script>
+
 </body>
 </html>
