@@ -38,7 +38,7 @@
 .btn-back-circle:hover {
     background: var(--primary, #38bdf8);
     color: #0a192f;
-    transform: translateX(-5px) scale(1.05); /* حركة بسيطة لليمين بما أن الاتجاه RTL */
+    transform: translateX(-5px) scale(1.05); /* حركة لليمين متوافقة مع الـ RTL */
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
 }
 
@@ -109,15 +109,22 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* تأثير الاهتزاز البصري اللحظي عند الخطأ المحقن برمجياً */
+.input-error .auth-input {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.05) !important;
+    animation: shakeError 0.4s ease-in-out;
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+}
+
 /* استجابة الشاشات الصغيرة */
 @media (max-width: 480px) {
-    .forgot-card {
-        padding: 30px 20px;
-    }
-    .btn-back-circle {
-        top: 15px;
-        right: 15px;
-        width: 35px;
-        height: 35px;
-    }
+    .forgot-card { padding: 30px 20px; }
+    .btn-back-circle { top: 15px; right: 15px; width: 35px; height: 35px; }
 }
