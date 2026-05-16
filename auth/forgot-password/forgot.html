@@ -16,12 +16,7 @@
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     <link rel="stylesheet" href="forgot.css">
     
-    <script src="../../shared/scripts/storage.js"></script>
-    <script src="../../shared/scripts/constants.js"></script>
-    <script src="../../shared/scripts/auth-guard.js"></script>
-    <script src="../../shared/scripts/icons.js"></script>
-    <script src="../../shared/scripts/helpers.js"></script>
-</head>
+    </head>
 <body class="animate-fade-in">
 
     <div class="auth-wrapper">
@@ -70,54 +65,65 @@
         </div>
     </div>
 
-    <script src="../../shared/scripts/api.js"></script>
-    <script src="../../shared/scripts/validation.js"></script>
-    <script src="../../shared/scripts/notifications.js"></script>
-    
     <script type="module">
         import { sendLoginRequest } from '../../js/core.js';
         import { showNotification } from '../../shared/scripts/notifications.js';
         import { saveToStorage } from '../../shared/scripts/storage.js';
 
-        const forgotForm = document.getElementById('forgotForm');
-        const forgotBtn = document.getElementById('forgotBtn');
-
-        forgotForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim().toLowerCase();
-            
-            // تفعيل حالة التحميل
-            forgotBtn.disabled = true;
-            forgotBtn.innerHTML = '<span>جاري التحقق من الحساب...</span>';
-
+        // محرك حقن الأيقونات الديناميكي الذكي
+        async function loadIcons() {
             try {
-                // استخدام دالة النواة لإرسال كود التحقق (تعمل للاستعادة أيضاً)
-                const success = await sendLoginRequest(email);
-
-                if (success) {
-                    // حفظ نوع العملية كـ "استعادة" لتوجيه العميل لصفحة تغيير الباسوورد لاحقاً
-                    saveToStorage('auth_mode', 'reset_password');
-                    saveToStorage('pending_email', email);
-                    
-                    showNotification("تم إرسال كود التحقق بنجاح", "success");
-                    
-                    setTimeout(() => {
-                        window.location.href = `../verify-otp/verify.html?email=${encodeURIComponent(email)}&mode=reset`;
-                    }, 1500);
-                } else {
-                    showNotification("يرجى التأكد من البريد الإلكتروني المدخل", "error");
-                    forgotBtn.disabled = false;
-                    forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
+                const iconsModule = await import('../../shared/scripts/icons.js');
+                if (iconsModule && typeof iconsModule.initIcons === 'function') {
+                    iconsModule.initIcons();
                 }
-            } catch (error) {
-                console.error("Forgot Password Error:", error);
-                showNotification("حدث خطأ، يرجى المحاولة لاحقاً", "error");
-                forgotBtn.disabled = false;
-                forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
+            } catch (err) { console.warn("[Icons Engine] System loading pending:", err); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadIcons();
+
+            const forgotForm = document.getElementById('forgotForm');
+            const forgotBtn = document.getElementById('forgotBtn');
+
+            if (forgotForm) {
+                forgotForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const emailInput = document.getElementById('email');
+                    if (!emailInput) return;
+
+                    const email = emailInput.value.trim().toLowerCase();
+                    
+                    forgotBtn.disabled = true;
+                    forgotBtn.innerHTML = '<span>جاري التحقق من الحساب...</span>';
+
+                    try {
+                        const success = await sendLoginRequest(email);
+
+                        if (success) {
+                            saveToStorage('auth_mode', 'reset_password');
+                            saveToStorage('pending_email', email);
+                            
+                            showNotification("تم إرسال كود التحقق بنجاح", "success");
+                            
+                            setTimeout(() => {
+                                window.location.href = `../verify-otp/verify.html?email=${encodeURIComponent(email)}&mode=reset`;
+                            }, 1500);
+                        } else {
+                            showNotification("يرجى التأكد من البريد الإلكتروني المدخل", "error");
+                            forgotBtn.disabled = false;
+                            forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
+                        }
+                    } catch (error) {
+                        console.error("Forgot Password Error:", error);
+                        showNotification("حدث خطأ فني في الاتصال، يرجى المحاولة لاحقاً", "error");
+                        forgotBtn.disabled = false;
+                        forgotBtn.innerHTML = '<span>إرسال كود الاستعادة</span>';
+                    }
+                });
             }
         });
     </script>
-
 </body>
 </html>
