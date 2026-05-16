@@ -35,11 +35,13 @@
                 <div class="input-group">
                     <div class="input-header flex-between mb-5">
                         <label for="newPassword">كلمة المرور الجديدة</label>
-                        <span id="toggleNewPass" class="toggle-password-text" style="cursor: pointer;">عرض</span>
                     </div>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" style="position: relative;">
                         <span class="input-icon" data-icon="lock"></span>
                         <input type="password" id="newPassword" class="auth-input" placeholder="أدخل كلمة المرور الجديدة" required autofocus autocomplete="new-password">
+                        <button type="button" id="toggleNewPass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.6; display: flex; align-items: center; padding: 5px;">
+                            <span data-icon="eye"></span>
+                        </button>
                     </div>
                 </div>
 
@@ -67,11 +69,13 @@
                 <div class="input-group mt-15">
                     <div class="input-header flex-between mb-5">
                         <label for="confirmPassword">تأكيد كلمة المرور</label>
-                        <span id="toggleConfirmPass" class="toggle-password-text" style="cursor: pointer;">عرض</span>
                     </div>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" style="position: relative;">
                         <span class="input-icon" data-icon="lock"></span>
                         <input type="password" id="confirmPassword" class="auth-input" placeholder="أعد إدخال كلمة المرور للمطابقة" required autocomplete="new-password">
+                        <button type="button" id="toggleConfirmPass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.6; display: flex; align-items: center; padding: 5px;">
+                            <span data-icon="eye"></span>
+                        </button>
                     </div>
                     <span id="matchError" class="text-danger text-xs font-bold mt-5 hidden block text-right">كلمتا المرور غير متطابقتين</span>
                 </div>
@@ -101,30 +105,20 @@
 
         async function initResetPage() {
             try {
-                // التأكد من أن المستخدم وصل لهذه الصفحة بطريقة شرعية
                 const authMode = getFromStorage('auth_mode');
                 if (authMode !== 'reset_password' && authMode !== 'otp_verified') {
                     console.warn("[Security] وصول غير مصرح به. العودة لصفحة الدخول.");
-                    window.location.replace('../login/login.html');
-                    return;
+                    window.location.replace('../login/login.html'); return;
                 }
-
                 const email = getFromStorage('pending_email') || new URLSearchParams(window.location.search).get('email');
                 if (email) {
                     const name = await getCustomerName(email);
                     const welcomeElem = document.getElementById('welcomeMsg');
-                    if (welcomeElem) {
-                        welcomeElem.innerText = `يا هلا يا ${name}، قم بتعيين كلمة مرور قوية لحماية استثماراتك.`;
-                    }
+                    if (welcomeElem && name) { welcomeElem.innerText = `يا هلا يا ${name}، قم بتعيين كلمة مرور قوية لحماية استثماراتك.`; }
                 }
-            } catch (error) {
-                console.warn("[Reset View Init] Data connection pending:", error);
-            }
-            
-            // حقن الأيقونات بعد بناء الواجهة
+            } catch (error) { console.warn("[Reset View Init] Pending:", error); }
             try { initIcons(); } catch (e) {}
         }
-        
         document.addEventListener('DOMContentLoaded', initResetPage);
     </script>
 
