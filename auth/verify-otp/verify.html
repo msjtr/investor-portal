@@ -17,13 +17,13 @@
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     
     <link rel="stylesheet" href="verify.css">
-    </head>
+</head>
 <body class="animate-fade-in">
 
     <div class="auth-wrapper">
         <div class="auth-card animate-slide-up position-relative">
             
-            <button type="button" id="backBtn" class="back-btn-circular" title="العودة للصفحة السابقة" aria-label="رجوع" onclick="window.history.back()">
+            <button type="button" id="backBtn" class="back-btn-circular" title="العودة للصفحة السابقة" aria-label="رجوع">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
@@ -61,7 +61,7 @@
 
             <div class="resend-container text-center mt-20 pt-15 border-top">
                 <p class="text-white text-xs m-0">لم يصلك الرمز؟ 
-                    <button id="resendBtn" class="register-link text-dim font-bold" style="background: none; border: none; cursor: pointer;">إعادة إرسال</button>
+                    <button id="resendBtn" class="register-link text-dim font-bold" style="background: none; border: none; cursor: pointer; padding: 0;">إعادة إرسال</button>
                 </p>
             </div>
 
@@ -79,61 +79,34 @@
     </div>
 
     <script type="module">
-        import { sendLoginRequest, getCustomerName } from '../../js/core.js';
+        import { getCustomerName } from '../../js/core.js';
         import { getFromStorage } from '../../shared/scripts/storage.js';
-        import { showNotification } from '../../shared/scripts/notifications.js';
 
-        // 1. تخصيص رسالة الترحيب باسم العميل
+        // 1. تخصيص رسالة الترحيب باسم العميل الآتي من النواة
         async function personalizeGreeting() {
             try {
                 const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
                 if (email) {
                     const name = await getCustomerName(email);
-                    document.getElementById('verifyMessage').innerText = `مرحباً بك يا ${name}، الرجاء إدخال الرمز المرسل لإيميلك.`;
+                    if (name) {
+                        document.getElementById('verifyMessage').innerText = `مرحباً بك يا ${name}، الرجاء إدخال الرمز المرسل لإيميلك.`;
+                    }
                 }
             } catch (err) {
                 console.warn("[Verify Engine] Name fetch fallback triggered.");
             }
         }
 
-        // 2. تفعيل زر إعادة الإرسال عبر النواة مع التأثير البصري
-        const resendBtn = document.getElementById('resendBtn');
-        if (resendBtn) {
-            resendBtn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const email = new URLSearchParams(window.location.search).get('email') || getFromStorage('pending_email');
-                
-                if (email) {
-                    resendBtn.disabled = true;
-                    resendBtn.innerText = "جاري الإرسال...";
-                    
-                    const success = await sendLoginRequest(email);
-                    
-                    if (success) {
-                        showNotification("تم إعادة إرسال الرمز بنجاح", "success");
-                        resendBtn.innerText = "تم الإرسال";
-                        // منع إعادة الإرسال المزعج لمدة دقيقة
-                        setTimeout(() => {
-                            resendBtn.disabled = false;
-                            resendBtn.innerText = "إعادة إرسال";
-                        }, 60000);
-                    } else {
-                        showNotification("فشل الإرسال، يرجى الانتظار والمحاولة لاحقاً", "error");
-                        resendBtn.disabled = false;
-                        resendBtn.innerText = "إعادة إرسال";
-                    }
-                }
-            });
-        }
-
-        // 3. حقن الأيقونات بعد رندرة الواجهة
+        // 2. حقن موديول الأيقونات المركزي
         async function loadIconsEngine() {
             try {
                 const iconsModule = await import('../../shared/scripts/icons.js');
                 if (iconsModule && typeof iconsModule.initIcons === 'function') {
                     iconsModule.initIcons();
                 }
-            } catch (iconErr) { console.warn("[Icons Engine] Pending...", iconErr); }
+            } catch (iconErr) { 
+                console.warn("[Icons Engine] Pending...", iconErr); 
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
