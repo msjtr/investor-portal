@@ -38,7 +38,7 @@
 
 .forgot-password-link:hover, .register-link:hover {
     color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6); /* إكمال التوهج السماوي */
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 
 /* 4. تنسيق زر إظهار/إخفاء كلمة المرور (أيقونة العين) */
@@ -50,7 +50,7 @@
 #togglePassword:hover {
     opacity: 1 !important;
     color: var(--primary, #38bdf8);
-    transform: translateY(-50%) scale(1.1); /* تكبير خفيف عند التحويم */
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* 5. تنسيق صندوق التنويه الأمني (Zero Trust Notice) */
