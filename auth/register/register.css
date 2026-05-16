@@ -33,11 +33,11 @@
 
 /* تصميم حقل الإدخال بنمط الزجاج المصقول */
 .auth-input {
-    height: 48px; /* تقليل الارتفاع قليلاً للملاءمة */
+    height: 48px;
     background: rgba(15, 23, 42, 0.6) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 10px !important;
-    padding: 0 45px 0 15px !important; /* مساحة للأيقونة */
+    padding: 0 45px 0 15px !important; /* مساحة ثابتة للأيقونة الأساسية باليمين */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: #ffffff;
     width: 100%;
@@ -48,10 +48,21 @@
 .auth-input:focus {
     background: rgba(15, 23, 42, 0.8) !important;
     border-color: var(--primary, #38bdf8) !important;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), 
-                inset 0 0 5px rgba(56, 189, 248, 0.1) !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), inset 0 0 5px rgba(56, 189, 248, 0.1) !important;
     transform: translateY(-1px);
     outline: none;
+}
+
+/* التنسيق المتوافق مع زر الأيقونة التفاعلي (العين) في اليسار */
+#togglePassword {
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+#togglePassword:hover {
+    opacity: 1 !important;
+    color: var(--primary, #38bdf8);
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* منطقة الموافقة على الشروط - أسلوب زجاجي ناعم */
@@ -94,7 +105,6 @@
     color: #ffffff;
 }
 
-/* تفعيل نمط التحميل والنبض المربوط برمجياً في السكربت */
 .btn-primary:disabled {
     background: rgba(255, 255, 255, 0.1) !important;
     color: rgba(255, 255, 255, 0.3) !important;
@@ -143,22 +153,11 @@
 
 /* تجاوب الجوال للهياكل الطويلة والضيقة */
 @media (max-height: 800px) {
-    .auth-card {
-        padding: 20px !important;
-    }
-    .auth-header h2 {
-        font-size: 1.2rem;
-        margin-top: 10px;
-    }
+    .auth-card { padding: 20px !important; }
+    .auth-header h2 { font-size: 1.2rem; margin-top: 10px; }
 }
 
 @media (max-width: 480px) {
-    .auth-input {
-        padding: 0 40px 0 12px !important;
-        font-size: 0.9rem;
-    }
-    .btn-primary {
-        height: 50px;
-        font-size: 0.95rem;
-    }
+    .auth-input { padding: 0 40px 0 12px !important; font-size: 0.9rem; }
+    .btn-primary { height: 50px; font-size: 0.95rem; }
 }
