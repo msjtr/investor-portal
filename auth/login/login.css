@@ -38,4 +38,47 @@
 
 .forgot-password-link:hover, .register-link:hover {
     color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(56, 189, 2
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6); /* إكمال التوهج السماوي */
+}
+
+/* 4. تنسيق زر إظهار/إخفاء كلمة المرور (أيقونة العين) */
+#togglePassword {
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+#togglePassword:hover {
+    opacity: 1 !important;
+    color: var(--primary, #38bdf8);
+    transform: translateY(-50%) scale(1.1); /* تكبير خفيف عند التحويم */
+}
+
+/* 5. تنسيق صندوق التنويه الأمني (Zero Trust Notice) */
+.security-notice {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(56, 189, 248, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.security-notice:hover {
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 6. تأثير الاهتزاز البصري عند الخطأ في تسجيل الدخول (Micro-interaction) */
+.input-error {
+    animation: shakeError 0.4s ease-in-out;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2) !important;
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+}
