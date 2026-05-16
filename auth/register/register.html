@@ -60,9 +60,13 @@
                     <div class="input-header flex-between mb-5">
                         <label for="password">كلمة المرور</label>
                     </div>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" style="position: relative;">
                         <span class="input-icon" data-icon="lock"></span>
                         <input type="password" id="password" class="auth-input" placeholder="أدخل كلمة مرور قوية" required autocomplete="new-password">
+                        
+                        <button type="button" id="togglePassword" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.6; display: flex; align-items: center; justify-content: center; padding: 5px;">
+                            <span data-icon="eye"></span>
+                        </button>
                     </div>
                 </div>
 
