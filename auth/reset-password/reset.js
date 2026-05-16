@@ -1,15 +1,23 @@
 /**
  * =================================================================
  * محرك إعادة تعيين كلمة المرور (Enterprise Reset Engine) - منصة تِيرا
- * التحقق اللحظي، مؤشر القوة، وتأمين الجلسة المركزية عبر النواة
+ * التحقق اللحظي، التحديث الفعلي في النواة، السجلات الأمنية، والربط بالمسارات
  * Path: investor-portal/auth/reset-password/reset.js
  * =================================================================
  */
 
-// استيراد النواة والوظائف المساعدة حسب هيكل المشروع المشترك
+// استيراد النواة والوظائف المساعدة
 import { getCustomerName } from '../../js/core.js';
 import { getFromStorage, removeFromStorage, saveToStorage } from '../../shared/scripts/storage.js';
 import { showNotification } from '../../shared/scripts/notifications.js';
+import { logSecurityEvent } from '../../shared/scripts/logger.js'; // استدعاء المسجل الأمني
+
+// استيراد أدوات قاعدة البيانات لتحديث كلمة المرور فعلياً
+import { db } from '../../js/database.js';
+import { collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+// رابط الويب هوك الخاص بمنصة Make (المسار الموحد)
+const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/czm13rtz2r49er30mxqtkwumncg8hn13';
 
 document.addEventListener('DOMContentLoaded', async () => {
     
@@ -123,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         strengthText.innerText = texts[score];
     }
 
-    // 4. إرسال الطلب النهائي وتحديث الحالة الأمنية الجغرافية
+    // 4. إرسال الطلب النهائي والتحديث الفعلي في النواة
     if (resetForm) {
         resetForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -149,59 +157,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const fullName = await getCustomerName(pendingEmail);
                 
-                // الربط البرمجي مع موديول أتمتة Make لإرسال إشعار الأمان الناجح للمستثمر
-                const webhookUrl = 'YOUR_MAKE_WEBHOOK_URL';
-                let communicationSuccess = false;
+                // --- إضافة هامة: تحديث كلمة المرور فعلياً في قاعدة البيانات ---
+                const q = query(collection(db, "users"), where("email", "==", pendingEmail.toLowerCase()));
+                const querySnapshot = await getDocs(q);
 
-                if (webhookUrl && webhookUrl !== 'YOUR_MAKE_WEBHOOK_URL') {
-                    try {
-                        const response = await fetch(webhookUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                action: 'password_reset_success',
-                                payload: {
-                                    email: pendingEmail,
-                                    fullName: fullName,
-                                    new_password: newPassword.value
-                                },
-                                metadata: {
-                                    ip: securityData.ip,
-                                    location: securityData.location,
-                                    device: navigator.platform,
-                                    timestamp: new Date().toISOString()
-                                }
-                            })
-                        });
-                        communicationSuccess = response.ok;
-                    } catch (webhookErr) {
-                        console.warn("[Automation Engine] Webhook down or blocked:", webhookErr);
-                    }
-                } else {
-                    // مسار تمرير تلقائي في حال لم يتم ربط الويبهوك بعد لتسريع التجربة المحلية
-                    communicationSuccess = true;
-                }
-
-                if (communicationSuccess) {
-                    showNotification("تم تحديث كلمة المرور بنجاح ✅", "success");
-                    removeFromStorage('pending_email');
-                    removeFromStorage('auth_mode');
-                    saveToStorage('user_session', { email: pendingEmail, name: fullName, token: "session_verified_" + Date.now() });
-
-                    setTimeout(() => {
-                        window.location.replace('../../pages/client/dashboard/index.html');
-                    }, 2000);
-                } else {
-                    showNotification("عذراً، فشل تحديث كلمة المرور. حاول لاحقاً.", "error");
-                    resetBtn.disabled = false;
-                    resetBtn.innerHTML = `<span>تحديث كلمة المرور والدخول</span>`;
-                }
-            } catch (error) {
-                console.error("[Reset Engine] Critical exception:", error);
-                showNotification("حدث خطأ فني في الاتصال بالنواة.", "error");
-                resetBtn.disabled = false;
-                resetBtn.innerHTML = `<span>تحديث كلمة المرور والدخول</span>`;
-            }
-        });
-    }
-});
+                if (querySnapshot.empty) {
+                    showNotification("عذراً، لم يتم العثور على الحساب.", "error");
+                    logSecurityEvent(pendingEmail, "password_reset_failed", "error", securityData, "محاولة تغيير كلمة مرور لحساب غير موجود");
+                    throw new Error("User not found in
