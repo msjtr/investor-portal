@@ -1,7 +1,7 @@
 /**
  * =================================================================
  * محرك صفحة التسجيل المطور (Enterprise Registration Engine) - منصة تيرا
- * يدمج: بصمة الجهاز، النواة المركزية، توثيق الـ IP وجدار حماية السيرفرات الخارجية
+ * حل جذري لمشكلة الـ CORS والـ IP عبر قنوات Cloudflare المستقرة
  * Path: investor-portal/auth/register/register.js
  * =================================================================
  */
@@ -69,24 +69,25 @@ document.addEventListener('DOMContentLoaded', () => {
             registerBtn.classList.add('animate-pulse');
             registerBtn.innerHTML = `<span>جاري تأمين الحساب والتحقق...</span>`;
 
-            // جدار حماية ذكي لجلب البيانات الجغرافية والـ IP لمنع أي بلوك مستقبلي
+            // استخدام الحل الذهبي المستقر من Cloudflare والمقاوم تماماً للـ CORS
             let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
             try {
-                const geoResponse = await fetch('https://ipapi.co/json/');
-                if (geoResponse.ok) {
-                    const geoData = await geoResponse.json();
-                    securityData.ip = geoData.ip || securityData.ip;
-                    securityData.location = geoData.city && geoData.country_name ? `${geoData.city}, ${geoData.country_name}` : securityData.location;
-                } else {
-                    // سيرفر احتياطي ثانٍ في حال سقوط الأول
-                    const backupResponse = await fetch('https://api.ipify.org?format=json');
-                    if (backupResponse.ok) {
-                        const backupData = await backupResponse.json();
-                        securityData.ip = backupData.ip || securityData.ip;
+                const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
+                if (response.ok) {
+                    const dataText = await response.text();
+                    // تفكيك النص المستلم لاستخراج الـ IP
+                    const ipLine = dataText.split('\n').find(line => line.startsWith('ip='));
+                    if (ipLine) {
+                        securityData.ip = ipLine.split('=')[1].trim();
+                    }
+                    // استخراج كود الدولة التقريبي إذا توفر
+                    const locLine = dataText.split('\n').find(line => line.startsWith('loc='));
+                    if (locLine && locLine.split('=')[1].trim() === 'SA') {
+                        securityData.location = "Riyadh, Saudi Arabia";
                     }
                 }
             } catch (err) { 
-                console.warn("[Security Engine] Geo dynamic bypass executed:", err); 
+                console.warn("[Security Engine] Cloudflare geo bypassed:", err); 
             }
 
             try {
@@ -123,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!makeResponse.ok) throw new Error("Server rejected request");
                 } catch (webhookErr) {
                     console.error("[Automation Engine] Webhook failed:", webhookErr);
-                    showNotification("يرجى التأكد من تجديد اتصال الـ Gmail في لوحة أتمتة الرسائل والمحاولة مجدداً.", "error");
+                    showNotification("يرجى التأكد من تجديد اتصال الـ Gmail في لوحة أتمتة الرسائل (Make) والمحاولة مجدداً.", "error");
                     logSecurityEvent(payloadData.email, "webhook_failed", "error", securityData, "فشل إرسال كود الـ OTP عبر Make");
                     
                     registerBtn.disabled = false; registerBtn.classList.remove('animate-pulse');
