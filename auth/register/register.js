@@ -1,13 +1,12 @@
 /**
  * =================================================================
- * محرك صفحة التسجيل (Enterprise Registration Engine) - منصة تيرا
- * يدمج: بصمة الجهاز، النواة المركزية، توثيق الـ IP والموقع الجغرافي والسجلات الأمنية
+ * محرك صفحة التسجيل المطور (Enterprise Registration Engine) - منصة تيرا
+ * يدمج: بصمة الجهاز، النواة المركزية، توثيق الـ IP وجدار حماية السيرفرات الخارجية
  * Path: investor-portal/auth/register/register.js
  * =================================================================
  */
 
 import { db } from '../../js/database.js';
-// تم إضافة doc و setDoc لضمان تسمية المستند بالـ uid بشكل صحيح في الفايرستور
 import { collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.js';
 import { showNotification } from '../../shared/scripts/notifications.js';
@@ -70,20 +69,27 @@ document.addEventListener('DOMContentLoaded', () => {
             registerBtn.classList.add('animate-pulse');
             registerBtn.innerHTML = `<span>جاري تأمين الحساب والتحقق...</span>`;
 
+            // جدار حماية ذكي لجلب البيانات الجغرافية والـ IP لمنع أي بلوك مستقبلي
             let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
             try {
-                const geoResponse = await fetch('https://ipwho.is/');
+                const geoResponse = await fetch('https://ipapi.co/json/');
                 if (geoResponse.ok) {
                     const geoData = await geoResponse.json();
-                    if (geoData.success) {
-                        securityData.ip = geoData.ip || securityData.ip;
-                        securityData.location = geoData.city && geoData.country ? `${geoData.city}, ${geoData.country}` : securityData.location;
+                    securityData.ip = geoData.ip || securityData.ip;
+                    securityData.location = geoData.city && geoData.country_name ? `${geoData.city}, ${geoData.country_name}` : securityData.location;
+                } else {
+                    // سيرفر احتياطي ثانٍ في حال سقوط الأول
+                    const backupResponse = await fetch('https://api.ipify.org?format=json');
+                    if (backupResponse.ok) {
+                        const backupData = await backupResponse.json();
+                        securityData.ip = backupData.ip || securityData.ip;
                     }
                 }
-            } catch (err) { console.warn("[Security Engine] Geo bypassed:", err); }
+            } catch (err) { 
+                console.warn("[Security Engine] Geo dynamic bypass executed:", err); 
+            }
 
             try {
-                // 1. التحقق من عدم تكرار البريد الإلكتروني
                 const q = query(collection(db, "users"), where("email", "==", payloadData.email));
                 const querySnapshot = await getDocs(q);
 
@@ -96,10 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 2. توليد معرف مستخدم فريد (uid) ثابت ومربوط هندسياً بالعملية
                 const generatedUid = 'usr_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
 
-                // 3. إرسال البيانات الحية إلى ميك بما فيها الـ uid المتناسق
                 try {
                     const makeResponse = await fetch(MAKE_WEBHOOK_URL, {
                         method: 'POST',
@@ -107,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify({
                             flow_type: 'account_creation', 
                             process_type: 'new_account_otp',
-                            uid: generatedUid, // الكبسولة الذهبية التي تحتاجها لوحة Make الحين!
+                            uid: generatedUid, 
                             email: payloadData.email, 
                             fullName: payloadData.fullName, 
                             phone: payloadData.phone,
@@ -119,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!makeResponse.ok) throw new Error("Server rejected request");
                 } catch (webhookErr) {
                     console.error("[Automation Engine] Webhook failed:", webhookErr);
-                    showNotification("تعذر الاتصال بخادم إرسال الرموز، يرجى المحاولة لاحقاً.", "error");
+                    showNotification("يرجى التأكد من تجديد اتصال الـ Gmail في لوحة أتمتة الرسائل والمحاولة مجدداً.", "error");
                     logSecurityEvent(payloadData.email, "webhook_failed", "error", securityData, "فشل إرسال كود الـ OTP عبر Make");
                     
                     registerBtn.disabled = false; registerBtn.classList.remove('animate-pulse');
@@ -127,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 4. حفظ البيانات في الفايرستور باستخدام setDoc ليكون معرف المستند هو نفسه الـ uid
                 await setDoc(doc(db, "users", generatedUid), {
                     uid: generatedUid,
                     fullName: payloadData.fullName, 
