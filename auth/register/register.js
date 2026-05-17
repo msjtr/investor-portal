@@ -7,7 +7,8 @@
  */
 
 import { db } from '../../js/database.js';
-import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+// تم إضافة doc و setDoc لضمان تسمية المستند بالـ uid بشكل صحيح في الفايرستور
+import { collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.js';
 import { showNotification } from '../../shared/scripts/notifications.js';
 import { validateEmail, validateSaudiPhone, validateName } from '../../shared/scripts/validation.js';
@@ -82,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) { console.warn("[Security Engine] Geo bypassed:", err); }
 
             try {
+                // 1. التحقق من عدم تكرار البريد الإلكتروني
                 const q = query(collection(db, "users"), where("email", "==", payloadData.email));
                 const querySnapshot = await getDocs(q);
 
@@ -94,14 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                // 2. توليد معرف مستخدم فريد (uid) ثابت ومربوط هندسياً بالعملية
+                const generatedUid = 'usr_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+
+                // 3. إرسال البيانات الحية إلى ميك بما فيها الـ uid المتناسق
                 try {
                     const makeResponse = await fetch(MAKE_WEBHOOK_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            flow_type: 'account_creation', process_type: 'new_account_otp',
-                            email: payloadData.email, fullName: payloadData.fullName, phone: payloadData.phone,
-                            location: securityData.location, ip: securityData.ip, userAgent: navigator.userAgent
+                            flow_type: 'account_creation', 
+                            process_type: 'new_account_otp',
+                            uid: generatedUid, // الكبسولة الذهبية التي تحتاجها لوحة Make الحين!
+                            email: payloadData.email, 
+                            fullName: payloadData.fullName, 
+                            phone: payloadData.phone,
+                            location: securityData.location, 
+                            ip: securityData.ip, 
+                            userAgent: navigator.userAgent
                         })
                     });
                     if (!makeResponse.ok) throw new Error("Server rejected request");
@@ -115,9 +127,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                await addDoc(collection(db, "users"), {
-                    fullName: payloadData.fullName, email: payloadData.email, phone: payloadData.phone,
-                    role: "client", ip: securityData.ip, location: securityData.location, createdAt: new Date().toISOString()
+                // 4. حفظ البيانات في الفايرستور باستخدام setDoc ليكون معرف المستند هو نفسه الـ uid
+                await setDoc(doc(db, "users", generatedUid), {
+                    uid: generatedUid,
+                    fullName: payloadData.fullName, 
+                    email: payloadData.email, 
+                    phone: payloadData.phone,
+                    role: "client", 
+                    ip: securityData.ip, 
+                    location: securityData.location, 
+                    createdAt: new Date().toISOString()
                 });
 
                 logSecurityEvent(payloadData.email, "new_registration", "success", securityData, "تم إنشاء الحساب بنجاح وإرسال كود التفعيل");
