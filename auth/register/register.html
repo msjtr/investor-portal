@@ -15,103 +15,66 @@
     <link rel="stylesheet" href="../../shared/styles/animations.css">
     <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
     <link rel="stylesheet" href="register.css">
+
+    <style>
+        .secure-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(6, 214, 160, 0.15); color: #06D6A0; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; border: 1px solid rgba(6, 214, 160, 0.3); margin-top: 15px; }
+        
+        .phone-group { display: flex; gap: 10px; width: 100%; }
+        .phone-group select { width: 35%; padding: 0 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-family: inherit; outline: none; }
+        .phone-group select option { background: #1a103c; color: #fff; }
+        .phone-group .input-wrapper { width: 65%; }
+
+        .match-msg { font-size: 12px; margin-top: 8px; display: none; font-weight: bold; }
+        .match-msg.valid { color: #06D6A0; display: block; }
+        .match-msg.invalid { color: #ef476f; display: block; }
+        
+        .rules-box { background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .rules-box p { margin: 0 0 10px 0; font-size: 12px; color: #FFD166; font-weight: bold; }
+        .rule-item { font-size: 11.5px; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .rule-item.pass { color: #06D6A0; font-weight: bold; }
+        .rule-item.fail { color: #ef476f; }
+
+        .strength-meter { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+        .strength-bar { height: 100%; width: 0; transition: 0.4s ease; }
+        .strength-text { font-size: 11px; font-weight: bold; margin-top: 5px; text-align: left; direction: ltr; }
+
+        /* الشروط والأحكام بتصميم Accordion */
+        .agreement-section { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .agreement-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; margin-bottom: 12px; }
+        .agreement-header { display: flex; align-items: flex-start; gap: 10px; }
+        .agreement-header input[type="checkbox"] { margin-top: 4px; width: 16px; height: 16px; cursor: pointer; accent-color: #FFD166; }
+        .agreement-header label { font-size: 12.5px; color: rgba(255,255,255,0.9); line-height: 1.6; cursor: pointer; margin: 0; }
+        .toggle-btn { background: none; border: none; color: #FFD166; font-size: 11px; margin-top: 8px; padding: 0; cursor: pointer; text-decoration: underline; display: flex; align-items: center; gap: 5px; }
+        .agreement-details { display: none; font-size: 11.5px; color: rgba(255,255,255,0.6); padding: 10px 15px; margin-top: 10px; border-right: 2px solid #FFD166; background: rgba(0,0,0,0.2); line-height: 1.7; }
+
+        /* مركز الحماية */
+        .security-center { background: rgba(6, 214, 160, 0.05); border: 1px solid rgba(6, 214, 160, 0.2); border-radius: 8px; padding: 15px; margin-bottom: 25px; margin-top: 20px; }
+        .security-center h3 { color: #06D6A0; font-size: 14px; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; }
+
+        /* الإشعارات الجانبية وشاشة التحميل */
+        .notification-container { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .notification { background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); border-right: 4px solid; min-width: 280px; transform: translateX(-120%); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); font-size: 13px; font-weight: bold; color: #333; display: flex; align-items: center; gap: 10px; direction: rtl; }
+        .notification.show { transform: translateX(0); }
+        .notif-success { border-color: #06D6A0; }
+        .notif-error { border-color: #ef476f; }
+        .notif-warning { border-color: #FFD166; }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 16, 60, 0.95); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 209, 102, 0.2); border-top-color: #FFD166; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body class="animate-fade-in">
 
-    <div class="auth-wrapper">
-        <div class="auth-card animate-slide-up">
-            
-            <div class="auth-header text-center">
-                <div class="logo-container">
-                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
-                </div>
-                <h2 class="text-white font-black mt-20">بوابة المستثمر</h2>
-                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
-                <p class="text-white opacity-80 mt-10 text-xs">أنشئ حسابك الاستثماري الجديد بخطوات آمنة</p>
-            </div>
+    <div class="notification-container" id="notifContainer"></div>
 
-            <form id="registerForm" class="flex-column mt-25">
-                
-                <div class="input-group mb-15">
-                    <label for="fullName">الاسم الكامل</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon" data-icon="user"></span>
-                        <input type="text" id="fullName" class="auth-input" placeholder="مثال: محمد بن صالح الشمري" required autofocus autocomplete="name">
-                    </div>
-                </div>
-
-                <div class="input-group mb-15">
-                    <label for="email">البريد الإلكتروني</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon" data-icon="email"></span>
-                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required autocomplete="email">
-                    </div>
-                </div>
-
-                <div class="input-group mb-15">
-                    <label for="phone">رقم الجوال</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon" data-icon="phone"></span>
-                        <input type="tel" id="phone" class="auth-input" placeholder="05xxxxxxxx" required autocomplete="tel">
-                    </div>
-                </div>
-
-                <div class="input-group mb-15">
-                    <div class="input-header flex-between mb-5">
-                        <label for="password">كلمة المرور</label>
-                    </div>
-                    <div class="input-wrapper" style="position: relative;">
-                        <span class="input-icon" data-icon="lock"></span>
-                        <input type="password" id="password" class="auth-input" placeholder="أدخل كلمة مرور قوية" required autocomplete="new-password">
-                        
-                        <button type="button" id="togglePassword" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.6; display: flex; align-items: center; justify-content: center; padding: 5px;">
-                            <span data-icon="eye"></span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="register-agreement mt-10 mb-15 text-right">
-                    <label class="custom-checkbox flex-center gap-5 cursor-pointer" style="justify-content: flex-start;">
-                        <input type="checkbox" id="agreeTerms" required>
-                        <span class="text-dim text-xs">أوافق على <a href="#" class="text-primary font-bold" target="_blank">الشروط والأحكام</a> وسياسة الخصوصية</span>
-                    </label>
-                </div>
-
-                <button type="submit" id="registerBtn" class="btn-primary mt-10">
-                    <span>إنشاء الحساب الاستثماري</span>
-                </button>
-            </form>
-
-            <div class="register-footer text-center mt-20 pt-15 border-top">
-                <p class="text-white text-xs m-0">لديك حساب بالفعل؟ <a href="../login/login.html" class="register-link text-primary font-bold">سجل دخولك الآن</a></p>
-            </div>
-
-            <div class="security-notice mt-25 text-right">
-                <div class="flex-center gap-5 mb-5 text-primary">
-                    <span data-icon="shield"></span>
-                    <span class="font-bold text-xs">أمان الهوية والتدقيق (Zero Trust)</span>
-                </div>
-                <p class="text-dim text-xs m-0" style="line-height: 1.6; font-size: 0.75rem;">
-                    يقر المستخدم بأن جميع البيانات المدخلة صحيحة وتعود له شخصياً. تطبق منصة تيرا معايير التشفير والتدقيق المتقدمة لحماية بياناتك وأصولك الرقمية.
-                </p>
-            </div>
-
-        </div>
+    <div class="overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <h2 class="text-white font-bold" style="color: #FFD166;">تم إتمام التحقق وإنشاء الحساب بنجاح</h2>
+        <p class="text-white opacity-80 text-sm">جاري توجيهكم إلى صفحة تسجيل الدخول…</p>
     </div>
 
-    <script type="module">
-        import { initIcons } from '../../shared/scripts/icons.js';
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                initIcons();
-            } catch (err) {
-                console.warn("[Icons Engine] System loading pending or bypassed:", err);
-            }
-        });
-    </script>
-
-    <script type="module" src="register.js"></script>
-
-</body>
-</html>
+    <div class="auth-wrapper">
+        <div class="auth-card animate-slide-up" style="max-width: 600px;">
+            
+            <div class="auth-header text-center">
