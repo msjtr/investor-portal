@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المستثمر | منصة تيرا — عالمك بلا حدود</title>
     
-    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="./shared/styles/variables.css">
@@ -39,6 +39,13 @@
             -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             text-align: center;
+            transition: all 0.5s ease;
+        }
+
+        /* تأثير التلاشي عند الانتقال */
+        .fade-out-active {
+            opacity: 0;
+            transform: scale(0.95);
         }
 
         .loader {
@@ -65,15 +72,15 @@
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        .status-text { margin-top: 25px; font-size: 0.95rem; color: #e2e8f0; font-weight: 700; min-height: 27px; }
+        .status-text { margin-top: 25px; font-size: 0.95rem; color: #e2e8f0; font-weight: 700; min-height: 27px; transition: opacity 0.3s ease; }
         .brand-text { color: #38bdf8; font-size: 0.75rem; font-weight: 900; margin-top: 8px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="loading-wrapper">
+    <div class="loading-wrapper" id="loadingWrapper">
         <div class="logo-box">
-            <img src="./assets/images/logo.svg" alt="تِيرا" style="height: 50px; margin-bottom: 20px;">
+            <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="تِيرا" style="height: 50px; margin-bottom: 20px;">
         </div>
         <div class="loader"></div>
         <div class="status-text" id="statusText">جاري التحقق من أمان الجلسة...</div>
@@ -86,6 +93,13 @@
 
         window.addEventListener('load', () => {
             const statusElem = document.getElementById('statusText');
+            const wrapper = document.getElementById('loadingWrapper');
+
+            // دالة انتقال ناعمة (Smooth Redirect)
+            const smoothRedirect = (url) => {
+                wrapper.classList.add('fade-out-active');
+                setTimeout(() => window.location.replace(url), 500);
+            };
 
             // تأخير بوقار هندسي لمنح تجربة الأمان السيبراني فخامتها البصرية لقارئ المحفظة
             setTimeout(async () => {
@@ -94,23 +108,47 @@
                     const pendingEmail = getFromStorage('pending_email');
 
                     if (userSession && userSession.email) {
-                        const name = await getCustomerName(userSession.email);
-                        if (statusElem && name) {
-                            statusElem.innerText = `مرحباً بك يا ${name}... جاري فتح المحفظة`;
+                        let name = "";
+                        // حماية إضافية: في حال تأخر قاعدة البيانات، لا يتوقف التوجيه بل يكمل الانتقال بأمان
+                        try {
+                            name = await getCustomerName(userSession.email);
+                        } catch (nameError) {
+                            console.warn("[Router] Name fetch delayed:", nameError);
                         }
-                        setTimeout(() => window.location.replace('./pages/client/dashboard/index.html'), 800);
+
+                        if (statusElem) {
+                            statusElem.style.opacity = 0;
+                            setTimeout(() => {
+                                statusElem.innerText = name ? `مرحباً بك يا ${name}... جاري فتح المحفظة` : `مرحباً بك... جاري فتح المحفظة`;
+                                statusElem.style.opacity = 1;
+                            }, 200);
+                        }
+                        
+                        setTimeout(() => smoothRedirect('./pages/client/dashboard/index.html'), 1200);
                     } 
                     else if (pendingEmail) {
-                        if (statusElem) statusElem.innerText = "جاري استكمال التحقق من الرمز...";
-                        setTimeout(() => window.location.replace('./auth/verify-otp/verify.html'), 800);
+                        if (statusElem) {
+                            statusElem.style.opacity = 0;
+                            setTimeout(() => {
+                                statusElem.innerText = "جاري استكمال التحقق من الرمز...";
+                                statusElem.style.opacity = 1;
+                            }, 200);
+                        }
+                        setTimeout(() => smoothRedirect('./auth/verify-otp/verify.html'), 1000);
                     } 
                     else {
-                        if (statusElem) statusElem.innerText = "جاري التوجيه لبوابة الدخول...";
-                        setTimeout(() => window.location.replace('./auth/login/login.html'), 500);
+                        if (statusElem) {
+                            statusElem.style.opacity = 0;
+                            setTimeout(() => {
+                                statusElem.innerText = "جاري التوجيه لبوابة الدخول...";
+                                statusElem.style.opacity = 1;
+                            }, 200);
+                        }
+                        setTimeout(() => smoothRedirect('./auth/login/login.html'), 800);
                     }
                 } catch (error) {
                     console.error("[Routing Error]:", error);
-                    window.location.replace("./auth/login/login.html");
+                    smoothRedirect("./auth/login/login.html");
                 }
             }, 1200);
         });
