@@ -21,17 +21,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     let timerInterval; const TIME_LIMIT = 180;
     const pendingEmail = getFromStorage('pending_email');
 
+    // البيانات الافتراضية لحماية الكود من التوقف في حال فشل الاتصال الخارجي
     let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
     try {
-        const geoResponse = await fetch('https://ipwho.is/');
+        // تم الانتقال إلى خدمة ipapi.co لتفادي حظر الـ 403 (Forbidden) المستمر
+        const geoResponse = await fetch('https://ipapi.co/json/');
         if (geoResponse.ok) {
             const geoData = await geoResponse.json();
-            if (geoData.success) {
+            // الخدمة البديلة لا ترجع حقل success بل تعتمد على البيانات مباشرة أو حقل error
+            if (!geoData.error) {
                 securityData.ip = geoData.ip || securityData.ip;
-                securityData.location = geoData.city && geoData.country ? `${geoData.city}, ${geoData.country}` : securityData.location;
+                securityData.location = geoData.city && geoData.country_name ? `${geoData.city}, ${geoData.country_name}` : securityData.location;
             }
         }
-    } catch (err) { console.warn("[Security Engine] Geo bypassed:", err); }
+    } catch (err) { 
+        console.warn("[Security Engine] Geo bypassed, using backup regional context:", err); 
+    }
 
     if (backBtn) { backBtn.addEventListener('click', () => window.history.back()); }
 
