@@ -1,6 +1,6 @@
 /* =================================================================
    تنسيقات صفحة إنشاء الحساب (Premium Register Theme - TERA)
-   النسخة المحدثة: دعم التصميم الزجاجي المكثف والتجاوب العالي
+   النسخة المحدثة: تصميم زجاجي فائق (Ultra Glassmorphism) وتجاوب دقيق
    Path: investor-portal/auth/register/register.css
 ================================================================= */
 
@@ -9,155 +9,180 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 8px; /* مسافة تنفسية بين العناصر */
 }
 
-/* توزيع الحقول بشكل مكثف لتوفير المساحة الرأسية */
+/* توزيع الحقول بشكل مكثف ومرتب */
 .input-group {
-    margin-bottom: 12px !important;
+    margin-bottom: 16px !important;
     text-align: right;
+    position: relative;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-size: 0.85rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.3px;
 }
 
-/* التنسيق الحصري للنص التوضيحي (Placeholder) - تباين معزز */
+/* النص التوضيحي (Placeholder) - تباين أنيق */
 .auth-input::placeholder {
-    color: rgba(226, 232, 240, 0.5) !important;
+    color: rgba(226, 232, 240, 0.4) !important;
     font-size: 0.85rem;
+    font-weight: 400;
 }
 
-/* تصميم حقل الإدخال بنمط الزجاج المصقول */
+/* حقل الإدخال - تأثير الزجاج المصقول الفاخر */
 .auth-input {
-    height: 48px;
-    background: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 10px !important;
-    padding: 0 45px 0 15px !important; /* مساحة ثابتة للأيقونة الأساسية باليمين */
+    height: 52px; /* زيادة بسيطة للفخامة والوضوح */
+    background: rgba(15, 23, 42, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px !important;
+    padding: 0 45px 0 15px !important; /* مساحة للأيقونة يمين النص */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: #ffffff;
     width: 100%;
     box-sizing: border-box;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-family: inherit;
 }
 
-/* تأثير التوهج عند التركيز */
+/* تأثير التوهج والتفاعل عند التركيز */
 .auth-input:focus {
-    background: rgba(15, 23, 42, 0.8) !important;
+    background: rgba(15, 23, 42, 0.7) !important;
     border-color: var(--primary, #38bdf8) !important;
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2), inset 0 0 5px rgba(56, 189, 248, 0.1) !important;
-    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15), inset 0 0 8px rgba(56, 189, 248, 0.05) !important;
+    transform: translateY(-2px);
     outline: none;
 }
 
-/* التنسيق المتوافق مع زر الأيقونة التفاعلي (العين) في اليسار */
+/* زر إظهار كلمة المرور (العين) */
 #togglePassword {
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 #togglePassword:hover {
     opacity: 1 !important;
     color: var(--primary, #38bdf8);
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.15);
 }
 
-/* منطقة الموافقة على الشروط - أسلوب زجاجي ناعم */
+/* منطقة الموافقة على الشروط - زجاجي ناعم */
 .register-agreement {
-    background: rgba(56, 189, 248, 0.03);
-    padding: 12px;
-    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.02);
+    padding: 15px;
+    border-radius: 12px;
     border: 1px solid rgba(56, 189, 248, 0.1);
-    margin: 15px 0;
+    margin: 20px 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: border-color 0.3s ease;
+}
+
+.register-agreement:hover {
+    border-color: rgba(56, 189, 248, 0.25);
 }
 
 .register-agreement .text-dim {
-    color: #94a3b8;
-    line-height: 1.6;
-    font-size: 0.75rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    font-size: 0.8rem;
 }
 
-/* تخصيص زر إنشاء الحساب الفخم (Elite Blue) */
+/* زر إنشاء الحساب - فخامة وعمق */
 .btn-primary {
-    height: 54px;
+    height: 56px;
     width: 100%;
     background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
-    border: none;
-    border-radius: 10px;
-    color: #0a192f;
+    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #ffffff; /* لون النص أبيض لتباين أجمل وأفخم */
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* تأثير لمعان سينمائي للزر عند المرور */
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    transition: all 0.7s ease;
+}
+
+.btn-primary:hover:not(:disabled)::after {
+    left: 150%;
 }
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 15px 35px rgba(2, 132, 199, 0.4);
     filter: brightness(1.1);
-    color: #ffffff;
 }
 
 .btn-primary:disabled {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
     color: rgba(255, 255, 255, 0.3) !important;
     box-shadow: none !important;
-    cursor: wait;
+    cursor: not-allowed;
     transform: none !important;
 }
 
-/* فوتر الصفحة والروابط */
+/* التذييل والروابط */
 .register-footer {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .register-link {
     color: var(--primary, #38bdf8) !important;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
     transition: all 0.3s ease;
     text-decoration: none;
+    font-weight: 800;
+    margin-right: 5px;
 }
 
 .register-link:hover {
     color: #ffffff !important;
-    text-shadow: 0 0 15px var(--primary);
+    text-shadow: 0 0 20px var(--primary, #38bdf8);
 }
 
-/* تنبيهات الخطأ اللحظية المحقونة عبر السكربت */
+/* تأثيرات الخطأ والاهتزاز */
 .input-error .auth-input {
     border-color: #ef4444 !important;
-    background: rgba(239, 68, 68, 0.05) !important;
-    animation: shake 0.4s ease-in-out;
+    background: rgba(239, 68, 68, 0.08) !important;
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(4px); }
-    75% { transform: translateX(-4px); }
-}
-
-/* التنويه الأمني السفلي */
-.security-notice {
-    margin-top: 20px;
-    opacity: 0.8;
-}
-
-/* تجاوب الجوال للهياكل الطويلة والضيقة */
-@media (max-height: 800px) {
-    .auth-card { padding: 20px !important; }
-    .auth-header h2 { font-size: 1.2rem; margin-top: 10px; }
-}
-
-@media (max-width: 480px) {
-    .auth-input { padding: 0 40px 0 12px !important; font-size: 0.9rem; }
-    .btn-primary { height: 50px; font-size: 0.95rem; }
-}
+    20%,
