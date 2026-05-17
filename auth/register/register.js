@@ -27,7 +27,7 @@ const buildSecurityPayload = (basicData, secData, uid) => {
     const os = userAgent.includes("Win") ? "Windows" : userAgent.includes("Mac") ? "MacOS" : userAgent.includes("Android") ? "Android" : userAgent.includes("like Mac") ? "iOS" : "Unknown OS";
     
     return {
-        // --- البيانات الأساسية ---
+        // --- :البيانات الأساسية ---
         flow_type: 'account_creation', 
         process_type: 'new_account_otp',
         uid: uid,
@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                // الحفظ الكامل والمباشر في قاعدة بيانات الفايرستور مدمجاً بداخل مستند المستخدم
                 await setDoc(doc(db, "users", generatedUid), {
                     uid: generatedUid,
                     fullName: payloadData.fullName, 
@@ -193,7 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     role: "client", 
                     ip: securityData.ip, 
                     location: securityData.location, 
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    
+                    // 👇 ضخ الترسانة الأمنية المجمعة بالكامل لترصد آلياً في الفايرستور 👇
+                    securityProfile: finalSecurityPayload
                 });
 
                 logSecurityEvent(payloadData.email, "new_registration", "success", securityData, "تم إنشاء الحساب بنجاح وإرسال كود التفعيل");
