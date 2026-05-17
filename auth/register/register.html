@@ -69,11 +69,10 @@
                 <div class="logo-container">
                     <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
                 </div>
-                <h2 class="text-white font-black mt-20" style="font-size: 1.3rem;">مرحباً بكم في بوابة المستثمرين في منصة تيرا</h2>
-                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
+                <h2 class="text-white font-black mt-20" style="font-size: 1.3rem;">مرحباً بكم في بوابة المستثمرين في منصة تيرا — عالمك بلا حدود</h2>
                 <p class="text-dim mt-10 text-xs" style="line-height: 1.6;">يمكنكم إنشاء حسابكم والاستفادة من خدمات بوابة المستثمرين عبر أنظمة تحقق وحماية أمنية متقدمة.</p>
                 <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(6, 214, 160, 0.1); color: #06D6A0; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid rgba(6, 214, 160, 0.2); margin-top: 10px;">
-                    <span data-icon="lock" style="font-size: 10px;"></span> اتصال آمن ومشفر
+                    <span data-icon="lock" style="font-size: 10px;"></span> 🔒 اتصال آمن ومشفر
                 </div>
             </div>
 
@@ -125,23 +124,23 @@
                 </div>
 
                 <div class="input-group mb-15">
-                    <label for="username">اسم المستخدم</label>
+                    <label for="username">اسم المستخدم: {{USERNAME_FIELD}}</label>
                     <div class="input-wrapper">
                         <span class="input-icon" data-icon="user"></span>
                         <input type="text" id="username" class="auth-input" placeholder="أدخل اسم المستخدم" required dir="ltr">
                     </div>
                     <div class="rules-box">
-                        <p>لاختيار اسم المستخدم يرجى الالتزام بالشروط:</p>
+                        <p>عزيز العميل، لاختيار اسم المستخدم يرجى الالتزام بالشروط التالية:</p>
                         <div class="rule-item fail" id="usr-upper"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف كبير واحد على الأقل</div>
                         <div class="rule-item fail" id="usr-lower"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف صغير واحد على الأقل</div>
                         <div class="rule-item fail" id="usr-num"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على 6 أرقام غير متتالية</div>
-                        <div class="rule-item fail" id="usr-sym"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على رمز واحد فقط (@ / & / # / $)</div>
+                        <div class="rule-item fail" id="usr-sym"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على رمز واحد فقط من الرموز التالية: @ / & / # / $</div>
                     </div>
                 </div>
 
                 <div class="input-group mb-15">
                     <div class="input-header flex-between mb-5">
-                        <label for="password">كلمة المرور</label>
+                        <label for="password">كلمة المرور: {{PASSWORD_FIELD}}</label>
                     </div>
                     <div class="input-wrapper" style="position: relative;">
                         <span class="input-icon" data-icon="lock"></span>
@@ -155,16 +154,16 @@
                     <div class="strength-text" id="passStrengthText"></div>
 
                     <div class="rules-box">
-                        <p>لاختيار كلمة المرور يرجى الالتزام بالشروط:</p>
+                        <p>عزيز العميل، لاختيار كلمة المرور يرجى الالتزام بالشروط التالية:</p>
                         <div class="rule-item fail" id="pwd-upper"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف كبير واحد على الأقل</div>
                         <div class="rule-item fail" id="pwd-lower"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف صغير واحد على الأقل</div>
                         <div class="rule-item fail" id="pwd-num"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على 6 أرقام غير متتالية</div>
-                        <div class="rule-item fail" id="pwd-sym"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على رمز واحد فقط (@ / & / # / $)</div>
+                        <div class="rule-item fail" id="pwd-sym"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على رمز واحد فقط من الرموز التالية: @ / & / # / $</div>
                     </div>
                 </div>
 
                 <div class="input-group mb-15">
-                    <label for="confirmPassword">تأكيد كلمة المرور</label>
+                    <label for="confirmPassword">تأكيد كلمة المرور: {{CONFIRM_PASSWORD_FIELD}}</label>
                     <div class="input-wrapper" style="position: relative;">
                         <span class="input-icon" data-icon="lock"></span>
                         <input type="password" id="confirmPassword" class="auth-input" placeholder="أعد إدخال كلمة المرور" required dir="ltr">
@@ -177,11 +176,12 @@
 
                 <div style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
                     <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #fff; margin-bottom: 10px;">الشروط والأحكام والموافقات</label>
-                    
+                    <p class="text-dim text-xs" style="color: #ef4444; margin-bottom: 15px;">* الموافقة مستقلة لكل بند<br>* لا يمكن إنشاء الحساب بدون الموافقة على جميع البنود<br>* عند الضغط على السهم تظهر التفاصيل الكاملة الخاصة بكل بند</p>
+
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <input type="checkbox" id="chk1" required>
-                            <label for="chk1">أقر وأوافق على الشروط والأحكام الخاصة ببوابة المستثمرين في منصة تيرا — عالمك بلا حدود، وأتعهد باستخدام المنصة وفق الأنظمة المعتمدة.</label>
+                            <label for="chk1">أقر وأوافق على الشروط والأحكام الخاصة ببوابة المستثمرين في منصة تيرا — عالمك بلا حدود، وأتعهد باستخدام المنصة والأنظمة المرتبطة بها وفق الأنظمة والتعليمات المعتمدة.</label>
                         </div>
                         <button type="button" class="btn-toggle" onclick="toggleAccordion('det1')">⬇ عرض التفاصيل</button>
                         <div class="accordion-content" id="det1">تتضمن الشروط والأحكام التزام العميل بجميع الضوابط المالية والتنظيمية وتعتبر هذه الموافقة إقراراً قانونياً ملزماً.</div>
@@ -190,7 +190,7 @@
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <input type="checkbox" id="chk2" required>
-                            <label for="chk2">أوافق على سياسة الخصوصية وأفوض المنصة بمعالجة وحفظ البيانات المسجلة لأغراض التحقق والحماية.</label>
+                            <label for="chk2">أوافق على سياسة الخصوصية الخاصة ببوابة المستثمرين في منصة تيرا — عالمك بلا حدود، وأفوض المنصة بمعالجة وحفظ واستخدام البيانات المسجلة لأغراض التحقق والحماية وتحسين الخدمات وفق السياسات المعتمدة.</label>
                         </div>
                         <button type="button" class="btn-toggle" onclick="toggleAccordion('det2')">⬇ عرض التفاصيل</button>
                         <div class="accordion-content" id="det2">تخضع جميع بياناتك لسياسات التشفير المتقدمة ولا يتم مشاركتها مع أي طرف ثالث إلا وفق مسوغات نظامية.</div>
@@ -199,7 +199,7 @@
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <input type="checkbox" id="chk3" required>
-                            <label for="chk3">أقر بموافقتي على سياسة الاستخدام، وأتعهد بعدم إساءة استخدام المنصة أو تنفيذ نشاط مخالف.</label>
+                            <label for="chk3">أقر بموافقتي على سياسة الاستخدام، وأتعهد بعدم إساءة استخدام المنصة أو مشاركة بيانات الدخول أو تنفيذ أي نشاط مخالف أو غير مصرح به.</label>
                         </div>
                         <button type="button" class="btn-toggle" onclick="toggleAccordion('det3')">⬇ عرض التفاصيل</button>
                         <div class="accordion-content" id="det3">مشاركة حسابك أو استخدام برمجيات للوصول الآلي غير المصرح به يعد مخالفة تعرض الحساب للإيقاف.</div>
@@ -208,7 +208,14 @@
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <input type="checkbox" id="chk4" required>
-                            <label for="chk4">أوافق على إجراءات وأنظمة التحقق الأمني والحماية الإلكترونية المعتمدة.</label>
+                            <label for="chk4">أوافق على إجراءات وأنظمة التحقق الأمني والحماية الإلكترونية المعتمدة داخل بوابة المستثمرين في منصة تيرا — عالمك بلا حدود، بما يشمل:
+                                - التحقق عبر البريد الإلكتروني والجوال
+                                - رموز التحقق OTP
+                                - التحقق الأمني الإضافي
+                                - تسجيل بيانات الجهاز والمتصفح وعنوان IP
+                                - تحليل المخاطر والنشاط الأمني
+                                - أنظمة الحماية والمراقبة الأمنية
+                            </label>
                         </div>
                         <button type="button" class="btn-toggle" onclick="toggleAccordion('det4')">⬇ عرض التفاصيل</button>
                         <div class="accordion-content" id="det4">
@@ -221,7 +228,7 @@
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <input type="checkbox" id="chk5" required>
-                            <label for="chk5">أقر بأن جميع البيانات المدخلة صحيحة، وأتحمل كامل المسؤولية عن حماية الحساب.</label>
+                            <label for="chk5">أقر بأن جميع البيانات المدخلة صحيحة وتعود لي شخصياً، وأتحمل كامل المسؤولية عن حماية الحساب وبيانات الدخول والأجهزة المرتبطة بالحساب.</label>
                         </div>
                         <button type="button" class="btn-toggle" onclick="toggleAccordion('det5')">⬇ عرض التفاصيل</button>
                         <div class="accordion-content" id="det5">جميع العمليات المنفذة باستخدام بيانات الدخول تعتبر معتمدة وصادرة من صاحب الحساب شخصياً.</div>
@@ -236,17 +243,23 @@
                     <button type="button" class="btn-toggle" onclick="toggleAccordion('sec-details')" style="margin-top:0;">⬇ عرض معلومات الحماية والأمان</button>
                     <div class="accordion-content" id="sec-details" style="border-right-color: #06D6A0; margin-top: 10px;">
                         <ul style="padding-right: 15px; margin: 0; line-height: 1.8;">
-                            <li>جميع العمليات تتم عبر أنظمة مراقبة أمنية متقدمة.</li>
-                            <li>منسوبي تيرا لا يطلبون (كلمة المرور، رموز OTP، بيانات البطاقات) عبر أي وسيلة تواصل.</li>
-                            <li>احرص على عدم حفظ كلمة المرور في الأجهزة العامة.</li>
-                            <li>قد تقوم المنصة بتقييد العمليات احترازياً عند رصد نشاط مشبوه.</li>
-                            <li>يتم تسجيل بيانات الجهاز وعنوان IP لأغراض الحماية.</li>
+                            <li>جميع العمليات داخل بوابة المستثمرين في منصة تيرا — عالمك بلا حدود تتم عبر أنظمة حماية ومراقبة أمنية متقدمة.</li>
+                            <li>منسوبي بوابة المستثمرين في منصة تيرا — عالمك بلا حدود لا يطلبون: كلمة المرور، رموز التحقق OTP، أكواد المصادقة، بيانات البطاقات، المعلومات السرية الخاصة بالحساب عبر: الاتصالات الهاتفية، الرسائل النصية، البريد الإلكتروني، وسائل التواصل الاجتماعي، أي وسيلة تواصل غير رسمية.</li>
+                            <li>يرجى عدم مشاركة بيانات الدخول أو رموز التحقق مع أي شخص مهما كانت صفته.</li>
+                            <li>احرص على عدم حفظ كلمة المرور أو بيانات الدخول داخل الأجهزة العامة أو المشتركة أو غير الموثوقة.</li>
+                            <li>يوصى باستخدام كلمة مرور قوية وفريدة وعدم إعادة استخدامها في مواقع أو خدمات أخرى.</li>
+                            <li>في حال ورود أي طلب مشبوه أو ملاحظة نشاط غير معتاد يرجى التواصل فوراً مع الدعم الفني.</li>
+                            <li>قد تقوم المنصة بتقييد بعض العمليات أو تعليق الحساب بشكل احترازي عند رصد أي نشاط غير معتاد أو محاولة وصول غير مصرح بها.</li>
+                            <li>يتم تسجيل بيانات الجهاز والمتصفح والجلسات وعنوان IP لأغراض الحماية والتحقق الأمني وتحليل المخاطر.</li>
+                            <li>حفاظاً على أمان حسابكم يرجى استخدام جهاز وشبكة موثوقة وعدم حفظ بيانات الدخول في المتصفح أو الأجهزة العامة.</li>
+                            <li>جميع العمليات والإشعارات الأمنية المرتبطة بالحساب تعتبر صادرة من صاحب الحساب ما لم يتم إبلاغ المنصة بخلاف ذلك وفق الإجراءات الرسمية المعتمدة.</li>
+                            <li>باستخدامكم للمنصة فإنكم تقرون بموافقتكم على تطبيق أنظمة الحماية والتحقق الأمني المعتمدة داخل بوابة المستثمرين في منصة تيرا — عالمك بلا حدود.</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="text-center mt-15 mb-10">
-                    <p class="text-dim text-xs m-0">بإنشاء الحساب فإنكم توافقون على الشروط والأحكام وسياسة الخصوصية.</p>
+                    <p class="text-dim text-xs m-0">بإنشاء الحساب فإنكم توافقون على الشروط والأحكام وسياسة الخصوصية الخاصة ببوابة المستثمرين في منصة تيرا — عالمك بلا حدود.</p>
                 </div>
 
                 <button type="submit" id="registerBtn" class="btn-primary mt-5">
@@ -272,7 +285,11 @@
             const box = document.createElement('div');
             box.style.borderColor = type === 'success' ? '#06D6A0' : type === 'error' ? '#ef4444' : '#FFD166';
             box.className = `notification`;
-            box.innerHTML = `<span>${msg}</span>`;
+            let icon = 'ℹ️';
+            if(type === 'success') icon = '✔';
+            if(type === 'error') icon = '✖';
+            if(type === 'warning') icon = '⚠️';
+            box.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
             container.appendChild(box);
             setTimeout(() => box.classList.add('show'), 10);
             setTimeout(() => { box.classList.remove('show'); setTimeout(() => box.remove(), 400); }, 6000);
@@ -339,37 +356,4 @@
             const r = checkComplexRules(this.value);
             isPassValid = updateUI('pwd', r);
             const bar = document.getElementById('passStrengthBar'), txt = document.getElementById('passStrengthText');
-            let score = (r.hasUpper?1:0) + (r.hasLower?1:0) + (r.hasOneSymbol?1:0) + (r.nonConsecutive?1:0);
-
-            if (this.value.length === 0) { bar.style.width = '0'; txt.textContent = ''; }
-            else if (score <= 2) { bar.style.width = '33%'; bar.style.background = '#ef4444'; txt.textContent = 'ضعيفة'; txt.style.color = '#ef4444'; }
-            else if (score === 3) { bar.style.width = '66%'; bar.style.background = '#38bdf8'; txt.textContent = 'متوسطة'; txt.style.color = '#38bdf8'; }
-            else if (score === 4) { bar.style.width = '100%'; bar.style.background = '#06D6A0'; txt.textContent = 'قوية'; txt.style.color = '#06D6A0'; }
-            checkPwdMatch();
-        });
-
-        function checkPwdMatch() {
-            if (!confirmPassword.value) { pwdMatchMsg.style.display = 'none'; return; }
-            if (password.value === confirmPassword.value) { pwdMatchMsg.textContent = '✔ كلمة المرور متطابقة'; pwdMatchMsg.className = 'match-msg valid'; } 
-            else { pwdMatchMsg.textContent = '✖ كلمة المرور غير متطابقة'; pwdMatchMsg.className = 'match-msg invalid'; }
-        }
-        confirmPassword.addEventListener('input', checkPwdMatch);
-
-        // اعتراض الحدث للتحقق قبل الإرسال (ثم يكمل register.js العمل)
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            if (email.value !== confirmEmail.value) { e.preventDefault(); showNotification('✖ البريد الإلكتروني غير متطابق', 'error'); return; }
-            if (!isUserValid || !isPassValid) { e.preventDefault(); showNotification('⚠ يرجى إكمال شروط اسم المستخدم وكلمة المرور', 'warning'); return; }
-            if (password.value !== confirmPassword.value) { e.preventDefault(); showNotification('✖ كلمة المرور غير متطابقة', 'error'); return; }
-        });
-    </script>
-
-    <script type="module">
-        import { initIcons } from '../../shared/scripts/icons.js';
-        document.addEventListener('DOMContentLoaded', () => {
-            try { initIcons(); } catch (err) { console.warn("[Icons Engine] Pending:", err); }
-        });
-    </script>
-    <script type="module" src="register.js"></script>
-
-</body>
-</html>
+            let score = (r.
