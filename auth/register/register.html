@@ -78,3 +78,102 @@
         <div class="auth-card animate-slide-up" style="max-width: 600px;">
             
             <div class="auth-header text-center">
+                <div class="logo-container">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
+                </div>
+                <h2 class="text-white font-black mt-20" style="font-size: 20px;">مرحباً بكم في بوابة المستثمرين في منصة تيرا</h2>
+                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
+                <p class="text-white opacity-80 mt-10 text-xs" style="line-height: 1.6;">يمكنكم إنشاء حسابكم والاستفادة من خدمات بوابة المستثمرين عبر أنظمة تحقق وحماية أمنية متقدمة.</p>
+                <div class="secure-badge"><span data-icon="lock"></span> اتصال آمن ومشفر</div>
+            </div>
+
+            <form id="registerForm" class="flex-column mt-25">
+                
+                <h3 class="text-primary font-bold text-sm mb-15" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">1️⃣ المعلومات الشخصية</h3>
+
+                <div class="input-group mb-15">
+                    <label for="fullName">اسم العميل الكامل</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="user"></span>
+                        <input type="text" id="fullName" class="auth-input" placeholder="الاسم الرباعي (عربي/إنجليزي)" required autofocus autocomplete="name">
+                    </div>
+                </div>
+
+                <div class="input-group mb-15">
+                    <label for="email">البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="email"></span>
+                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="input-group mb-15">
+                    <label for="confirmEmail">تأكيد البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="email"></span>
+                        <input type="email" id="confirmEmail" class="auth-input" placeholder="أعد إدخال البريد الإلكتروني" required>
+                    </div>
+                    <div id="emailMatchMsg" class="match-msg"></div>
+                </div>
+
+                <div class="input-group mb-25">
+                    <label for="phone">رقم الجوال</label>
+                    <div class="phone-group">
+                        <select id="countryCode">
+                            <option value="966">🇸🇦 السعودية (+966)</option>
+                            <option value="20">🇪🇬 مصر (+20)</option>
+                            <option value="971">🇦🇪 الإمارات (+971)</option>
+                            <option value="965">🇰🇼 الكويت (+965)</option>
+                            <option value="974">🇶🇦 قطر (+974)</option>
+                            <option value="968">🇴🇲 عمان (+968)</option>
+                            <option value="973">🇧🇭 البحرين (+973)</option>
+                        </select>
+                        <div class="input-wrapper">
+                            <span class="input-icon" data-icon="phone"></span>
+                            <input type="tel" id="phone" class="auth-input" placeholder="أدخل الرقم (بدون 0)" required dir="ltr">
+                        </div>
+                    </div>
+                    <span class="text-dim text-xs mt-5 d-block">تنبيه: سيتم إرسال رمز تحقق لتأكيد رقم الجوال.</span>
+                </div>
+
+                <h3 class="text-primary font-bold text-sm mb-15 mt-20" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">2️⃣ بيانات الدخول والأمان</h3>
+
+                <div class="input-group mb-15">
+                    <label for="username">اسم المستخدم</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="user"></span>
+                        <input type="text" id="username" class="auth-input" placeholder="أدخل اسم المستخدم" required dir="ltr">
+                    </div>
+                    <div class="rules-box">
+                        <p>عزيزي العميل، لاختيار اسم المستخدم يرجى الالتزام بالشروط:</p>
+                        <div class="rule-item fail" id="usr-upper"><span data-icon="cross"></span> يحتوي على حرف كبير واحد على الأقل</div>
+                        <div class="rule-item fail" id="usr-lower"><span data-icon="cross"></span> يحتوي على حرف صغير واحد على الأقل</div>
+                        <div class="rule-item fail" id="usr-num"><span data-icon="cross"></span> يحتوي على 6 أرقام غير متتالية</div>
+                        <div class="rule-item fail" id="usr-sym"><span data-icon="cross"></span> يحتوي على رمز واحد فقط (@ / & / # / $)</div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-15">
+                    <label for="password">كلمة المرور</label>
+                    <div class="input-wrapper" style="position: relative;">
+                        <span class="input-icon" data-icon="lock"></span>
+                        <input type="password" id="password" class="auth-input" placeholder="أدخل كلمة المرور" required autocomplete="new-password" dir="ltr">
+                        <button type="button" class="toggle-pwd-btn" onclick="toggleVisibility('password', this)" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.6;">
+                            <span data-icon="eye"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="strength-meter"><div class="strength-bar" id="passStrengthBar"></div></div>
+                    <div class="strength-text" id="passStrengthText"></div>
+
+                    <div class="rules-box">
+                        <p>عزيزي العميل، لاختيار كلمة المرور يرجى الالتزام بالشروط:</p>
+                        <div class="rule-item fail" id="pwd-upper"><span data-icon="cross"></span> يحتوي على حرف كبير واحد على الأقل</div>
+                        <div class="rule-item fail" id="pwd-lower"><span data-icon="cross"></span> يحتوي على حرف صغير واحد على الأقل</div>
+                        <div class="rule-item fail" id="pwd-num"><span data-icon="cross"></span> يحتوي على 6 أرقام غير متتالية</div>
+                        <div class="rule-item fail" id="pwd-sym"><span data-icon="cross"></span> يحتوي على رمز واحد فقط (@ / & / # / $)</div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-15">
+                    <label for="confirmPassword">تأ
