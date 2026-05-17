@@ -2,7 +2,7 @@
  * =================================================================
  * محرك صفحة التسجيل المطور (Enterprise Registration Engine) - منصة تيرا
  * حل جذري لمشكلة الـ CORS والـ IP عبر قنوات Cloudflare المستقرة
- * مدمج مع الترسانة الأمنية الشاملة، التحقق اللحظي، وشروط كلمة المرور
+ * مدمج مع الترسانة الأمنية الشاملة ومعالجة قواعد البيانات
  * Path: investor-portal/auth/register/register.js
  * =================================================================
  */
@@ -11,7 +11,7 @@ import { db } from '../../js/database.js';
 import { collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { saveToStorage, removeFromStorage } from '../../shared/scripts/storage.js';
 import { showNotification } from '../../shared/scripts/notifications.js';
-import { validateEmail, validateSaudiPhone, validateName } from '../../shared/scripts/validation.js';
+import { validateEmail, validateName } from '../../shared/scripts/validation.js';
 import { logSecurityEvent } from '../../shared/scripts/logger.js'; 
 
 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/czm13rtz2r49er30mxqtkwumncg8hn13';
@@ -78,114 +78,41 @@ const buildSecurityPayload = (basicData, secData, uid) => {
     };
 };
 
-// 3. خوارزمية فحص قوة وتطابق اسم المستخدم وكلمة المرور
-const checkComplexRules = (str) => {
-    const hasUpper = /[A-Z]/.test(str);
-    const hasLower = /[a-z]/.test(str);
-    const symbols = str.match(/[@&#$]/g);
-    const hasOneSymbol = symbols && symbols.length === 1 && !/[^a-zA-Z0-9@&#$]/.test(str);
-    
-    const digits = str.replace(/[^0-9]/g, '');
-    const has6Digits = digits.length === 6;
-    let nonConsecutive = false;
-    
-    if (has6Digits) {
-        const seq = '0123456789'; const rev = '9876543210';
-        const isRepeated = /^(\d)\1{5}$/.test(digits);
-        if (!seq.includes(digits) && !rev.includes(digits) && !isRepeated) {
-            nonConsecutive = true;
-        }
-    }
-    return { hasUpper, hasLower, nonConsecutive, hasOneSymbol };
-};
-
-const updateRuleUI = (prefix, rules) => {
-    const ui = (id, valid) => {
-        const el = document.getElementById(prefix + id);
-        if(!el) return;
-        if (valid) { el.className = 'rule-item pass'; el.innerHTML = `<span data-icon="check"></span> ${el.innerText.substring(2)}`; }
-        else { el.className = 'rule-item fail'; el.innerHTML = `<span data-icon="cross"></span> ${el.innerText.substring(2)}`; }
-    };
-    ui('-upper', rules.hasUpper); ui('-lower', rules.hasLower);
-    ui('-num', rules.nonConsecutive); ui('-sym', rules.hasOneSymbol);
-    return rules.hasUpper && rules.hasLower && rules.nonConsecutive && rules.hasOneSymbol;
-};
-
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const registerBtn = document.getElementById('registerBtn');
-    let attemptCount = 0; const maxRegisterAttempts = 4;
+    let attemptCount = 0; 
+    const maxRegisterAttempts = 4;
 
+    // تنظيف الجلسات السابقة لضمان بيئة نظيفة للتسجيل
     removeFromStorage('temp_user');
     removeFromStorage('pending_email');
 
-    // --- متغيرات التحقق اللحظي ---
-    let isUserValid = false;
-    let isPassValid = false;
-
-    // --- ربط عناصر DOM ---
-    const fullNameElem = document.getElementById('fullName');
-    const emailElem = document.getElementById('email');
-    const confirmEmailElem = document.getElementById('confirmEmail');
-    const countryCodeElem = document.getElementById('countryCode');
-    const phoneElem = document.getElementById('phone');
-    const usernameElem = document.getElementById('username');
-    const passwordElem = document.getElementById('password');
-    const confirmPasswordElem = document.getElementById('confirmPassword');
-
-    // 1. التحقق من اسم المستخدم
-    if(usernameElem) {
-        usernameElem.addEventListener('input', function() {
-            isUserValid = updateRuleUI('usr', checkComplexRules(this.value));
-        });
-    }
-
-    // 2. التحقق من كلمة المرور ومؤشر القوة
-    if(passwordElem) {
-        passwordElem.addEventListener('input', function() {
-            const r = checkComplexRules(this.value);
-            isPassValid = updateRuleUI('pwd', r);
-            
-            const bar = document.getElementById('passStrengthBar');
-            const txt = document.getElementById('passStrengthText');
-            if(bar && txt) {
-                let score = (r.hasUpper?1:0) + (r.hasLower?1:0) + (r.hasOneSymbol?1:0) + (r.nonConsecutive?1:0);
-                if (this.value.length === 0) { bar.style.width = '0'; txt.textContent = ''; }
-                else if (score <= 2) { bar.style.width = '33%'; bar.style.background = '#ef476f'; txt.textContent = 'ضعيفة'; txt.style.color = '#ef476f'; }
-                else if (score === 3) { bar.style.width = '66%'; bar.style.background = '#FFD166'; txt.textContent = 'متوسطة'; txt.style.color = '#FFD166'; }
-                else if (score === 4) { bar.style.width = '100%'; bar.style.background = '#06D6A0'; txt.textContent = 'قوية'; txt.style.color = '#06D6A0'; }
-            }
-        });
-    }
-
-    // --- الإرسال والتحقق النهائي ---
     if (registerForm) {
+        // نستخدم حدث submit الذي يمر عبر التحققات الموجودة في ملف HTML أولاً
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // 1. التحقق من محاولات الإرسال لمنع هجمات Spam
             if (attemptCount >= maxRegisterAttempts) {
-                showNotification("تم تعليق عمليات التسجيل مؤقتاً لتجاوز عدد المحاولات.", "error"); return;
+                showNotification("تم تعليق عمليات التسجيل مؤقتاً لتجاوز عدد المحاولات.", "error"); 
+                return;
             }
 
-            // التأكد من تحميل العناصر
-            if (!fullNameElem || !emailElem || !confirmEmailElem || !phoneElem || !usernameElem || !passwordElem || !confirmPasswordElem) {
-                showNotification("حدث خلل في تحميل عناصر النموذج الفني.", "error"); return;
+            // 2. تجميع عناصر النموذج (DOM Elements)
+            const fullNameElem = document.getElementById('fullName');
+            const emailElem = document.getElementById('email');
+            const countryCodeElem = document.getElementById('countryCode');
+            const phoneElem = document.getElementById('phone');
+            const usernameElem = document.getElementById('username');
+            const passwordElem = document.getElementById('password');
+
+            if (!fullNameElem || !emailElem || !phoneElem || !usernameElem || !passwordElem) {
+                showNotification("حدث خلل في تحميل عناصر النموذج الفني.", "error"); 
+                return;
             }
 
-            // التحققات الأمنية والمطابقة
-            if (emailElem.value.trim().toLowerCase() !== confirmEmailElem.value.trim().toLowerCase()) {
-                showNotification("البريد الإلكتروني غير متطابق.", "error"); return;
-            }
-            if (!isUserValid) {
-                showNotification("يرجى إكمال شروط اسم المستخدم المطلوبة.", "warning"); return;
-            }
-            if (!isPassValid) {
-                showNotification("يرجى إكمال شروط كلمة المرور المطلوبة.", "warning"); return;
-            }
-            if (passwordElem.value !== confirmPasswordElem.value) {
-                showNotification("كلمة المرور غير متطابقة.", "error"); return;
-            }
-
+            // 3. تجميع البيانات
             const payloadData = {
                 fullName: fullNameElem.value.trim(),
                 email: emailElem.value.trim().toLowerCase(),
@@ -196,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 password: passwordElem.value
             };
 
+            // 4. تحققات أخيرة لضمان نظافة البيانات قبل الإرسال لقاعدة البيانات
             if (!validateName(payloadData.fullName)) {
                 showNotification("يرجى إدخال الاسم الكامل بشكل صحيح (ثلاثي على الأقل).", "warning"); return;
             }
@@ -203,11 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification("صيغة البريد الإلكتروني المدخل غير صحيحة.", "warning"); return;
             }
 
+            // تعطيل الزر لمنع تكرار الإرسال
             registerBtn.disabled = true;
             registerBtn.classList.add('animate-pulse');
             registerBtn.innerHTML = `<span>جاري تأمين الحساب والتحقق...</span>`;
+            attemptCount++;
 
-            // استخدام الحل الذهبي المستقر من Cloudflare والمقاوم تماماً للـ CORS
+            // 5. جلب الموقع الجغرافي والأمان من Cloudflare (لحل مشكلة CORS)
             let securityData = { ip: "127.0.0.1", location: "Hail, KSA" };
             try {
                 const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
@@ -223,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // التحقق من عدم وجود البريد مسبقاً
+                // 6. التحقق من قاعدة البيانات: هل البريد مسجل مسبقاً؟
                 const q = query(collection(db, "users"), where("email", "==", payloadData.email));
                 const querySnapshot = await getDocs(q);
 
@@ -236,11 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                // 7. توليد المعرف الخاص والترسانة الأمنية
                 const generatedUid = 'usr_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-
-                // بناء الحزمة الأمنية الكاملة وإرسالها لـ Make
                 const finalSecurityPayload = buildSecurityPayload(payloadData, securityData, generatedUid);
 
+                // 8. إرسال الطلب إلى خادم Make (الويب هوك) لإرسال الإيميل وبناء كود OTP
                 try {
                     const makeResponse = await fetch(MAKE_WEBHOOK_URL, {
                         method: 'POST',
@@ -258,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // الحفظ الكامل في قاعدة بيانات الفايرستور
+                // 9. الحفظ الكامل والمباشر في الفايرستور (Firestore) ككتلة واحدة
                 await setDoc(doc(db, "users", generatedUid), {
                     uid: generatedUid,
                     username: payloadData.username,
@@ -269,21 +199,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     ip: securityData.ip, 
                     location: securityData.location, 
                     createdAt: new Date().toISOString(),
-                    securityProfile: finalSecurityPayload // الترسانة الأمنية
+                    securityProfile: finalSecurityPayload // تضمن حفظ الـ 52 متغيراً أمنياً بضغطة زر
                 });
 
+                // 10. نجاح العملية: توثيق السجل وعرض شاشة التحميل والتوجيه
                 logSecurityEvent(payloadData.email, "new_registration", "success", securityData, "تم إنشاء الحساب بنجاح وإرسال كود التفعيل");
                 saveToStorage('pending_email', payloadData.email);
                 
-                // إظهار شاشة التحميل (Overlay) الخاصة بالنجاح والتوجيه
+                // إظهار شاشة التحميل (Overlay الزرقاء) التي طلبناها
                 const loadingOverlay = document.getElementById('loadingOverlay');
                 if(loadingOverlay) {
                     loadingOverlay.style.display = 'flex';
-                } else {
-                    showNotification("تم إرسال كود التفعيل لبريدك بنجاح ✅", "success");
                 }
 
-                // التوجيه لصفحة الـ OTP بعد 5 ثوانٍ كما هو مطلوب في الهيكلة
+                // التوجيه لصفحة الـ OTP للتحقق من الإيميل (بعد 5 ثوانٍ من ظهور شاشة التحميل)
                 setTimeout(() => {
                     window.location.replace(`../verify-otp/verify.html?email=${encodeURIComponent(payloadData.email)}&mode=register`);
                 }, 5000);
