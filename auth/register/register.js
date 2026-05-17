@@ -2,7 +2,7 @@
  * =================================================================
  * محرك صفحة التسجيل المطور (Enterprise Registration Engine) - منصة تيرا
  * حل جذري لمشكلة الـ CORS والـ IP عبر قنوات Cloudflare المستقرة
- * مدمج مع الترسانة الأمنية الشاملة للتدقيق والامتثال
+ * مدمج مع الترسانة الأمنية الشاملة، التحقق اللحظي، وشروط كلمة المرور
  * Path: investor-portal/auth/register/register.js
  * =================================================================
  */
@@ -27,18 +27,19 @@ const buildSecurityPayload = (basicData, secData, uid) => {
     const os = userAgent.includes("Win") ? "Windows" : userAgent.includes("Mac") ? "MacOS" : userAgent.includes("Android") ? "Android" : userAgent.includes("like Mac") ? "iOS" : "Unknown OS";
     
     return {
-        // --- :البيانات الأساسية ---
+        // --- البيانات الأساسية ---
         flow_type: 'account_creation', 
         process_type: 'new_account_otp',
         uid: uid,
+        username: basicData.username,
         email: basicData.email,
         fullName: basicData.fullName,
-        phone: basicData.phone || "غير متوفر",
+        phone: basicData.fullPhone || "غير متوفر",
         
         // --- البيانات الجغرافية والشبكة ---
         ip: secData.ip || "127.0.0.1",
         country: secData.location.includes("Saudi Arabia") ? "Saudi Arabia" : "Unknown",
-        city: secData.location.includes("Riyadh") ? "Riyadh" : "Hail", // افتراضي بناءً على التوجيه التقريبي
+        city: secData.location.includes("Riyadh") ? "Riyadh" : "Hail",
         location: secData.location || "Hail, KSA",
         connection_type: navigator.connection ? navigator.connection.effectiveType : "Unknown",
         
@@ -77,16 +78,87 @@ const buildSecurityPayload = (basicData, secData, uid) => {
     };
 };
 
+// 3. خوارزمية فحص قوة وتطابق اسم المستخدم وكلمة المرور
+const checkComplexRules = (str) => {
+    const hasUpper = /[A-Z]/.test(str);
+    const hasLower = /[a-z]/.test(str);
+    const symbols = str.match(/[@&#$]/g);
+    const hasOneSymbol = symbols && symbols.length === 1 && !/[^a-zA-Z0-9@&#$]/.test(str);
+    
+    const digits = str.replace(/[^0-9]/g, '');
+    const has6Digits = digits.length === 6;
+    let nonConsecutive = false;
+    
+    if (has6Digits) {
+        const seq = '0123456789'; const rev = '9876543210';
+        const isRepeated = /^(\d)\1{5}$/.test(digits);
+        if (!seq.includes(digits) && !rev.includes(digits) && !isRepeated) {
+            nonConsecutive = true;
+        }
+    }
+    return { hasUpper, hasLower, nonConsecutive, hasOneSymbol };
+};
+
+const updateRuleUI = (prefix, rules) => {
+    const ui = (id, valid) => {
+        const el = document.getElementById(prefix + id);
+        if(!el) return;
+        if (valid) { el.className = 'rule-item pass'; el.innerHTML = `<span data-icon="check"></span> ${el.innerText.substring(2)}`; }
+        else { el.className = 'rule-item fail'; el.innerHTML = `<span data-icon="cross"></span> ${el.innerText.substring(2)}`; }
+    };
+    ui('-upper', rules.hasUpper); ui('-lower', rules.hasLower);
+    ui('-num', rules.nonConsecutive); ui('-sym', rules.hasOneSymbol);
+    return rules.hasUpper && rules.hasLower && rules.nonConsecutive && rules.hasOneSymbol;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const registerBtn = document.getElementById('registerBtn');
-    const agreeCheckbox = document.getElementById('agreeTerms');
-
     let attemptCount = 0; const maxRegisterAttempts = 4;
 
     removeFromStorage('temp_user');
     removeFromStorage('pending_email');
 
+    // --- متغيرات التحقق اللحظي ---
+    let isUserValid = false;
+    let isPassValid = false;
+
+    // --- ربط عناصر DOM ---
+    const fullNameElem = document.getElementById('fullName');
+    const emailElem = document.getElementById('email');
+    const confirmEmailElem = document.getElementById('confirmEmail');
+    const countryCodeElem = document.getElementById('countryCode');
+    const phoneElem = document.getElementById('phone');
+    const usernameElem = document.getElementById('username');
+    const passwordElem = document.getElementById('password');
+    const confirmPasswordElem = document.getElementById('confirmPassword');
+
+    // 1. التحقق من اسم المستخدم
+    if(usernameElem) {
+        usernameElem.addEventListener('input', function() {
+            isUserValid = updateRuleUI('usr', checkComplexRules(this.value));
+        });
+    }
+
+    // 2. التحقق من كلمة المرور ومؤشر القوة
+    if(passwordElem) {
+        passwordElem.addEventListener('input', function() {
+            const r = checkComplexRules(this.value);
+            isPassValid = updateRuleUI('pwd', r);
+            
+            const bar = document.getElementById('passStrengthBar');
+            const txt = document.getElementById('passStrengthText');
+            if(bar && txt) {
+                let score = (r.hasUpper?1:0) + (r.hasLower?1:0) + (r.hasOneSymbol?1:0) + (r.nonConsecutive?1:0);
+                if (this.value.length === 0) { bar.style.width = '0'; txt.textContent = ''; }
+                else if (score <= 2) { bar.style.width = '33%'; bar.style.background = '#ef476f'; txt.textContent = 'ضعيفة'; txt.style.color = '#ef476f'; }
+                else if (score === 3) { bar.style.width = '66%'; bar.style.background = '#FFD166'; txt.textContent = 'متوسطة'; txt.style.color = '#FFD166'; }
+                else if (score === 4) { bar.style.width = '100%'; bar.style.background = '#06D6A0'; txt.textContent = 'قوية'; txt.style.color = '#06D6A0'; }
+            }
+        });
+    }
+
+    // --- الإرسال والتحقق النهائي ---
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -95,36 +167,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification("تم تعليق عمليات التسجيل مؤقتاً لتجاوز عدد المحاولات.", "error"); return;
             }
 
-            const fullNameElem = document.getElementById('fullName');
-            const emailElem = document.getElementById('email');
-            const phoneElem = document.getElementById('phone');
-            const passwordElem = document.getElementById('password');
-
-            if (!fullNameElem || !emailElem || !phoneElem || !passwordElem) {
+            // التأكد من تحميل العناصر
+            if (!fullNameElem || !emailElem || !confirmEmailElem || !phoneElem || !usernameElem || !passwordElem || !confirmPasswordElem) {
                 showNotification("حدث خلل في تحميل عناصر النموذج الفني.", "error"); return;
+            }
+
+            // التحققات الأمنية والمطابقة
+            if (emailElem.value.trim().toLowerCase() !== confirmEmailElem.value.trim().toLowerCase()) {
+                showNotification("البريد الإلكتروني غير متطابق.", "error"); return;
+            }
+            if (!isUserValid) {
+                showNotification("يرجى إكمال شروط اسم المستخدم المطلوبة.", "warning"); return;
+            }
+            if (!isPassValid) {
+                showNotification("يرجى إكمال شروط كلمة المرور المطلوبة.", "warning"); return;
+            }
+            if (passwordElem.value !== confirmPasswordElem.value) {
+                showNotification("كلمة المرور غير متطابقة.", "error"); return;
             }
 
             const payloadData = {
                 fullName: fullNameElem.value.trim(),
                 email: emailElem.value.trim().toLowerCase(),
+                countryCode: countryCodeElem ? countryCodeElem.value : '966',
                 phone: phoneElem.value.trim(),
+                fullPhone: `+${countryCodeElem ? countryCodeElem.value : '966'}${phoneElem.value.trim()}`,
+                username: usernameElem.value.trim(),
                 password: passwordElem.value
             };
 
-            if (!agreeCheckbox || !agreeCheckbox.checked) {
-                showNotification("يجب الموافقة على الشروط والأحكام للاستمرار.", "warning"); return;
-            }
             if (!validateName(payloadData.fullName)) {
                 showNotification("يرجى إدخال الاسم الكامل بشكل صحيح (ثلاثي على الأقل).", "warning"); return;
             }
             if (!validateEmail(payloadData.email)) {
                 showNotification("صيغة البريد الإلكتروني المدخل غير صحيحة.", "warning"); return;
-            }
-            if (!validateSaudiPhone(payloadData.phone)) {
-                showNotification("يرجى إدخال رقم جوال سعودي صحيح يبدأ بـ 05.", "warning"); return;
-            }
-            if (payloadData.password.length < 6) {
-                showNotification("يجب أن تكون كلمة المرور مكونة من 6 خانات أو أكثر.", "warning"); return;
             }
 
             registerBtn.disabled = true;
@@ -138,19 +214,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const dataText = await response.text();
                     const ipLine = dataText.split('\n').find(line => line.startsWith('ip='));
-                    if (ipLine) {
-                        securityData.ip = ipLine.split('=')[1].trim();
-                    }
+                    if (ipLine) securityData.ip = ipLine.split('=')[1].trim();
                     const locLine = dataText.split('\n').find(line => line.startsWith('loc='));
-                    if (locLine && locLine.split('=')[1].trim() === 'SA') {
-                        securityData.location = "Riyadh, Saudi Arabia";
-                    }
+                    if (locLine && locLine.split('=')[1].trim() === 'SA') securityData.location = "Riyadh, Saudi Arabia";
                 }
             } catch (err) { 
                 console.warn("[Security Engine] Cloudflare geo bypassed:", err); 
             }
 
             try {
+                // التحقق من عدم وجود البريد مسبقاً
                 const q = query(collection(db, "users"), where("email", "==", payloadData.email));
                 const querySnapshot = await getDocs(q);
 
@@ -172,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const makeResponse = await fetch(MAKE_WEBHOOK_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(finalSecurityPayload) // إرسال الترسانة بالكامل هنا
+                        body: JSON.stringify(finalSecurityPayload)
                     });
                     if (!makeResponse.ok) throw new Error("Server rejected request");
                 } catch (webhookErr) {
@@ -185,28 +258,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // الحفظ الكامل والمباشر في قاعدة بيانات الفايرستور مدمجاً بداخل مستند المستخدم
+                // الحفظ الكامل في قاعدة بيانات الفايرستور
                 await setDoc(doc(db, "users", generatedUid), {
                     uid: generatedUid,
+                    username: payloadData.username,
                     fullName: payloadData.fullName, 
                     email: payloadData.email, 
-                    phone: payloadData.phone,
+                    phone: payloadData.fullPhone,
                     role: "client", 
                     ip: securityData.ip, 
                     location: securityData.location, 
                     createdAt: new Date().toISOString(),
-                    
-                    // 👇 ضخ الترسانة الأمنية المجمعة بالكامل لترصد آلياً في الفايرستور 👇
-                    securityProfile: finalSecurityPayload
+                    securityProfile: finalSecurityPayload // الترسانة الأمنية
                 });
 
                 logSecurityEvent(payloadData.email, "new_registration", "success", securityData, "تم إنشاء الحساب بنجاح وإرسال كود التفعيل");
                 saveToStorage('pending_email', payloadData.email);
-                showNotification("تم إرسال كود التفعيل لبريدك بنجاح ✅", "success");
+                
+                // إظهار شاشة التحميل (Overlay) الخاصة بالنجاح والتوجيه
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if(loadingOverlay) {
+                    loadingOverlay.style.display = 'flex';
+                } else {
+                    showNotification("تم إرسال كود التفعيل لبريدك بنجاح ✅", "success");
+                }
 
+                // التوجيه لصفحة الـ OTP بعد 5 ثوانٍ كما هو مطلوب في الهيكلة
                 setTimeout(() => {
                     window.location.replace(`../verify-otp/verify.html?email=${encodeURIComponent(payloadData.email)}&mode=register`);
-                }, 1500);
+                }, 5000);
 
             } catch (error) {
                 console.error("[Register Engine] Error:", error);
