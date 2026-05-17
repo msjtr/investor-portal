@@ -3,150 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد | بوابة المستثمرين في منصة تيرا</title>
+    <title>إنشاء حساب استثماري | بوابة المستثمر في منصة تيرا</title>
     
     <link rel="icon" type="image/svg+xml" href="https://msjtr.github.io/investor-portal/assets/images/favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <meta property="og:title" content="BETA | بوابة المستثمر في منصة تيرا | إنشاء حساب">
+    <meta property="og:description" content="انضم إلينا كمسؤول محفظة وابدأ بإدارة استثماراتك بذكاء وأمان سيبراني متقدم عبر منصة تيرا — عالمك بلا حدود.">
     
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared/styles/variables.css">
+    <link rel="stylesheet" href="../../shared/styles/utilities.css">
+    <link rel="stylesheet" href="../../shared/styles/animations.css">
+    <link rel="stylesheet" href="../../shared/styles/auth-layout.css">
+    <link rel="stylesheet" href="register.css">
+
     <style>
-        /* ================= الهوية البصرية والمتغيرات ================= */
-        :root {
-            --primary: #1a103c;
-            --accent: #FFD166;
-            --success: #06D6A0;
-            --danger: #ef476f;
-            --bg: #f4f7f6;
-            --surface: #ffffff;
-            --text-main: #333333;
-            --text-dim: #666666;
-            --border: #e2e8f0;
-        }
+        .phone-group { display: flex; gap: 10px; width: 100%; }
+        .phone-group select { width: 35%; padding: 0 10px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; }
+        .phone-group select option { background: #0f172a; color: #fff; }
+        .phone-group .input-wrapper { width: 65%; }
 
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 700px; margin: 0 auto; background: var(--surface); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; border-top: 5px solid var(--primary); }
-        
-        /* ================= الترويسة ================= */
-        .header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--primary) 0%, #2d1c5a 100%); color: white; }
-        .header img { max-width: 140px; margin-bottom: 15px; }
-        .header h1 { font-size: 20px; margin: 0 0 10px 0; color: var(--accent); font-weight: 900; }
-        .header p { font-size: 14px; margin: 0 0 15px 0; color: #e2e8f0; }
-        .secure-badge { display: inline-block; background: rgba(6, 214, 160, 0.15); color: var(--success); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; border: 1px solid rgba(6, 214, 160, 0.3); }
+        .match-msg { font-size: 0.75rem; margin-top: 5px; display: none; font-weight: bold; }
+        .match-msg.valid { color: #06D6A0; display: block; }
+        .match-msg.invalid { color: #ef4444; display: block; }
 
-        /* ================= الأقسام والنماذج ================= */
-        .section { padding: 30px 40px; border-bottom: 1px solid var(--border); }
-        .section-title { font-size: 16px; color: var(--primary); margin-top: 0; margin-bottom: 20px; font-weight: 900; background: #f8f9fa; padding: 10px 15px; border-right: 4px solid var(--accent); border-radius: 4px; }
-        
-        .form-group { margin-bottom: 20px; position: relative; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 14px; }
-        .form-control { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; box-sizing: border-box; font-family: inherit; transition: 0.3s; }
-        .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(26, 16, 60, 0.1); }
-        
-        /* رقم الجوال والدولة */
-        .phone-group { display: flex; gap: 10px; }
-        .phone-group select { width: 35%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; }
-        .phone-group input { width: 65%; }
+        .rules-box { background: rgba(15, 23, 42, 0.4); padding: 12px; border-radius: 8px; margin-top: 8px; border: 1px solid rgba(56, 189, 248, 0.1); }
+        .rules-box p { margin: 0 0 8px 0; font-size: 0.75rem; color: #38bdf8; font-weight: bold; }
+        .rule-item { font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .rule-item.pass { color: #06D6A0; font-weight: bold; }
+        .rule-item.fail { color: #ef4444; }
 
-        /* رسائل التطابق والتنبيهات */
-        .match-msg { font-size: 13px; font-weight: bold; margin-top: 8px; display: none; }
-        .match-msg.valid { color: var(--success); display: block; }
-        .match-msg.invalid { color: var(--danger); display: block; }
-        .alert-text { font-size: 12px; color: var(--text-dim); margin-top: 5px; display: block; font-weight: 600; }
-
-        /* ================= شروط التحقق (يوزر/باسورد) ================= */
-        .rules-container { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px dashed #ccc; }
-        .rules-container p { margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: var(--primary); }
-        .rule-item { font-size: 13px; margin-bottom: 5px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; font-weight: 600; }
-        .rule-item.pass { color: var(--success); }
-        .rule-item.fail { color: var(--danger); }
-        
-        .pwd-wrapper { position: relative; }
-        .toggle-pwd { position: absolute; left: 15px; top: 38px; cursor: pointer; color: #888; background: none; border: none; font-size: 18px; }
-        
-        .strength-meter { display: flex; height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+        .strength-meter { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 8px; overflow: hidden; }
         .strength-bar { height: 100%; width: 0; transition: 0.3s; }
-        .strength-text { font-size: 12px; font-weight: bold; margin-top: 5px; display: block; text-align: left; }
+        .strength-text { font-size: 0.7rem; font-weight: bold; margin-top: 4px; display: block; text-align: left; direction: ltr; }
 
-        /* ================= الشروط والموافقات ================= */
-        .checkbox-group { background: #fafafa; border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .chk-header { display: flex; align-items: flex-start; gap: 10px; }
-        .chk-header input { margin-top: 4px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
-        .chk-header label { font-size: 13.5px; font-weight: 600; cursor: pointer; margin: 0; line-height: 1.6; }
-        .toggle-details { background: none; border: none; color: var(--primary); font-size: 12px; font-weight: bold; cursor: pointer; padding: 0; margin-top: 10px; display: flex; align-items: center; gap: 5px; text-decoration: underline; }
-        .details-content { display: none; font-size: 13px; color: var(--text-dim); background: #fff; padding: 15px; margin-top: 10px; border-radius: 6px; border-right: 3px solid var(--accent); line-height: 1.8; }
-        .details-content ul { margin: 10px 0 0 0; padding-right: 20px; }
-
-        /* ================= مركز الحماية والأمان ================= */
-        .security-center { background: #f0fdf9; border: 1px solid #baf3e6; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-        .security-center h3 { color: var(--success); margin: 0 0 10px 0; font-size: 15px; }
-        .security-details { display: none; margin-top: 15px; }
-        .security-details ul { margin: 0; padding-right: 20px; font-size: 13px; color: var(--text-dim); line-height: 1.8; }
-        .security-details li { margin-bottom: 8px; }
-
-        /* ================= الأزرار والتذييل ================= */
-        .actions { text-align: center; padding: 30px 40px; background: #f8f9fa; }
-        .btn-submit { background: var(--primary); color: var(--accent); border: none; padding: 15px 40px; font-size: 16px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; }
-        .btn-submit:hover { background: #2d1c5a; }
-        .terms-note { font-size: 12px; color: var(--text-dim); margin-top: 15px; font-weight: 600; }
-        .login-link { margin-top: 25px; font-size: 14px; font-weight: 700; }
-        .login-link a { color: var(--primary); text-decoration: none; border-bottom: 2px solid var(--accent); }
+        .accordion-item { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .accordion-header { display: flex; align-items: flex-start; gap: 8px; }
+        .accordion-header input { margin-top: 3px; accent-color: #38bdf8; }
+        .accordion-header label { font-size: 0.8rem; color: #e2e8f0; line-height: 1.5; cursor: pointer; margin: 0; }
+        .btn-toggle { background: none; border: none; color: #38bdf8; font-size: 0.7rem; margin-top: 6px; padding: 0; cursor: pointer; text-decoration: underline; }
+        .accordion-content { display: none; font-size: 0.75rem; color: #94a3b8; padding: 8px 12px; margin-top: 8px; border-right: 2px solid #38bdf8; background: rgba(0,0,0,0.2); }
         
-        .footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-dim); font-weight: 600; line-height: 1.8; }
-
-        /* ================= الإشعارات اليسرى ================= */
-        .notif-container { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .notif-box { background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-right: 4px solid; min-width: 250px; transform: translateX(-150%); transition: 0.4s; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 10px; direction: rtl; }
-        .notif-box.show { transform: translateX(0); }
-        .notif-success { border-color: var(--success); color: var(--success); }
-        .notif-error { border-color: var(--danger); color: var(--danger); }
-        .notif-warning { border-color: var(--accent); color: #d4a017; }
-        .notif-info { border-color: var(--primary); color: var(--primary); }
-
-        /* ================= شاشة التحميل ================= */
-        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 16, 60, 0.95); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; }
-        .spinner { width: 50px; height: 50px; border: 4px solid rgba(255, 209, 102, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        .notification-container { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .notification { background: #0f172a; padding: 12px 18px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-right: 3px solid; min-width: 250px; transform: translateX(-150%); transition: 0.4s; font-size: 0.85rem; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 10px; direction: rtl; }
+        .notification.show { transform: translateX(0); }
+        
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.95); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(56, 189, 248, 0.2); border-top-color: #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="animate-fade-in">
 
-    <div class="notif-container" id="notifContainer"></div>
+    <div class="notification-container" id="notifContainer"></div>
 
-    <div class="loader-overlay" id="loadingOverlay">
+    <div class="overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <h2 style="color: var(--accent); font-weight: 900;">تم إنشاء الحساب بنجاح</h2>
-        <p style="font-size: 15px; color: #e2e8f0;">جاري توجيهكم إلى صفحة تسجيل الدخول…</p>
+        <h2 class="text-white font-bold" style="color: #38bdf8; font-size: 1.2rem;">تم إتمام التحقق وإنشاء الحساب بنجاح</h2>
+        <p class="text-dim text-sm">جاري توجيهكم إلى صفحة تسجيل الدخول…</p>
     </div>
 
-    <div class="container">
-        <div class="header">
-            <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="شعار منصة TERA" onerror="this.style.display='none'">
-            <h1>مرحباً بكم في بوابة المستثمرين في منصة تيرا — عالمك بلا حدود</h1>
-            <p>يمكنكم إنشاء حسابكم والاستفادة من خدمات بوابة المستثمرين عبر أنظمة تحقق وحماية أمنية متقدمة.</p>
-            <div class="secure-badge">🔒 اتصال آمن ومشفر</div>
-        </div>
+    <div class="auth-wrapper">
+        <div class="auth-card animate-slide-up" style="max-width: 550px;">
+            
+            <div class="auth-header text-center">
+                <div class="logo-container">
+                    <img src="https://msjtr.github.io/investor-portal/assets/images/logo.svg" alt="منصة تيرا" class="auth-logo">
+                </div>
+                <h2 class="text-white font-black mt-20" style="font-size: 1.3rem;">مرحباً بكم في بوابة المستثمرين في منصة تيرا</h2>
+                <p class="text-primary font-bold text-sm m-0">عالمك بلا حدود</p>
+                <p class="text-dim mt-10 text-xs" style="line-height: 1.6;">يمكنكم إنشاء حسابكم والاستفادة من خدمات بوابة المستثمرين عبر أنظمة تحقق وحماية أمنية متقدمة.</p>
+                <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(6, 214, 160, 0.1); color: #06D6A0; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid rgba(6, 214, 160, 0.2); margin-top: 10px;">
+                    <span data-icon="lock" style="font-size: 10px;"></span> اتصال آمن ومشفر
+                </div>
+            </div>
 
-        <form id="registerForm">
-            <div class="section">
-                <h2 class="section-title">قسم المعلومات الشخصية</h2>
+            <form id="registerForm" class="flex-column mt-25">
                 
-                <div class="form-group">
-                    <label>1️⃣ اسم العميل الكامل</label>
-                    <input type="text" id="fullName" class="form-control" placeholder="حقل إدخال الاسم الرباعي" required>
+                <div class="input-group mb-15">
+                    <label for="fullName">1️⃣ اسم العميل الكامل</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="user"></span>
+                        <input type="text" id="fullName" class="auth-input" placeholder="الاسم الرباعي (عربي/إنجليزي)" required autofocus autocomplete="name">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>2️⃣ البريد الإلكتروني</label>
-                    <input type="email" id="email" class="form-control" placeholder="البريد الإلكتروني" required>
+                <div class="input-group mb-15">
+                    <label for="email">2️⃣ البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="email"></span>
+                        <input type="email" id="email" class="auth-input" placeholder="name@domain.com" required autocomplete="email">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>3️⃣ تأكيد البريد الإلكتروني</label>
-                    <input type="email" id="confirmEmail" class="form-control" placeholder="تأكيد البريد الإلكتروني" required>
+                <div class="input-group mb-15">
+                    <label for="confirmEmail">3️⃣ تأكيد البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="email"></span>
+                        <input type="email" id="confirmEmail" class="auth-input" placeholder="أعد إدخال البريد الإلكتروني" required>
+                    </div>
                     <div id="emailMatchMsg" class="match-msg"></div>
                 </div>
 
-                <div class="form-group">
-                    <label>4️⃣ مفتاح رمز الدولة و 5️⃣ رقم الجوال</label>
+                <div class="input-group mb-20">
+                    <label for="phone">4️⃣ مفتاح الدولة و 5️⃣ رقم الجوال</label>
                     <div class="phone-group">
                         <select id="countryCode">
                             <option value="966">🇸🇦 السعودية (+966)</option>
@@ -157,45 +116,260 @@
                             <option value="968">🇴🇲 عمان (+968)</option>
                             <option value="973">🇧🇭 البحرين (+973)</option>
                         </select>
-                        <input type="tel" id="phone" class="form-control" placeholder="رقم الجوال (بدون 0)" required dir="ltr">
+                        <div class="input-wrapper">
+                            <span class="input-icon" data-icon="phone"></span>
+                            <input type="tel" id="phone" class="auth-input" placeholder="05xxxxxxxx (بدون 0)" required dir="ltr">
+                        </div>
                     </div>
-                    <span class="alert-text">تنبيه: سيتم إرسال رمز تحقق لتأكيد رقم الجوال.</span>
+                    <span class="text-dim text-xs mt-5 d-block" style="font-size: 0.7rem;">تنبيه: سيتم إرسال رمز تحقق لتأكيد رقم الجوال.</span>
                 </div>
+
+                <div class="input-group mb-15">
+                    <label for="username">اسم المستخدم</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon" data-icon="user"></span>
+                        <input type="text" id="username" class="auth-input" placeholder="أدخل اسم المستخدم" required dir="ltr">
+                    </div>
+                    <div class="rules-box">
+                        <p>لاختيار اسم المستخدم يرجى الالتزام بالشروط:</p>
+                        <div class="rule-item fail" id="usr-upper"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف كبير واحد على الأقل</div>
+                        <div class="rule-item fail" id="usr-lower"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف صغير واحد على الأقل</div>
+                        <div class="rule-item fail" id="usr-num"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على 6 أرقام غير متتالية</div>
+                        <div class="rule-item fail" id="usr-sym"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على رمز واحد فقط (@ / & / # / $)</div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-15">
+                    <div class="input-header flex-between mb-5">
+                        <label for="password">كلمة المرور</label>
+                    </div>
+                    <div class="input-wrapper" style="position: relative;">
+                        <span class="input-icon" data-icon="lock"></span>
+                        <input type="password" id="password" class="auth-input" placeholder="أدخل كلمة مرور قوية" required autocomplete="new-password" dir="ltr">
+                        <button type="button" onclick="toggleVisibility('password', this)" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.5;">
+                            <span data-icon="eye"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="strength-meter"><div class="strength-bar" id="passStrengthBar"></div></div>
+                    <div class="strength-text" id="passStrengthText"></div>
+
+                    <div class="rules-box">
+                        <p>لاختيار كلمة المرور يرجى الالتزام بالشروط:</p>
+                        <div class="rule-item fail" id="pwd-upper"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف كبير واحد على الأقل</div>
+                        <div class="rule-item fail" id="pwd-lower"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على حرف صغير واحد على الأقل</div>
+                        <div class="rule-item fail" id="pwd-num"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على 6 أرقام غير متتالية</div>
+                        <div class="rule-item fail" id="pwd-sym"><span data-icon="cross" style="font-size:8px;"></span> يحتوي على رمز واحد فقط (@ / & / # / $)</div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-15">
+                    <label for="confirmPassword">تأكيد كلمة المرور</label>
+                    <div class="input-wrapper" style="position: relative;">
+                        <span class="input-icon" data-icon="lock"></span>
+                        <input type="password" id="confirmPassword" class="auth-input" placeholder="أعد إدخال كلمة المرور" required dir="ltr">
+                        <button type="button" onclick="toggleVisibility('confirmPassword', this)" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; opacity: 0.5;">
+                            <span data-icon="eye"></span>
+                        </button>
+                    </div>
+                    <div id="pwdMatchMsg" class="match-msg"></div>
+                </div>
+
+                <div style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #fff; margin-bottom: 10px;">الشروط والأحكام والموافقات</label>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <input type="checkbox" id="chk1" required>
+                            <label for="chk1">أقر وأوافق على الشروط والأحكام الخاصة ببوابة المستثمرين في منصة تيرا — عالمك بلا حدود، وأتعهد باستخدام المنصة وفق الأنظمة المعتمدة.</label>
+                        </div>
+                        <button type="button" class="btn-toggle" onclick="toggleAccordion('det1')">⬇ عرض التفاصيل</button>
+                        <div class="accordion-content" id="det1">تتضمن الشروط والأحكام التزام العميل بجميع الضوابط المالية والتنظيمية وتعتبر هذه الموافقة إقراراً قانونياً ملزماً.</div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <input type="checkbox" id="chk2" required>
+                            <label for="chk2">أوافق على سياسة الخصوصية وأفوض المنصة بمعالجة وحفظ البيانات المسجلة لأغراض التحقق والحماية.</label>
+                        </div>
+                        <button type="button" class="btn-toggle" onclick="toggleAccordion('det2')">⬇ عرض التفاصيل</button>
+                        <div class="accordion-content" id="det2">تخضع جميع بياناتك لسياسات التشفير المتقدمة ولا يتم مشاركتها مع أي طرف ثالث إلا وفق مسوغات نظامية.</div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <input type="checkbox" id="chk3" required>
+                            <label for="chk3">أقر بموافقتي على سياسة الاستخدام، وأتعهد بعدم إساءة استخدام المنصة أو تنفيذ نشاط مخالف.</label>
+                        </div>
+                        <button type="button" class="btn-toggle" onclick="toggleAccordion('det3')">⬇ عرض التفاصيل</button>
+                        <div class="accordion-content" id="det3">مشاركة حسابك أو استخدام برمجيات للوصول الآلي غير المصرح به يعد مخالفة تعرض الحساب للإيقاف.</div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <input type="checkbox" id="chk4" required>
+                            <label for="chk4">أوافق على إجراءات وأنظمة التحقق الأمني والحماية الإلكترونية المعتمدة.</label>
+                        </div>
+                        <button type="button" class="btn-toggle" onclick="toggleAccordion('det4')">⬇ عرض التفاصيل</button>
+                        <div class="accordion-content" id="det4">
+                            - التحقق عبر البريد والجوال و OTP<br>
+                            - تسجيل بيانات الجهاز وعنوان IP<br>
+                            - أنظمة الحماية والمراقبة الأمنية
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <input type="checkbox" id="chk5" required>
+                            <label for="chk5">أقر بأن جميع البيانات المدخلة صحيحة، وأتحمل كامل المسؤولية عن حماية الحساب.</label>
+                        </div>
+                        <button type="button" class="btn-toggle" onclick="toggleAccordion('det5')">⬇ عرض التفاصيل</button>
+                        <div class="accordion-content" id="det5">جميع العمليات المنفذة باستخدام بيانات الدخول تعتبر معتمدة وصادرة من صاحب الحساب شخصياً.</div>
+                    </div>
+                </div>
+
+                <div class="security-notice mt-15 text-right" style="background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.1);">
+                    <div class="flex-center gap-5 mb-5 text-primary">
+                        <span data-icon="shield"></span>
+                        <span class="font-bold text-xs" style="color: #38bdf8;">مركز الحماية والأمان</span>
+                    </div>
+                    <button type="button" class="btn-toggle" onclick="toggleAccordion('sec-details')" style="margin-top:0;">⬇ عرض معلومات الحماية والأمان</button>
+                    <div class="accordion-content" id="sec-details" style="border-right-color: #06D6A0; margin-top: 10px;">
+                        <ul style="padding-right: 15px; margin: 0; line-height: 1.8;">
+                            <li>جميع العمليات تتم عبر أنظمة مراقبة أمنية متقدمة.</li>
+                            <li>منسوبي تيرا لا يطلبون (كلمة المرور، رموز OTP، بيانات البطاقات) عبر أي وسيلة تواصل.</li>
+                            <li>احرص على عدم حفظ كلمة المرور في الأجهزة العامة.</li>
+                            <li>قد تقوم المنصة بتقييد العمليات احترازياً عند رصد نشاط مشبوه.</li>
+                            <li>يتم تسجيل بيانات الجهاز وعنوان IP لأغراض الحماية.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="text-center mt-15 mb-10">
+                    <p class="text-dim text-xs m-0">بإنشاء الحساب فإنكم توافقون على الشروط والأحكام وسياسة الخصوصية.</p>
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn-primary mt-5">
+                    <span>إنشاء حساب</span>
+                </button>
+            </form>
+
+            <div class="register-footer text-center mt-20 pt-15 border-top">
+                <p class="text-white text-xs m-0">لديكم حساب بالفعل؟ <a href="../login/login.html" class="register-link text-primary font-bold">سجل دخولك الآن</a></p>
             </div>
 
-            <div class="section">
-                <h2 class="section-title">قسم إنشاء حساب جديد</h2>
+        </div>
+        
+        <div class="text-center mt-20 text-xs text-dim" style="line-height: 1.8;">
+            جميع الحقوق محفوظة لمنصة تيرا للخدمات المتكاملة © 2026<br>
+            بوابة المستثمرين في منصة تيرا — عالمك بلا حدود
+        </div>
+    </div>
 
-                <div class="form-group">
-                    <label>اسم المستخدم: {{USERNAME_FIELD}}</label>
-                    <input type="text" id="username" class="form-control" placeholder="اسم المستخدم" required dir="ltr">
-                    <div class="rules-container">
-                        <p>عزيز العميل، لاختيار اسم المستخدم يرجى الالتزام بالشروط التالية:</p>
-                        <div class="rule-item fail" id="usr-upper">✖ يحتوي على حرف كبير واحد على الأقل</div>
-                        <div class="rule-item fail" id="usr-lower">✖ يحتوي على حرف صغير واحد على الأقل</div>
-                        <div class="rule-item fail" id="usr-num">✖ يحتوي على 6 أرقام غير متتالية</div>
-                        <div class="rule-item fail" id="usr-sym">✖ يحتوي على رمز واحد فقط من الرموز التالية: @ / & / # / $</div>
-                    </div>
-                </div>
+    <script>
+        function showNotification(msg, type = 'info') {
+            const container = document.getElementById('notifContainer');
+            const box = document.createElement('div');
+            box.style.borderColor = type === 'success' ? '#06D6A0' : type === 'error' ? '#ef4444' : '#FFD166';
+            box.className = `notification`;
+            box.innerHTML = `<span>${msg}</span>`;
+            container.appendChild(box);
+            setTimeout(() => box.classList.add('show'), 10);
+            setTimeout(() => { box.classList.remove('show'); setTimeout(() => box.remove(), 400); }, 6000);
+        }
 
-                <div class="form-group pwd-wrapper">
-                    <label>كلمة المرور: {{PASSWORD_FIELD}}</label>
-                    <input type="password" id="password" class="form-control" placeholder="كلمة المرور" required dir="ltr">
-                    <button type="button" class="toggle-pwd" onclick="togglePwd('password')">👁</button>
-                    
-                    <div class="strength-meter"><div class="strength-bar" id="pwdStrengthBar"></div></div>
-                    <span class="strength-text" id="pwdStrengthText"></span>
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
 
-                    <div class="rules-container">
-                        <p>عزيز العميل، لاختيار كلمة المرور يرجى الالتزام بالشروط التالية:</p>
-                        <div class="rule-item fail" id="pwd-upper">✖ يحتوي على حرف كبير واحد على الأقل</div>
-                        <div class="rule-item fail" id="pwd-lower">✖ يحتوي على حرف صغير واحد على الأقل</div>
-                        <div class="rule-item fail" id="pwd-num">✖ يحتوي على 6 أرقام غير متتالية</div>
-                        <div class="rule-item fail" id="pwd-sym">✖ يحتوي على رمز واحد فقط من الرموز التالية: @ / & / # / $</div>
-                    </div>
-                </div>
+        function toggleVisibility(id, btn) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') { input.type = 'text'; btn.style.opacity = '1'; } 
+            else { input.type = 'password'; btn.style.opacity = '0.5'; }
+        }
 
-                <div class="form-group pwd-wrapper">
-                    <label>تأكيد كلمة المرور: {{CONFIRM_PASSWORD_FIELD}}</label>
-                    <input type="password" id="confirmPassword" class="form-control" placeholder="تأكيد كلمة المرور" required dir="ltr">
-                    <button type
+        document.getElementById('fullName').addEventListener('input', function() {
+            this.value = this.value.replace(/[^\u0621-\u064Aa-zA-Z\s]/g, '');
+        });
+
+        document.getElementById('phone').addEventListener('input', function() {
+            let val = this.value.replace(/[^0-9]/g, '');
+            if (val.startsWith('0')) val = val.substring(1);
+            this.value = val;
+        });
+
+        const email = document.getElementById('email'), confirmEmail = document.getElementById('confirmEmail'), emailMsg = document.getElementById('emailMatchMsg');
+        function checkEmail() {
+            if (!confirmEmail.value) { emailMsg.style.display = 'none'; return; }
+            if (email.value === confirmEmail.value) { emailMsg.textContent = '✔ البريد الإلكتروني متطابق'; emailMsg.className = 'match-msg valid'; } 
+            else { emailMsg.textContent = '✖ البريد الإلكتروني غير متطابق'; emailMsg.className = 'match-msg invalid'; }
+        }
+        email.addEventListener('input', checkEmail); confirmEmail.addEventListener('input', checkEmail);
+
+        function checkComplexRules(str) {
+            const hasUpper = /[A-Z]/.test(str), hasLower = /[a-z]/.test(str);
+            const symbols = str.match(/[@&#$]/g);
+            const hasOneSymbol = symbols && symbols.length === 1 && !/[^a-zA-Z0-9@&#$]/.test(str);
+            const digits = str.replace(/[^0-9]/g, '');
+            const has6Digits = digits.length === 6;
+            let nonConsecutive = false;
+            if (has6Digits) {
+                const seq = '0123456789', rev = '9876543210', isRepeated = /^(\d)\1{5}$/.test(digits);
+                if (!seq.includes(digits) && !rev.includes(digits) && !isRepeated) nonConsecutive = true;
+            }
+            return { hasUpper, hasLower, nonConsecutive, hasOneSymbol };
+        }
+
+        function updateUI(prefix, r) {
+            const ui = (id, valid) => {
+                const el = document.getElementById(prefix + id);
+                if (valid) { el.className = 'rule-item pass'; el.innerHTML = `✔ ${el.innerText.substring(2)}`; }
+                else { el.className = 'rule-item fail'; el.innerHTML = `✖ ${el.innerText.substring(2)}`; }
+            };
+            ui('-upper', r.hasUpper); ui('-lower', r.hasLower); ui('-num', r.nonConsecutive); ui('-sym', r.hasOneSymbol);
+            return r.hasUpper && r.hasLower && r.nonConsecutive && r.hasOneSymbol;
+        }
+
+        let isUserValid = false, isPassValid = false;
+        document.getElementById('username').addEventListener('input', function() { isUserValid = updateUI('usr', checkComplexRules(this.value)); });
+
+        const password = document.getElementById('password'), confirmPassword = document.getElementById('confirmPassword'), pwdMatchMsg = document.getElementById('pwdMatchMsg');
+        password.addEventListener('input', function() {
+            const r = checkComplexRules(this.value);
+            isPassValid = updateUI('pwd', r);
+            const bar = document.getElementById('passStrengthBar'), txt = document.getElementById('passStrengthText');
+            let score = (r.hasUpper?1:0) + (r.hasLower?1:0) + (r.hasOneSymbol?1:0) + (r.nonConsecutive?1:0);
+
+            if (this.value.length === 0) { bar.style.width = '0'; txt.textContent = ''; }
+            else if (score <= 2) { bar.style.width = '33%'; bar.style.background = '#ef4444'; txt.textContent = 'ضعيفة'; txt.style.color = '#ef4444'; }
+            else if (score === 3) { bar.style.width = '66%'; bar.style.background = '#38bdf8'; txt.textContent = 'متوسطة'; txt.style.color = '#38bdf8'; }
+            else if (score === 4) { bar.style.width = '100%'; bar.style.background = '#06D6A0'; txt.textContent = 'قوية'; txt.style.color = '#06D6A0'; }
+            checkPwdMatch();
+        });
+
+        function checkPwdMatch() {
+            if (!confirmPassword.value) { pwdMatchMsg.style.display = 'none'; return; }
+            if (password.value === confirmPassword.value) { pwdMatchMsg.textContent = '✔ كلمة المرور متطابقة'; pwdMatchMsg.className = 'match-msg valid'; } 
+            else { pwdMatchMsg.textContent = '✖ كلمة المرور غير متطابقة'; pwdMatchMsg.className = 'match-msg invalid'; }
+        }
+        confirmPassword.addEventListener('input', checkPwdMatch);
+
+        // اعتراض الحدث للتحقق قبل الإرسال (ثم يكمل register.js العمل)
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            if (email.value !== confirmEmail.value) { e.preventDefault(); showNotification('✖ البريد الإلكتروني غير متطابق', 'error'); return; }
+            if (!isUserValid || !isPassValid) { e.preventDefault(); showNotification('⚠ يرجى إكمال شروط اسم المستخدم وكلمة المرور', 'warning'); return; }
+            if (password.value !== confirmPassword.value) { e.preventDefault(); showNotification('✖ كلمة المرور غير متطابقة', 'error'); return; }
+        });
+    </script>
+
+    <script type="module">
+        import { initIcons } from '../../shared/scripts/icons.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            try { initIcons(); } catch (err) { console.warn("[Icons Engine] Pending:", err); }
+        });
+    </script>
+    <script type="module" src="register.js"></script>
+
+</body>
+</html>
